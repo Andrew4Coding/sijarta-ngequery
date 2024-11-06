@@ -12,16 +12,29 @@ export abstract class BaseModel<T extends QueryParams> {
         this.tableName = tableName;
     }
 
+    async findAll(): Promise<T[]> {
+        const query = `SELECT * FROM ${this.tableName}`;
+        const result = await pool.query(query);
+        return result.rows as T[];
+    }
+
+    async findAllWithPagination(limit: number, page: number): Promise<T[]> {
+        const offset = (page - 1) * limit;
+        const query = `SELECT * FROM ${this.tableName} LIMIT $1 OFFSET $2`;
+        const result = await pool.query(query, [limit, offset]);
+        return result.rows as T[];
+    }
+
     async create(data: T): Promise<T> {
         const columns = Object.keys(data).join(', ');
         const placeholders = Object.keys(data).map((_, idx) => `$${idx + 1}`).join(', ');
         const values = Object.values(data);
 
         const query = `
-      INSERT INTO ${this.tableName} (${columns})
-      VALUES (${placeholders})
-      RETURNING *;
-    `;
+            INSERT INTO ${this.tableName} (${columns})
+            VALUES (${placeholders})
+            RETURNING *;
+        `;
         const result = await pool.query(query, values);
         return result.rows[0] as T;
     }
