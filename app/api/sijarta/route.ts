@@ -1,8 +1,15 @@
-import pool from "@/database/db";
+import { Pekerja } from "@/database/models/pekerja";
+import { queries } from "@/lib/queries";
 
 export async function GET(req: Request) {
+  const { page, limit } = queries(req);
+  
   try {
-    const { rows } = await pool.query("SELECT * FROM DISKON");
+    const pekerja = new Pekerja();
+    const rows = await pekerja.findAllWithPagination(
+      limit,
+      page
+    );
     return new Response(
       JSON.stringify({
         message: "Success",
