@@ -9,7 +9,11 @@ const config: Config = {
     "./modules/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-  	extend: {
+	  extend: {
+		  fontFamily: {
+			  dmsans: ['var(--font-dm-sans)', 'sans-serif'],
+			  catamaran: ['var(--font-catamaran)', 'sans-serif'],
+		  },
   		colors: {
   			background: 'var(--background)',
   			foreground: 'var(--foreground)'
