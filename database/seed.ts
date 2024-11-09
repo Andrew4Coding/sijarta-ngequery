@@ -10,6 +10,7 @@ export async function createTable() {
             PWD VARCHAR(255),
             TGLLAHIR DATE,
             ALAMAT VARCHAR(255),
+            SESSION_ID UUID DEFAULT NULL,
             SALDOMPAY DECIMAL
         );
 
