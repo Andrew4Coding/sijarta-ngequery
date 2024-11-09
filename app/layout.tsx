@@ -4,6 +4,7 @@ import "./globals.css";
 import Layout from "@/components/layout";
 
 import { Catamaran, DM_Sans } from "next/font/google";
+import { Navbar } from "@/components/layout/Navbar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -46,6 +47,7 @@ export default function RootLayout({
       <body
         className={`${dmsans.variable} ${catamaran.variable} antialiased`}
       >
+        <Navbar />
         <Layout>{children}</Layout>
       </body>
     </html>
