@@ -1,7 +1,7 @@
-// In DiskonModule/index.tsx
+"use client";
 
 import React, { useState } from 'react';
-import ModalPembelian from '@/modules/DiskonModule/elements/ModalPembelian'; // Import the ModalPembelian component
+import ModalPembelian from '@/modules/DiskonModule/elements/ModalPembelian'; 
 
 export interface Voucher {
   code: string;
