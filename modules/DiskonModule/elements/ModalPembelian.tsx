@@ -33,7 +33,7 @@ const ModalPembelian: React.FC<ModalPembelianProps> = ({
             </>
           )}
         </p>
-        <button style={styles.closeButton} onClick={closeModal}>Button Tutup</button>
+        <button style={styles.closeButton} onClick={closeModal}>Tutup</button>
       </div>
     </div>
   );
