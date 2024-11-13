@@ -7,9 +7,46 @@ export const HomePageModule = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const categories = [
-        { name: 'Kategori Jasa 1', subcategories: ['Subkategori Jasa 1', 'Subkategori Jasa 2', 'Subkategori Jasa 3'] },
-        { name: 'Kategori Jasa 2', subcategories: ['Subkategori Jasa 1', 'Subkategori Jasa 2', 'Subkategori Jasa 3'] },
-        { name: 'Kategori Jasa 3', subcategories: ['Subkategori Jasa 1', 'Subkategori Jasa 2', 'Subkategori Jasa 3'] },
+        {
+            "name": "Layanan Konsultasi",
+            "subcategories": ["Konsultasi Bisnis", "Konsultasi Keuangan", "Konsultasi SDM"]
+        },
+        {
+            "name": "Pelatihan dan Pendidikan",
+            "subcategories": ["Pelatihan Keterampilan Teknis", "Pelatihan Kepemimpinan", "Kursus Bahasa Asing"]
+        },
+        {
+            "name": "Pengembangan Teknologi",
+            "subcategories": ["Pengembangan Aplikasi Web", "Pengembangan Aplikasi Mobile", "Pengembangan Perangkat Lunak Khusus"]
+        },
+        {
+            "name": "Layanan Pemasaran",
+            "subcategories": ["Pemasaran Digital", "Pemasaran Media Sosial", "Strategi Pemasaran Konten"]
+        },
+        {
+            "name": "Jasa Kreatif",
+            "subcategories": ["Desain Grafis", "Fotografi", "Produksi Video"]
+        },
+        {
+            "name": "Layanan Kesehatan",
+            "subcategories": ["Konsultasi Gizi", "Terapi Fisik", "Konsultasi Psikologis"]
+        },
+        {
+            "name": "Layanan Keuangan",
+            "subcategories": ["Manajemen Investasi", "Perencanaan Pajak", "Asuransi Jiwa dan Kesehatan"]
+        },
+        {
+            "name": "Layanan Perjalanan",
+            "subcategories": ["Perencanaan Liburan", "Layanan Pemandu Wisata", "Pemesanan Hotel"]
+        },
+        {
+            "name": "Layanan Kebersihan",
+            "subcategories": ["Kebersihan Rumah", "Kebersihan Kantor", "Jasa Laundry"]
+        },
+        {
+            "name": "Jasa Logistik",
+            "subcategories": ["Pengiriman Barang", "Penyimpanan dan Gudang", "Distribusi Produk"]
+        }
     ];
 
     const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
