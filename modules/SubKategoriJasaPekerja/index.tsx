@@ -370,9 +370,6 @@ export const SubKategoriJasaPekerja = () => {
                         <div key={index} className="flex items-center border mb-2 rounded-md overflow-hidden bg-white">
                             <span className="w-1/3 border-r text-center font-medium p-2">{session.name}</span>
                             <span className="w-1/5 text-center font-semibold p-2 mr-4">{session.price}</span>
-                            <button className="ml-auto mr-1 px-4 py-1 text-center font-semibold bg-gray-300 text-gray-700 rounded-md">
-                                Pesan
-                            </button>
                         </div>
                     ))}
                 </div>
