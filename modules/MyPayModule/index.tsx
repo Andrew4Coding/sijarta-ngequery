@@ -39,10 +39,10 @@ export const MyPayModule = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-6 h-[700px] overflow-y-scroll overflow-x-visible w-full">
           {dummyData.map((item, index) => {
             const date = new Date(item.date.toISOString()).toLocaleDateString(
-              "en-US",
+              "id-ID",
               {
                 day: "2-digit",
-                month: "long",
+                month: "2-digit",
                 year: "numeric",
               }
             );
