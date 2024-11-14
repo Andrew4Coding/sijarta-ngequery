@@ -1,12 +1,18 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+type Category = {
+    name: string;
+    subcategories: string[];
+};
 
 export const HomePageModule = () => {
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
 
-    const categories = [
+    const categories: Category[] = [
         { "name": "Layanan Konsultasi", "subcategories": ["Konsultasi Bisnis", "Konsultasi Keuangan", "Konsultasi SDM"] },
         { "name": "Pelatihan dan Pendidikan", "subcategories": ["Pelatihan Keterampilan Teknis", "Pelatihan Kepemimpinan", "Kursus Bahasa Asing"] },
         { "name": "Pengembangan Teknologi", "subcategories": ["Pengembangan Aplikasi Web", "Pengembangan Aplikasi Mobile", "Pengembangan Perangkat Lunak Khusus"] },
@@ -19,21 +25,31 @@ export const HomePageModule = () => {
         { "name": "Jasa Logistik", "subcategories": ["Pengiriman Barang", "Penyimpanan dan Gudang", "Distribusi Produk"] }
     ];
 
+    useEffect(() => {
+        // Menampilkan semua kategori dan subkategori saat halaman pertama kali dimuat
+        setFilteredCategories(categories);
+    }, []);
+
     const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedCategory(event.target.value);
+        updateFilteredCategories(event.target.value, searchTerm);
     };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
+        updateFilteredCategories(selectedCategory, event.target.value);
     };
 
-    const filteredCategories = categories.filter((category) => {
-        const matchesCategory = selectedCategory ? category.name === selectedCategory : true;
-        const matchesSearch = category.subcategories.some(subcategory =>
-            subcategory.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        return matchesCategory && matchesSearch;
-    });
+    const updateFilteredCategories = (category: string, term: string) => {
+        const results = categories.filter((categoryItem) => {
+            const matchesCategory = category ? categoryItem.name === category : true;
+            const matchesSearch = categoryItem.subcategories.some((subcategory) =>
+                subcategory.toLowerCase().includes(term.toLowerCase())
+            );
+            return matchesCategory && matchesSearch;
+        });
+        setFilteredCategories(results);
+    };
 
     return (
         <main className="flex flex-col items-center py-10 px-5 bg-gray-100 min-h-screen">
@@ -55,7 +71,6 @@ export const HomePageModule = () => {
                     placeholder="Nama Subkategori"
                     className="w-2/3 p-2 border border-gray-300 rounded-md"
                 />
-                <button className="bg-gray-300 border border-gray-400 p-2 rounded-md">Search</button>
             </div>
 
             <div className="w-full max-w-lg">
