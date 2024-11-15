@@ -1,5 +1,5 @@
 import React from 'react'
-import { PemesananJasaModule } from '@/modules/PemesananJasaModule';
+import PemesananJasaModule from '@/modules/PemesananJasaModule';
 
 const page = () => {
   return (

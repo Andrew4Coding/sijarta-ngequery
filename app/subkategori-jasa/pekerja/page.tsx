@@ -1,9 +1,9 @@
 import React from 'react'
-import { SubKategoriJasaPekerjaModule } from '@/modules/SubKategoriJasaPekerja'
+import { SubKategoriJasaPekerja } from '@/modules/SubKategoriJasaPekerja'
 
 const page = () => {
   return (
-    <SubKategoriJasaPekerjaModule />
+    <SubKategoriJasaPekerja />
   )
 }
 
