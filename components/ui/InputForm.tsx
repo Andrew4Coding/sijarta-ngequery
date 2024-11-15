@@ -63,13 +63,11 @@ const InputForm = <
             </FormControl>
             {description && (
               <FormDescription className="flex gap-2 items-center">
-                <div>
-                  <AlertCircle
-                    width={14}
-                    height={14}
-                    className="md:w-[16px] opacity-90 dark:opacity-100"
-                  />
-                </div>
+                <AlertCircle
+                  width={14}
+                  height={14}
+                  className="md:w-[16px] opacity-90 dark:opacity-100"
+                />
                 <span className="text-xs opacity-60 dark:opacity-100">
                   {description}
                 </span>
