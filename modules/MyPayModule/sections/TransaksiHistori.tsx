@@ -4,7 +4,7 @@ import { dummyData } from "../const";
 
 export const TransaksiHistori = () => {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-6 h-[700px] overflow-y-scroll overflow-x-visible w-full">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-6 h-[700px] overflow-y-scroll overflow-x-visible w-full pb-20">
       {dummyData.map((item, index) => {
         const date = new Date(item.date.toISOString()).toLocaleDateString(
           "id-ID",
@@ -32,14 +32,14 @@ export const TransaksiHistori = () => {
             ) : null}
             <div
               className={cn(
-                "rounded-lg bg-red-50 px-2 xl:px-6 py-4 shadow-lg flex justify-between items-center hover:scale-105 transition-transform xl:mx-6",
+                "rounded-lg bg-red-50 px-2 xl:px-10 py-6 shadow-sm flex justify-between items-center hover:scale-105 duration-300 xl:mx-6 cursor-pointer",
                 { "bg-blue-50": item.type === "TopUp MyPay" }
               )}
             >
               <div className="flex flex-col gap-2">
                 <p
                   className={cn(
-                    "text-[14px] md:text-2xl font-semibold text-red-500",
+                    "text-sm md:text-xl font-semibold text-red-500",
                     {
                       "text-green-500": item.type === "TopUp MyPay",
                     }
@@ -50,11 +50,11 @@ export const TransaksiHistori = () => {
                     currency: "IDR",
                   })}
                 </p>
-                <p className="text-[12px] md:text-base text-gray-500 font-semibold">
+                <p className="text-xs md:text-sm text-gray-500 font-medium">
                   {hours}
                 </p>
               </div>
-              <p className="text-[12px] md:text-base xl:text-xl font-bold text-[#1f1e1eb7]">
+              <p className="text-sm md:text-base xl:text-sm font-semibold text-[#1f1e1eb7]">
                 {item.type}
               </p>
             </div>

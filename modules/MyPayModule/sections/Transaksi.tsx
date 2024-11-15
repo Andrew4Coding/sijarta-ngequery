@@ -9,7 +9,7 @@ import { BayarTransaksi } from "../elements/BayarTransaksi";
 export const Transaksi = ({ saldo }: { saldo: string }) => {
   const [value, setValue] = useState("");
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col font-dmsans">
       <p className="font-semibold">
         Saldo kamu: <span className="text-green-700">{saldo}</span>
       </p>
