@@ -19,7 +19,7 @@ type Category = {
 };
 
 export const HomePageModule = () => {
-    // STATIC MODE
+    // STATIC MODE SEMENTARA BUAT NGARAHIN KALAU YANG KLIK PENGGUNA/PEKERJA
     const isPekerja = false;
 
     const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -111,11 +111,11 @@ export const HomePageModule = () => {
                         <h3 className="bg-gray-100 font-semibold text-base px-4 py-2 border-b border-gray-200 rounded-t-md">{category.name}</h3>
                         <ul className="list-none">
                             {category.subcategories.map((subcategory, subIndex) => (
-                                <li key={subIndex} className="p-2 pl-4 border-b border-gray-200 last:border-b-0">
-                                    <Link href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pengguna'}/${subcategory.split(" ").join("-")}`}>
+                                <Link key={subIndex} href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pengguna'}/${subcategory.split(" ").join("-")}`}>
+                                    <li className="p-2 pl-4 border-b border-gray-200 last:border-b-0 hover:bg-gray-50">
                                         {subcategory}
-                                    </Link>
-                                </li>
+                                    </li>
+                                </Link>
                             ))}
                         </ul>
                     </div>
