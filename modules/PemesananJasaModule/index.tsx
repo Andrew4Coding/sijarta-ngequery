@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import ModalTestimoni from '@/modules/PemesananJasaModule/elements/ModalTestimoni'; 
 
 type Order = {
     subcategory: string;
@@ -11,12 +10,6 @@ type Order = {
     status: string;
 };
 
-type Testimonial = {
-    rating: number;
-    comment: string;
-    workerName: string;
-};
-
 const statuses = ["Menunggu Pembayaran", "Mencari Pekerja Terdekat", "Pesanan Selesai", "Pesanan Dibatalkan"];
 
 const PemesananJasaModule = () => {
@@ -24,21 +17,12 @@ const PemesananJasaModule = () => {
     const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
     const [subcategoryFilter, setSubcategoryFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
-    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-    const [showModal, setShowModal] = useState(false);
-    const [selectedOrderIndex, setSelectedOrderIndex] = useState<number | null>(null);
 
     useEffect(() => {
-        // Hardcoded order data for testing purposes
-        const hardcodedOrders: Order[] = [
-            { subcategory: "Konsultasi Bisnis", session: "Sesi 1", price: "Rp 1.000.000", workerName: "John Doe", status: "Pesanan Selesai" },
-            { subcategory: "Konsultasi Bisnis", session: "Sesi 2", price: "Rp 500.000", workerName: "Jane Smith", status: "Pesanan Selesai" },
-            { subcategory: "Konsultasi Keuangan", session: "Sesi 1", price: "Rp 750.000", workerName: "Alex Johnson", status: "Pesanan Dibatalkan" },
-            { subcategory: "Konsultasi Keuangan", session: "Sesi 2", price: "Rp 1.200.000", workerName: "Emily Davis", status: "Menunggu Pembayaran" }
-        ];
-
-        setOrders(hardcodedOrders);
-        setFilteredOrders(hardcodedOrders); // Initialize filtered orders
+        // Ambil data pesanan dari localStorage atau API
+        const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+        setOrders(savedOrders);
+        setFilteredOrders(savedOrders); // Inisialisasi filteredOrders
     }, []);
 
     const handleCancelOrder = (index: number) => {
@@ -50,20 +34,7 @@ const PemesananJasaModule = () => {
     };
 
     const handleCreateTestimonial = (index: number) => {
-        setSelectedOrderIndex(index); // Store which order is selected for testimonial
-        setShowModal(true); // Show the modal
-    };
-
-    const handleSubmitTestimonial = (rating: number, comment: string) => {
-        if (selectedOrderIndex !== null) {
-            const newTestimonial = {
-                rating,
-                comment,
-                workerName: orders[selectedOrderIndex].workerName
-            };
-            setTestimonials([...testimonials, newTestimonial]);
-            setShowModal(false); // Close the modal
-        }
+        // Implementasikan logika pembuatan testimoni
     };
 
     const applyFilters = () => {
@@ -80,7 +51,7 @@ const PemesananJasaModule = () => {
         <div className="p-6 bg-gray-100 min-h-screen">
             <h2 className="font-bold text-xl mb-4">Pesanan Jasa</h2>
 
-            {/* Filter Section */}
+            {/* Bagian Filter */}
             <div className="flex gap-4 mb-4">
                 <select
                     value={subcategoryFilter}
@@ -90,6 +61,7 @@ const PemesananJasaModule = () => {
                     <option value="">Subkategori</option>
                     <option value="Konsultasi Bisnis">Konsultasi Bisnis</option>
                     <option value="Konsultasi Keuangan">Konsultasi Keuangan</option>
+                    {/* Tambahkan subkategori lainnya jika diperlukan */}
                 </select>
 
                 <select
@@ -108,7 +80,7 @@ const PemesananJasaModule = () => {
                 </button>
             </div>
 
-            {/* Orders List */}
+            {/* Daftar Pesanan */}
             {filteredOrders.map((order, index) => (
                 <div key={index} className="border p-4 mb-2 rounded-lg bg-white shadow-sm">
                     <div className="grid grid-cols-6 gap-2 text-center">
@@ -133,7 +105,14 @@ const PemesananJasaModule = () => {
                             <p>{order.status}</p>
                         </div>
                         <div className="flex items-center justify-center">
-                            {order.status === "Pesanan Selesai" ? (
+                            {order.status === "Menunggu Pembayaran" || order.status === "Mencari Pekerja Terdekat" ? (
+                                <button
+                                    onClick={() => handleCancelOrder(index)}
+                                    className="px-4 py-2 bg-red-500 text-white rounded-md"
+                                >
+                                    Batalkan
+                                </button>
+                            ) : order.status === "Pesanan Selesai" ? (
                                 <button
                                     onClick={() => handleCreateTestimonial(index)}
                                     className="px-4 py-2 bg-blue-500 text-white rounded-md"
@@ -145,12 +124,6 @@ const PemesananJasaModule = () => {
                     </div>
                 </div>
             ))}
-            
-            {/* Modal Testimoni */}
-            <ModalTestimoni
-                isOpen={showModal}
-                closeModal={() => setShowModal(false)}
-            />
         </div>
     );
 };

@@ -13,13 +13,6 @@ type SubcategoryInfo = {
     sessions: Session[];
 };
 
-type Testimonial = {
-    workerName: string;
-    rating: number;
-    customerName: string;
-    review: string;
-};
-
 const subcategoryData: Record<string, { category: string; info: SubcategoryInfo }> = {
     "Konsultasi Bisnis": {
         category: "Layanan Konsultasi",
@@ -324,28 +317,6 @@ const subcategoryData: Record<string, { category: string; info: SubcategoryInfo 
 };
 
 export const SubKategoriJasaPengguna = () => {
-
-    const testimonials: Testimonial[] = [
-        {
-            workerName: "Pekerja A",
-            rating: 2,
-            customerName: "Pelanggan 1",
-            review: "Sangat puas dengan pelayanannya! Pekerja sangat profesional dan ramah.",
-        },
-        {
-            workerName: "Pekerja B",
-            rating: 4,
-            customerName: "Pelanggan 2",
-            review: "Pelayanan cukup memuaskan, hasil sesuai dengan harapan.",
-        },
-        {
-            workerName: "Pekerja C",
-            rating: 5,
-            customerName: "Pelanggan 3",
-            review: "Luar biasa! Hasil pekerjaan sangat memuaskan dan cepat.",
-        },
-    ];
-
     const searchParams = useSearchParams();
     const router = useRouter();
     const subcategory = searchParams.get('subcategory') || 'Subkategori Tidak Ditemukan';
@@ -432,25 +403,6 @@ export const SubKategoriJasaPengguna = () => {
                     </div>
                 </div>
             )}
-
-            {/* Testimonials Section */}
-            <div className="w-full max-w-2xl bg-white shadow-md rounded-md p-6 mt-8">
-                <h2 className="font-bold mb-4">Testimoni</h2>
-                {testimonials.map((testimonial, index) => (
-                    <div key={index} className="border rounded-md p-4 mb-4 bg-gray-50">
-                        <div className="flex space-x-2 mb-2">
-                            <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-semibold">
-                                Pekerja yang direview: {testimonial.workerName}
-                            </span>
-                            <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-semibold">
-                                Rating: {testimonial.rating}/5
-                            </span>
-                        </div>
-                        <p className="font-medium">{testimonial.customerName}</p>
-                        <p className="text-gray-600">{testimonial.review}</p>
-                    </div>
-                ))}
-            </div>
         </main>
     );
 };
