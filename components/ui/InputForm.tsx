@@ -53,7 +53,6 @@ const InputForm = <
           <FormItem className="flex flex-col gap-1 text-xs md:text-base">
             <FormControl>
               <Input
-                icon={icon}
                 type={type}
                 label={label}
                 className="text-xs md:text-base"
