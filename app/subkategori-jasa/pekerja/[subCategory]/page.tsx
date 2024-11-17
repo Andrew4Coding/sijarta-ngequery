@@ -7,7 +7,7 @@ const page: NextPage<{
 }> = ({ params }) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <SubKategoriJasaPekerja />
+      <SubKategoriJasaPekerja subCategory={params.subCategory.replace("-", " ")} />
     </Suspense>
   );
 };

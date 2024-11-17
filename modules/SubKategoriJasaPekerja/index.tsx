@@ -1,8 +1,8 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { subcategoryData } from '../SubKategoriJasaPengguna/const';
+import { Button } from '@/components/ui/button';
 
 type Session = {
     name: string;
@@ -16,7 +16,7 @@ type Testimonial = {
     review: string;
 };
 
-export const SubKategoriJasaPekerja = () => {
+export const SubKategoriJasaPekerja = ({subCategory}: {subCategory: string}) => {
     const [testimonials, setTestimonials] = useState<Testimonial[]>([
         {
             workerName: "Pekerja A",
@@ -38,15 +38,11 @@ export const SubKategoriJasaPekerja = () => {
         },
     ]);
 
-
-    const searchParams = useSearchParams();
-    const subcategory = searchParams.get('subcategory') || 'Subkategori Tidak Ditemukan';
-
-    const subcategoryInfo = subcategoryData[subcategory]?.info || {
+    const subcategoryInfo = subcategoryData[subCategory]?.info || {
         description: "Deskripsi tidak tersedia untuk subkategori ini.",
         sessions: []
     };
-    const category = subcategoryData[subcategory]?.category || 'Kategori Tidak Ditemukan';
+    const category = subcategoryData[subCategory]?.category || 'Kategori Tidak Ditemukan';
 
     const [isJoined, setIsJoined] = useState(false);
 
@@ -55,12 +51,12 @@ export const SubKategoriJasaPekerja = () => {
     };
 
     return (
-        <main className="flex flex-col items-center py-10 px-5 bg-gray-100 min-h-screen">
+        <main className="flex flex-col items-center pt-32 px-5 bg-gray-100 min-h-screen">
             <div className="w-full max-w-2xl bg-white shadow-md rounded-md p-6">
                 <div className="flex justify-between space-x-12 mb-4">
                     <input
                         type="text"
-                        value={subcategory}
+                        value={subCategory}
                         className="border p-2 rounded-md w-1/2 text-center font-semibold bg-white"
                         disabled
                     />
@@ -92,7 +88,7 @@ export const SubKategoriJasaPekerja = () => {
                 {!isJoined && (
                     <button
                         onClick={handleJoin}
-                        className="mt-4 w-full px-4 py-2 text-center font-semibold bg-blue-500 text-white rounded-md"
+                        className="mt-4 w-full px-4 py-2 text-center font-semibold bg-blue-500 hover:bg-blue-600 text-white rounded-md"
                     >
                         Bergabung
                     </button>
