@@ -8,7 +8,7 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
-  nominal: z.number().min(1, {
+  nominal: z.string().refine((val) => parseInt(val) > 0, {
     message: "Nominal harus lebih dari 0",
   }),
 });
@@ -23,7 +23,10 @@ export const TopUp = () => {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-5"
+        >
           <InputForm
             label="Nominal"
             name="nominal"

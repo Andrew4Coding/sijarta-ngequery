@@ -13,7 +13,7 @@ const formSchema = z.object({
   }).regex(/^(\+62|62|0)8[1-9][0-9]{6,9}$/, {
     message: "Nomor HP tidak valid",
   }),
-  nominal: z.number().min(1, {
+  nominal: z.string().refine((val) => parseInt(val) > 0, {
     message: "Nominal harus lebih dari 0",
   }),
 });
