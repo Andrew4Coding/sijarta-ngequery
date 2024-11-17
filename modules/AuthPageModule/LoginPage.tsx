@@ -26,12 +26,11 @@ export const LoginPage = () => {
         console.log(data);
     }
     
-
     return (
         <main className="w-full h-[100vh] flex items-center justify-center bg-gray-100 font-dmsans">
             <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center">
-                <h1 className="font-bold text-2xl font-catamaran">Welcome to Sijarta</h1>
-                <p className='text-gray-500'>by ngeQuery Team</p>
+                <h1 className="font-bold text-2xl font-catamaran">Welcome to SIJARTA</h1>
+                <p className='text-gray-500 mb-5'>by ngeQuery Team</p>
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
