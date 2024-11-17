@@ -2,23 +2,40 @@
 import { Button } from '@/components/ui/button'
 import { ChevronDown, LogOut } from 'lucide-react'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
+import { useUserData } from '@/lib/useUserData'
 import { usePathname, useRouter } from 'next/navigation'
 
+const penggunaMenus = [
+  { href: '/', label: 'Homepage' },
+  { href: '/mypay', label: 'MyPay' },
+  { href: '/kelola-pesanan', label: 'Kelola Pesanan Saya' },
+  { href: '/diskon', label: 'Diskon' }
+]
+
+const pekerjaMenus = [
+  { href: '/', label: 'Homepage' },
+  { href: '/pekerjaan', label: 'Kelola Pekerjaan Saya' },
+  { href: '/status-pekerjaan', label: 'Kelola Status Pekerjaan' },
+  { href: '/mypay', label: 'MyPay' }
+]
+
+
 export const Navbar = () => {
-  const { role, isAuthenticated } = { role: 'pengguna', isAuthenticated: true }
   const [isOpen, setIsOpen] = useState(false)
 
   const router = useRouter()
   const pathname = usePathname()
+
+  const {userData, isAuthenticated, role } = useUserData();
 
   const hideMenus = pathname === '/login' || pathname === '/register'
 
@@ -29,18 +46,16 @@ export const Navbar = () => {
         <p className='text-sm'>
           Welcome {' '}
           <strong>
-            {role === 'pengguna' ? 'Pengguna' : 'Admin'}
-            !
+            {userData.nama}
           </strong>
         </p>
       </div>
       {!hideMenus && (
         <>
           <div className='hidden md:flex gap-4'>
-            <Link href='/'>Home</Link>
-            <Link href='/mypay'>MyPay</Link>
-            <Link href='/'>Pesanan Saya</Link>
-            <Link href='/diskon'>Diskon</Link>
+            {(role === 'pengguna' ? penggunaMenus : pekerjaMenus).map(menu => (
+              <Link key={menu.href} href={menu.href}>{menu.label}</Link>
+            ))}
           </div>
           <div className='hidden md:flex'>
             {isAuthenticated ? 
@@ -77,18 +92,11 @@ export const Navbar = () => {
             </PopoverTrigger>
             <PopoverContent className='bg-white'>
               <ul className='space-y-2 font-dmsans'>
-                <li>
-                  <Link href='/'>Home</Link>
-                </li>
-                <li>
-                  <Link href='/mypay'>MyPay</Link>
-                </li>
-                <li>
-                  <Link href='/'>Pesanan Saya</Link>
-                </li>
-                <li>
-                  <Link href='/diskon'>Diskon</Link>
-                </li>
+                {(role === 'pengguna' ? penggunaMenus : pekerjaMenus).map(menu => (
+                  <li key={menu.href}>
+                    <Link href={menu.href}>{menu.label}</Link>
+                  </li>
+                ))}
                 <li>
                   <Link href='/profile'>Profile</Link>
                 </li>
