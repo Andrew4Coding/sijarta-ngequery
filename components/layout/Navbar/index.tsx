@@ -17,7 +17,7 @@ import { usePathname, useRouter } from 'next/navigation'
 const penggunaMenus = [
   { href: '/', label: 'Home' },
   { href: '/mypay', label: 'MyPay' },
-  { href: '/kelola-pesanan', label: 'Pesanan Saya' },
+  { href: '/pemesanan-jasa', label: 'Pesanan Saya' },
   { href: '/diskon', label: 'Diskon' }
 ]
 
