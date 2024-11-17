@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 
 type Order = {
     subcategory: string;
@@ -13,59 +13,38 @@ type Order = {
 
 const statuses = ["Menunggu Pembayaran", "Mencari Pekerja Terdekat", "Pesanan Selesai", "Pesanan Dibatalkan"];
 
+// Dummy data
+const dummyOrders: Order[] = [
+    { subcategory: "Konsultasi Bisnis", session: "1 Jam", price: "Rp 150.000", workerName: "Budi", status: "Menunggu Pembayaran" },
+    { subcategory: "Konsultasi Keuangan", session: "30 Menit", price: "Rp 75.000", workerName: "Susi", status: "Mencari Pekerja Terdekat" },
+    { subcategory: "Konsultasi Bisnis", session: "2 Jam", price: "Rp 300.000", workerName: "Andi", status: "Pesanan Selesai" },
+    { subcategory: "Konsultasi Keuangan", session: "1 Jam", price: "Rp 150.000", workerName: "Rina", status: "Pesanan Dibatalkan" },
+];
+
 const PemesananJasaModule = () => {
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
+    const [orders, setOrders] = useState<Order[]>(dummyOrders);
     const [subcategoryFilter, setSubcategoryFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
-
-    const searchParams = useSearchParams();
-    const subcategory = searchParams.get('subcategory') || 'Subkategori Tidak Ditemukan';
-    const session = searchParams.get('session') || 'Sesi Tidak Ditemukan';
-    const price = searchParams.get('price') || 'Harga Tidak Ditemukan';
-
-    useEffect(() => {
-        // Ambil data pesanan dari localStorage atau API
-        const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-
-        // Jika ada parameter dari URL, tambahkan pesanan baru
-        if (subcategory !== 'Subkategori Tidak Ditemukan' && session !== 'Sesi Tidak Ditemukan') {
-            const newOrder: Order = {
-                subcategory,
-                session,
-                price,
-                workerName: "",
-                status: "Menunggu Pembayaran",
-            };
-            savedOrders.push(newOrder);
-            localStorage.setItem('orders', JSON.stringify(savedOrders));
-        }
-
-        setOrders(savedOrders);
-        setFilteredOrders(savedOrders); // Inisialisasi filteredOrders
-    }, [subcategory, session, price]);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
 
     const handleCancelOrder = (index: number) => {
         const updatedOrders = [...orders];
         updatedOrders[index].status = "Pesanan Dibatalkan";
         setOrders(updatedOrders);
-        setFilteredOrders(updatedOrders);
-        localStorage.setItem('orders', JSON.stringify(updatedOrders));
     };
 
-    const handleCreateTestimonial = (index: number) => {
-        // Implementasikan logika pembuatan testimoni
+    const handleCreateTestimonial = (order: Order) => {
+        setCurrentOrder(order);
+        setOpenDialog(true);
     };
 
-    const applyFilters = () => {
-        const filtered = orders.filter(order => {
-            return (
-                (subcategoryFilter === "" || order.subcategory === subcategoryFilter) &&
-                (statusFilter === "" || order.status === statusFilter)
-            );
-        });
-        setFilteredOrders(filtered);
-    };
+    const filteredOrders = orders.filter(order => {
+        return (
+            (subcategoryFilter === "" || order.subcategory === subcategoryFilter) &&
+            (statusFilter === "" || order.status === statusFilter)
+        );
+    });
 
     return (
         <div className="p-6 bg-gray-100 min-h-screen pt-40 px-10 md:px-32">
@@ -81,7 +60,6 @@ const PemesananJasaModule = () => {
                     <option value="">Subkategori</option>
                     <option value="Konsultasi Bisnis">Konsultasi Bisnis</option>
                     <option value="Konsultasi Keuangan">Konsultasi Keuangan</option>
-                    {/* Tambahkan subkategori lainnya jika diperlukan */}
                 </select>
 
                 <select
@@ -94,10 +72,6 @@ const PemesananJasaModule = () => {
                         <option key={idx} value={status}>{status}</option>
                     ))}
                 </select>
-
-                <button onClick={applyFilters} className="px-4 py-2 bg-blue-500 text-white rounded-md">
-                    Search
-                </button>
             </div>
 
             {/* Daftar Pesanan */}
@@ -134,7 +108,7 @@ const PemesananJasaModule = () => {
                                 </button>
                             ) : order.status === "Pesanan Selesai" ? (
                                 <button
-                                    onClick={() => handleCreateTestimonial(index)}
+                                    onClick={() => handleCreateTestimonial(order)}
                                     className="px-4 py-2 bg-blue-500 text-white rounded-md"
                                 >
                                     Buat Testimoni
@@ -144,6 +118,49 @@ const PemesananJasaModule = () => {
                     </div>
                 </div>
             ))}
+
+            {/* Dialog for Testimonial */}
+            {openDialog && currentOrder && (
+                <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                    <DialogContent>
+                        <DialogTitle>Buat Testimoni</DialogTitle>
+                        <DialogDescription>Berikan rating dan komentar Anda tentang layanan ini</DialogDescription>
+
+                        {/* Form Testimonial */}
+                        <div className="mb-4">
+                            <label className="block mb-2">Rating:</label>
+                            <select className="p-2 border rounded-md w-full">
+                                {[...Array(10)].map((_, idx) => (
+                                    <option key={idx} value={idx + 1}>{idx + 1}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block mb-2">Komentar:</label>
+                            <textarea
+                                className="p-2 border rounded-md w-full"
+                                rows={4}
+                            />
+                        </div>
+
+                        <div className="flex justify-end gap-2">
+                            <DialogClose
+                                className="px-4 py-2 bg-gray-500 text-white rounded-md"
+                                onClick={() => setOpenDialog(false)}
+                            >
+                                Batal
+                            </DialogClose>
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                                onClick={() => setOpenDialog(false)}
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            )}
         </div>
     );
 };

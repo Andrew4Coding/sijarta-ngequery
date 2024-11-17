@@ -21,6 +21,7 @@ type Worker = {
     phone: string;
     birthDate: string;
     address: string;
+    image: string; // Tambahkan properti image
 };
 
 type Testimonial = {
@@ -45,6 +46,7 @@ export const SubKategoriJasaPengguna = ({
             phone: "08123456789",
             birthDate: "01/01/1990",
             address: "Jl. Contoh No. 1",
+            image: "/images/pekerjaA.jpg", // URL gambar
         },
         {
             name: "Pekerja B",
@@ -53,6 +55,7 @@ export const SubKategoriJasaPengguna = ({
             phone: "08123456780",
             birthDate: "02/02/1991",
             address: "Jl. Contoh No. 2",
+            image: "/images/pekerjaB.jpg",
         },
         {
             name: "Pekerja C",
@@ -61,6 +64,7 @@ export const SubKategoriJasaPengguna = ({
             phone: "08123456781",
             birthDate: "03/03/1989",
             address: "Jl. Contoh No. 3",
+            image: "/images/pekerjaC.jpg",
         },
         {
             name: "Pekerja D",
@@ -69,8 +73,10 @@ export const SubKategoriJasaPengguna = ({
             phone: "08123456782",
             birthDate: "04/04/1992",
             address: "Jl. Contoh No. 4",
+            image: "/images/pekerjaD.jpg",
         },
     ];
+    
 
     const testimonials: Testimonial[] = [
         {
@@ -124,19 +130,6 @@ export const SubKategoriJasaPengguna = ({
     };    
 
     const handleOrderSubmit = () => {
-        const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-        const updatedOrders = [
-            ...existingOrders,
-            {
-                subCategory,
-                session: selectedSession ? selectedSession.name : "",
-                price: selectedSession ? selectedSession.price : "",
-                workerName: "", // Nama pekerja dapat diisi kemudian
-                status: "Menunggu Pembayaran",
-            },
-        ];
-        localStorage.setItem('orders', JSON.stringify(updatedOrders));
-        setShowModal(false);
         router.push('/pemesanan-jasa');
     };    
 
@@ -185,7 +178,12 @@ export const SubKategoriJasaPengguna = ({
                                 className="p-4 border rounded-md bg-gray-50 hover:bg-gray-200"
                                 onClick={() => openWorkerDialog(worker)}
                             >
-                                {worker.name}
+                                <img
+                                    src={worker.image}
+                                    alt={worker.name}
+                                    className="w-full h-16 object-cover rounded-md mb-2"
+                                />
+                                <p className="text-center font-medium">{worker.name}</p>
                             </button>
                         ))}
                     </div>
@@ -195,7 +193,12 @@ export const SubKategoriJasaPengguna = ({
             {showWorkerDialog && selectedWorker && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg w-96">
-                        <h3 className="text-xl font-semibold mb-4">Profil Pekerja</h3>
+                    <h3 className="text-xl font-semibold mb-4 text-center">Profil Pekerja</h3>
+                        <img
+                            src={selectedWorker.image}
+                            alt={`Foto ${selectedWorker.name}`}
+                            className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
+                        />
                         <p><strong>Nama:</strong> {selectedWorker.name}</p>
                         <p><strong>Rating:</strong> {selectedWorker.rating}/5</p>
                         <p><strong>Jumlah Pesanan Selesai:</strong> {selectedWorker.completedOrders}</p>
@@ -233,7 +236,7 @@ export const SubKategoriJasaPengguna = ({
             {showModal && selectedSession && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg w-80">
-                        <h3 className="text-xl font-semibold mb-4">Pesan Jasa</h3>
+                    <h3 className="text-xl font-semibold mb-4 text-center">Pesan Jasa</h3>
                         <label className="block mb-2">Tanggal Pemesanan:</label>
                         <input type="text" value={newOrder.date} disabled className="border p-2 rounded-md w-full mb-4" />
                         <label className="block mb-2">Diskon:</label>
