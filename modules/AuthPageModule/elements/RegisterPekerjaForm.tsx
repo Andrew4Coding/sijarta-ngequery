@@ -223,7 +223,7 @@ export const RegisterPekerjaForm = () => {
                         />
                         <Button
                             type="submit"
-                            className="col-span-1 md:col-span-2 w-full bg-blue-500 text-white p-2 rounded-md"
+                            className="col-span-2"
                         >
                             Register
                         </Button>

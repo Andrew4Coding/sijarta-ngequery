@@ -64,6 +64,7 @@ export const RegisterPage = () => {
                         >
                             Continue
                         </Button>
+                        <p className='mt-4 text-sm text-center'>Sudah punya akun? <a href="/login" className="font-bold">Login</a></p>
                     </div>
                 </div>
             </main>
