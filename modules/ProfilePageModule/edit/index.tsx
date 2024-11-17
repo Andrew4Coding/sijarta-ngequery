@@ -49,12 +49,10 @@ export const EditProfilePengguna = () => {
         resolver: zodResolver(ProfileSchema),
         defaultValues: {
             Nama: "Andrew Devito Aryo",
-            Level: "Gold",
             JenisKelamin: "Laki-laki",
             NoHP: "08123456789",
             TanggalLahir: "01 Januari 1990",
             Alamat: "Jl. Kebon Jeruk No. 123, Jakarta",
-            SaldoMPAY: "Rp 1.000.000"
         }
     });
 
@@ -127,7 +125,6 @@ export const EditProfilePekerja = () => {
             NoHP: "08123456789",
             TanggalLahir: "01 Januari 1990",
             Alamat: "Jl. Kebon Jeruk No. 123, Jakarta",
-            SaldoMPAY: "Rp 1.000.000",
             NamaBank: "BCA",
             NoRekening: "1234567890",
             NPWP: "1234567890",

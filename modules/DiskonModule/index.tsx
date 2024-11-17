@@ -2,6 +2,7 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import { useUserData } from '@/lib/useUserData';
 
 export interface Voucher {
   code: string;
@@ -24,6 +25,8 @@ export const DiskonModule = () => {
     { code: "PROMO20", endDate: "15/11/2024" },
     { code: "PROMO50", endDate: "30/11/2024" },
   ];
+
+  const {userData } = useUserData();
 
   return (
     <div className="px-10 md:px-20 font-dmsans py-32">
@@ -71,7 +74,7 @@ export const DiskonModule = () => {
                   <div className="flex flex-col gap-2">
                     <p className="mb-4">
                       {(
-                        voucher.price >= 10000
+                        userData.saldoMPay >= voucher.price
                       ) ? (
                         <>
                           Selamat! Anda berhasil membeli voucher dengan kode <strong>{voucher.code}</strong>. Voucher ini akan berlaku hingga tanggal <strong>{voucher.validity}</strong> dengan kuota penggunaan sebanyak <strong>{voucher.quota}</strong>.

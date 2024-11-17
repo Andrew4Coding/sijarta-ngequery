@@ -5,6 +5,16 @@ interface QueryParams {
     [key: string]: any;
 }
 
+export async function customSQL(query: string) {
+    try {
+        const result = await pool.query(query);
+        return result.rows;
+    }
+    catch (error: any) {
+        return error;
+    }
+}
+
 export abstract class BaseModel<T extends QueryParams> {
     public tableName: string;
 

@@ -53,7 +53,10 @@ export const Navbar = () => {
             {isAuthenticated ? 
               <div className='flex gap-2 items-center'>
                 <div className='flex items-center gap-2 text-sm'>
-                  <p>Hello, {userData.nama}</p>
+                  <div className='text-right'>
+                    <p className='font-bold'>Hello, {userData.nama}</p>
+                    <p>Rp {userData.saldoMPay}</p>
+                  </div>
                   <Avatar
                     className='cursor-pointer'
                     onClick={() => {

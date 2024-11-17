@@ -26,7 +26,7 @@ export const BayarTransaksi = () => {
               .map((data) => (
                 <div
                   key={data.id}
-                  className="flex flex-col gap-3 border border-black rounded-[16px] px-4 py-2"
+                  className="flex flex-col gap-3 border border-black rounded-sm px-5 py-5"
                 >
                   <p className="font-semibold">
                     Nominal:{" "}

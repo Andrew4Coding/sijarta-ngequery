@@ -6,6 +6,7 @@ interface UserPenggunaData {
     noHp: string;
     tanggalLahir: string;
     alamat: string;
+    saldoMPay: number;
 }
 
 interface UserPekerjaData extends UserPenggunaData {
@@ -13,7 +14,6 @@ interface UserPekerjaData extends UserPenggunaData {
     noRekening: string;
     npwp: string;
     urlFotoKtp: string;
-    saldoMPay: number;
     rating: number;
     jumlahPesananSelesai: number;
     kategoriJasa: string[];
