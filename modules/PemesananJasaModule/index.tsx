@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 
 type Order = {
     subcategory: string;
@@ -17,6 +18,8 @@ const PemesananJasaModule = () => {
     const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
     const [subcategoryFilter, setSubcategoryFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
+    const [openDialog, setOpenDialog] = useState(false);  
+    const [currentOrder, setCurrentOrder] = useState<Order | null>(null); 
 
     useEffect(() => {
         // Ambil data pesanan dari localStorage atau API
@@ -33,8 +36,9 @@ const PemesananJasaModule = () => {
         localStorage.setItem('orders', JSON.stringify(updatedOrders));
     };
 
-    const handleCreateTestimonial = (index: number) => {
-        // Implementasikan logika pembuatan testimoni
+    const handleCreateTestimonial = (order: Order) => {
+        setCurrentOrder(order); 
+        setOpenDialog(true); 
     };
 
     const applyFilters = () => {
@@ -114,7 +118,7 @@ const PemesananJasaModule = () => {
                                 </button>
                             ) : order.status === "Pesanan Selesai" ? (
                                 <button
-                                    onClick={() => handleCreateTestimonial(index)}
+                                    onClick={() => handleCreateTestimonial(order)}  // Pass order to the dialog
                                     className="px-4 py-2 bg-blue-500 text-white rounded-md"
                                 >
                                     Buat Testimoni
@@ -124,6 +128,49 @@ const PemesananJasaModule = () => {
                     </div>
                 </div>
             ))}
+
+            {/* Dialog for Testimonial */}
+            {openDialog && currentOrder && (
+                <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                    <DialogContent>
+                        <DialogTitle>Buat Testimoni</DialogTitle>
+                        <DialogDescription>Berikan rating dan komentar Anda tentang layanan ini</DialogDescription>
+
+                        {/* Form Testimonial */}
+                        <div className="mb-4">
+                            <label className="block mb-2">Rating:</label>
+                            <select className="p-2 border rounded-md w-full">
+                                {[...Array(10)].map((_, idx) => (
+                                    <option key={idx} value={idx + 1}>{idx + 1}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block mb-2">Komentar:</label>
+                            <textarea
+                                className="p-2 border rounded-md w-full"
+                                rows={4}
+                            />
+                        </div>
+
+                        <div className="flex justify-end gap-2">
+                            <DialogClose
+                                className="px-4 py-2 bg-gray-500 text-white rounded-md"
+                                onClick={() => setOpenDialog(false)}
+                            >
+                                Batal
+                            </DialogClose>
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                                onClick={() => setOpenDialog(false)}
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            )}
         </div>
     );
 };
