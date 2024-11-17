@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { subcategoryData } from '../SubKategoriJasaPekerja/const';
+import { subcategoryData } from './const';
 
 type Session = {
     name: string;
