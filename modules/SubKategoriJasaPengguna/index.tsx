@@ -117,8 +117,7 @@ export const SubKategoriJasaPengguna = () => {
     
         setNewOrder({ ...newOrder, total: discountedPrice.toFixed(2) });
         setShowModal(true);
-    };
-    
+    };    
 
     const handleOrderSubmit = () => {
         const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
