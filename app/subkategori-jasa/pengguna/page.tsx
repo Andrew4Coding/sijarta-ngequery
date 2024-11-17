@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { SubKategoriJasaPengguna } from '@/modules/SubKategoriJasaPengguna'
 
 const page = () => {
   return (
-    <SubKategoriJasaPengguna />
+    <Suspense
+      fallback={<div>Loading...</div>}
+    >
+      <SubKategoriJasaPengguna />
+    </Suspense>
   )
 }
 
