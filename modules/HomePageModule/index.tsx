@@ -11,6 +11,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Input } from '@/components/ui/input';
+import Link from 'next/link';
 
 type Category = {
     name: string;
@@ -18,6 +19,9 @@ type Category = {
 };
 
 export const HomePageModule = () => {
+    // STATIC MODE
+    const isPekerja = false;
+
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
@@ -66,6 +70,11 @@ export const HomePageModule = () => {
             <div className="flex gap-2 mb-6 w-full max-w-lg">
                 <Select
                     onValueChange={(val) => {
+                        if (val === 'all') {
+                            setSelectedCategory('');
+                            updateFilteredCategories('', searchTerm);
+                            return;
+                        }
                         setSelectedCategory(val);
                         updateFilteredCategories(val, searchTerm);
                     }}
@@ -78,6 +87,7 @@ export const HomePageModule = () => {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem value="all">Semua Kategori</SelectItem>
                             <SelectLabel>Kategori</SelectLabel>
                             {categories.map((category, index) => (
                                 <SelectItem key={index} value={category.name}>{category.name}</SelectItem>
@@ -102,7 +112,9 @@ export const HomePageModule = () => {
                         <ul className="list-none">
                             {category.subcategories.map((subcategory, subIndex) => (
                                 <li key={subIndex} className="p-2 pl-4 border-b border-gray-200 last:border-b-0">
-                                    {subcategory}
+                                    <Link href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pengguna'}/${subcategory.split(" ").join("-")}`}>
+                                        {subcategory}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>

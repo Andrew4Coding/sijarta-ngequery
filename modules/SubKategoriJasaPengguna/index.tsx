@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { subcategoryData } from './const';
 
 type Session = {
@@ -23,7 +23,12 @@ type Testimonial = {
 
 
 
-export const SubKategoriJasaPengguna = () => {
+export const SubKategoriJasaPengguna = ({
+    subCategory
+}: {
+    subCategory: string
+}) => {
+    console.log(subCategory);
     const testimonials: Testimonial[] = [
         {
             workerName: "Pekerja A",
@@ -45,11 +50,9 @@ export const SubKategoriJasaPengguna = () => {
         },
     ];
 
-    const searchParams = useSearchParams();
     const router = useRouter();
-    const subcategory = searchParams.get('subcategory') || 'Subkategori Tidak Ditemukan';
-    const subcategoryInfo = subcategoryData[subcategory]?.info || { description: "", sessions: [] };
-    const category = subcategoryData[subcategory]?.category || 'Kategori Tidak Ditemukan';
+    const subcategoryInfo = subcategoryData[subCategory]?.info || { description: "", sessions: [] };
+    const category = subcategoryData[subCategory]?.category || 'Kategori Tidak Ditemukan';
 
     const [showModal, setShowModal] = useState(false);
     const [selectedSession, setSelectedSession] = useState<Session | null>(null);
@@ -72,7 +75,7 @@ export const SubKategoriJasaPengguna = () => {
         const updatedOrders = [
             ...existingOrders,
             {
-                subcategory,
+                subCategory,
                 session: selectedSession ? selectedSession.name : "",
                 price: selectedSession ? selectedSession.price : "",
                 workerName: "", // Nama pekerja dapat diisi kemudian
@@ -88,7 +91,7 @@ export const SubKategoriJasaPengguna = () => {
         <main className="flex flex-col items-center py-40 px-10 md:px-10 bg-gray-100 min-h-screen">
             <div className="w-full max-w-2xl bg-white shadow-md rounded-md p-6">
                 <div className="flex justify-between space-x-12 mb-4">
-                    <input type="text" value={subcategory} disabled className="border p-2 rounded-md w-1/2 text-center font-semibold bg-white" />
+                    <input type="text" value={subCategory} disabled className="border p-2 rounded-md w-1/2 text-center font-semibold bg-white" />
                     <input type="text" value={category} disabled className="border p-2 rounded-md w-1/2 text-center font-semibold bg-white" />
                 </div>
 
