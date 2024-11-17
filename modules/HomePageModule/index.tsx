@@ -1,6 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Input } from '@/components/ui/input';
 
 type Category = {
     name: string;
@@ -52,28 +62,40 @@ export const HomePageModule = () => {
     };
 
     return (
-        <main className="flex flex-col items-center py-10 px-5 bg-gray-100 min-h-screen">
+        <main className="flex flex-col items-center bg-gray-100 min-h-screen px-10 md:px-10 py-40 font-dmsans w-full">
             <div className="flex gap-2 mb-6 w-full max-w-lg">
-                <select
-                    value={selectedCategory}
-                    onChange={handleCategoryChange}
-                    className="w-1/3 p-2 border border-gray-300 rounded-md"
+                <Select
+                    onValueChange={(val) => {
+                        setSelectedCategory(val);
+                        updateFilteredCategories(val, searchTerm);
+                    }}
                 >
-                    <option value="">Kategori</option>
-                    {categories.map((category, index) => (
-                        <option key={index} value={category.name}>{category.name}</option>
-                    ))}
-                </select>
-                <input
+                    <SelectTrigger
+                        className="w-[200px]"
+                        value={selectedCategory}
+                    >
+                        <SelectValue placeholder="Pilih Kategori" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>Kategori</SelectLabel>
+                            {categories.map((category, index) => (
+                                <SelectItem key={index} value={category.name}>{category.name}</SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Input
+                    label="Nama Subkategori"
                     type="text"
                     value={searchTerm}
                     onChange={handleSearchChange}
                     placeholder="Nama Subkategori"
-                    className="w-2/3 p-2 border border-gray-300 rounded-md"
+                    className="w-full md:w-[300px]"
                 />
             </div>
 
-            <div className="w-full max-w-lg">
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-10">
                 {filteredCategories.map((category, index) => (
                     <div key={index} className="bg-white border border-gray-200 mb-4 rounded-md">
                         <h3 className="bg-gray-100 font-semibold text-base px-4 py-2 border-b border-gray-200 rounded-t-md">{category.name}</h3>

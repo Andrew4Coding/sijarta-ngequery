@@ -56,7 +56,7 @@ export const StatusPekerjaan = () => {
             filteredPekerjaan.map((card) => (
               <div
                 key={card.id}
-                className="flex md:flex-row flex-col max-md:gap-4 justify-between items-center bg-blue-50 rounded-md shadow-lg px-2 md:px-6 py-5"
+                className="flex md:flex-row flex-col max-md:gap-4 justify-between items-center  rounded-md shadow-sm px-10 border-2 py-5"
               >
                 <div className="grid md:grid-cols-2 gap-3 md:gap-8 max-md:text-center">
                   <div className="md:border-r md:pr-6 space-y-3">
@@ -103,7 +103,7 @@ export const StatusPekerjaan = () => {
                   >
                     {card.status}
                   </Badge>
-                  <Button variant={"outline"} className="mx-auto">
+                  <Button variant={"secondary"} className="mx-auto">
                     Update Status
                   </Button>
                 </div>

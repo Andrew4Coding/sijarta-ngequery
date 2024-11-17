@@ -1,11 +1,11 @@
-import { Pekerja } from "@/database/models/pekerja";
+import { User } from "@/database/models/user";
 import { queries } from "@/lib/queries";
 
 export async function GET(req: Request) {
   const { page, limit } = queries(req);
   
   try {
-    const pekerja = new Pekerja();
+    const pekerja = new User();
     const rows = await pekerja.findAllWithPagination(
       limit,
       page

@@ -52,11 +52,11 @@ export abstract class BaseModel<T extends QueryParams> {
         const values = [...Object.values(data), value];
 
         const query = `
-      UPDATE ${this.tableName}
-      SET ${updates}
-      WHERE ${String(column)} = $${values.length}
-      RETURNING *;
-    `;
+            UPDATE ${this.tableName}
+            SET ${updates}
+            WHERE ${String(column)} = $${values.length}
+            RETURNING *;
+        `;
         const result = await pool.query(query, values);
         return result.rows[0] ? (result.rows[0] as T) : null;
     }
