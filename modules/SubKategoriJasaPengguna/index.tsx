@@ -108,18 +108,17 @@ export const SubKategoriJasaPengguna = () => {
         const discountCode = newOrder.discountCode.trim();
         let discountedPrice = parseFloat(session.price);
     
-        // Implementasi logika diskon
-        if (discountCode === "DISKON50" && discountedPrice >= 100000) {
-            discountedPrice = discountedPrice * 0.5; // Diskon 50%
-        } else if (discountCode === "DISKON30" && discountedPrice >= 75000) {
-            discountedPrice = discountedPrice * 0.7; // Diskon 30%
-        } else if (discountCode === "DISKON20" && discountedPrice >= 50000) {
+        // Contoh implementasi kode diskon
+        if (discountCode === "PROMO10") {
+            discountedPrice = discountedPrice * 0.9; // Diskon 10%
+        } else if (discountCode === "PROMO20") {
             discountedPrice = discountedPrice * 0.8; // Diskon 20%
         }
     
         setNewOrder({ ...newOrder, total: discountedPrice.toFixed(2) });
         setShowModal(true);
-    };       
+    };
+    
 
     const handleOrderSubmit = () => {
         const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
