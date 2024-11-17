@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 type Order = {
     subcategory: string;
@@ -18,12 +19,31 @@ const PemesananJasaModule = () => {
     const [subcategoryFilter, setSubcategoryFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
 
+    const searchParams = useSearchParams();
+    const subcategory = searchParams.get('subcategory') || 'Subkategori Tidak Ditemukan';
+    const session = searchParams.get('session') || 'Sesi Tidak Ditemukan';
+    const price = searchParams.get('price') || 'Harga Tidak Ditemukan';
+
     useEffect(() => {
         // Ambil data pesanan dari localStorage atau API
         const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+
+        // Jika ada parameter dari URL, tambahkan pesanan baru
+        if (subcategory !== 'Subkategori Tidak Ditemukan' && session !== 'Sesi Tidak Ditemukan') {
+            const newOrder: Order = {
+                subcategory,
+                session,
+                price,
+                workerName: "",
+                status: "Menunggu Pembayaran",
+            };
+            savedOrders.push(newOrder);
+            localStorage.setItem('orders', JSON.stringify(savedOrders));
+        }
+
         setOrders(savedOrders);
         setFilteredOrders(savedOrders); // Inisialisasi filteredOrders
-    }, []);
+    }, [subcategory, session, price]);
 
     const handleCancelOrder = (index: number) => {
         const updatedOrders = [...orders];
