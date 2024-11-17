@@ -41,12 +41,16 @@ export const Navbar = () => {
             <Link href='/mypay'>MyPay</Link>
             <Link href='/'>Pesanan Saya</Link>
             <Link href='/diskon'>Diskon</Link>
-            <Link href='/profile'>Profile</Link>
           </div>
           <div className='hidden md:flex'>
             {isAuthenticated ? 
               <div className='flex gap-2 items-center'>
-                <Avatar>
+                <Avatar
+                  className='cursor-pointer'
+                  onClick={() => {
+                    router.push('/profile')
+                  }}
+                >
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>

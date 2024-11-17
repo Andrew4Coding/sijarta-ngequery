@@ -1,8 +1,13 @@
 import { RegisterPage } from '@/modules/AuthPageModule/RegisterPage';
+import { Suspense } from 'react';
 
 const page = () => {
     return (
-        <RegisterPage />
+        <Suspense
+            fallback={<div>Loading...</div>}
+        >
+            <RegisterPage />
+        </Suspense>
     )
 }
 
