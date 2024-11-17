@@ -15,16 +15,16 @@ import { useUserData } from '@/lib/useUserData'
 import { usePathname, useRouter } from 'next/navigation'
 
 const penggunaMenus = [
-  { href: '/', label: 'Homepage' },
+  { href: '/', label: 'Home' },
   { href: '/mypay', label: 'MyPay' },
-  { href: '/kelola-pesanan', label: 'Kelola Pesanan Saya' },
+  { href: '/kelola-pesanan', label: 'Pesanan Saya' },
   { href: '/diskon', label: 'Diskon' }
 ]
 
 const pekerjaMenus = [
-  { href: '/', label: 'Homepage' },
-  { href: '/pekerjaan', label: 'Kelola Pekerjaan Saya' },
-  { href: '/status-pekerjaan', label: 'Kelola Status Pekerjaan' },
+  { href: '/', label: 'Home' },
+  { href: '/pekerjaan', label: 'Pekerjaan' },
+  { href: '/pekerjaan?tabs=history', label: 'Status Pekerjaan' },
   { href: '/mypay', label: 'MyPay' }
 ]
 
@@ -40,16 +40,8 @@ export const Navbar = () => {
   const hideMenus = pathname === '/login' || pathname === '/register'
 
   return (
-    <nav className='fixed top-0 w-full bg-white shadow-md px-10 md:px-32 py-5 flex justify-between items-center z-50 font-dmsans'>
-      <div className='space-y-2'>
-        <h1 className='font-extrabold text-3xl font-dmsans'>SIJARTA</h1>
-        <p className='text-sm'>
-          Welcome {' '}
-          <strong>
-            {userData.nama}
-          </strong>
-        </p>
-      </div>
+    <nav className='fixed top-0 w-full bg-white shadow-md px-10 md:px-32 py-8 flex justify-between items-center z-50 font-dmsans'>
+      <h1 className='font-extrabold text-3xl font-dmsans'>SIJARTA</h1>
       {!hideMenus && (
         <>
           <div className='hidden md:flex gap-4'>
@@ -60,15 +52,18 @@ export const Navbar = () => {
           <div className='hidden md:flex'>
             {isAuthenticated ? 
               <div className='flex gap-2 items-center'>
-                <Avatar
-                  className='cursor-pointer'
-                  onClick={() => {
-                    router.push('/profile')
-                  }}
-                >
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+                <div className='flex items-center gap-2 text-sm'>
+                  <p>Hello, {userData.nama}</p>
+                  <Avatar
+                    className='cursor-pointer'
+                    onClick={() => {
+                      router.push('/profile')
+                    }}
+                  >
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </div>
                 <Button
                   onClick={() => {
                     router.replace('/login')
