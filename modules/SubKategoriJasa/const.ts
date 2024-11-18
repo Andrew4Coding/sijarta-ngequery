@@ -1,4 +1,5 @@
-import { SubcategoryInfo } from ".";
+import { SubcategoryInfo, Testimonial } from "./SubKategoriJasaPengguna";
+import { Worker } from './SubKategoriJasaPengguna/index';
 
 export const subcategoryData: Record<string, { category: string; info: SubcategoryInfo }> = {
     "Konsultasi Bisnis": {
@@ -302,3 +303,64 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         }
     }
 };
+
+export const workers: Worker[] = [
+    {
+        name: "Pekerja A",
+        rating: 4.5,
+        completedOrders: 20,
+        phone: "08123456789",
+        birthDate: "01/01/1990",
+        address: "Jl. Contoh No. 1",
+        image: "/images/pekerjaA.jpg", // URL gambar
+    },
+    {
+        name: "Pekerja B",
+        rating: 4.0,
+        completedOrders: 15,
+        phone: "08123456780",
+        birthDate: "02/02/1991",
+        address: "Jl. Contoh No. 2",
+        image: "/images/pekerjaB.jpg",
+    },
+    {
+        name: "Pekerja C",
+        rating: 5.0,
+        completedOrders: 30,
+        phone: "08123456781",
+        birthDate: "03/03/1989",
+        address: "Jl. Contoh No. 3",
+        image: "/images/pekerjaC.jpg",
+    },
+    {
+        name: "Pekerja D",
+        rating: 3.5,
+        completedOrders: 10,
+        phone: "08123456782",
+        birthDate: "04/04/1992",
+        address: "Jl. Contoh No. 4",
+        image: "/images/pekerjaD.jpg",
+    },
+];
+
+
+export const testimonials: Testimonial[] = [
+    {
+        workerName: "Pekerja A",
+        rating: 2,
+        customerName: "Pelanggan 1",
+        review: "Sangat puas dengan pelayanannya! Pekerja sangat profesional dan ramah.",
+    },
+    {
+        workerName: "Pekerja B",
+        rating: 4,
+        customerName: "Pelanggan 2",
+        review: "Pelayanan cukup memuaskan, hasil sesuai dengan harapan.",
+    },
+    {
+        workerName: "Pekerja C",
+        rating: 5,
+        customerName: "Pelanggan 3",
+        review: "Luar biasa! Hasil pekerjaan sangat memuaskan dan cepat.",
+    },
+];

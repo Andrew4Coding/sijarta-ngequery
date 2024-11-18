@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { SubKategoriJasaPengguna } from "@/modules/SubKategoriJasaPengguna";
+import { SubKategoriJasaPengguna } from "@/modules/SubKategoriJasa/SubKategoriJasaPengguna";
 import { NextPage } from "next";
 
 const page: NextPage<{
