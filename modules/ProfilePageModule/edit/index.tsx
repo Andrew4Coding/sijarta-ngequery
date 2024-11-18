@@ -15,6 +15,7 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
+import { useUserData } from '@/lib/useUserData';
 
 const ProfileSchema = z.object({
     Nama: z.string().nonempty("Nama is required"),
@@ -192,12 +193,10 @@ export const EditProfilePekerja = () => {
 }
 
 export const EditProfilePageModule = () => {
-    const searchParams = useSearchParams();
-    const roleParams = searchParams.get('role') ?? 'pengguna';
-
+    const { role } = useUserData();
     return (
         <main>
-            {roleParams === 'pengguna' ? <EditProfilePengguna /> : <EditProfilePekerja />}
+            {role === 'pengguna' ? <EditProfilePengguna /> : <EditProfilePekerja />}
         </main>
     )
 };
