@@ -1,5 +1,4 @@
 import { SubKategoriJasaPekerja } from "@/modules/SubKategoriJasa/SubKategoriJasaPekerja";
-import { Suspense } from "react";
 
 async function page({ params }: {
   params: Promise<{ subCategory: string }>;
@@ -7,9 +6,7 @@ async function page({ params }: {
   const subcategory = (await params).subCategory.replace("-", " ");
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SubKategoriJasaPekerja subCategory={subcategory} />
-    </Suspense>
+    <SubKategoriJasaPekerja subCategory={subcategory} />
   );
 }
 
