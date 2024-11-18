@@ -33,7 +33,7 @@ export type ReturnType =
 
 export const useUserData: () => ReturnType = () => {
     return {
-        role: 'pengguna',
+        role: 'pekerja',
         userData: {
             nama: 'John Doe',
             jenisKelamin: 'L',

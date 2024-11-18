@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -9,9 +9,10 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/select";
+import { useUserData } from '@/lib/useUserData';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 type Category = {
     name: string;
@@ -19,8 +20,9 @@ type Category = {
 };
 
 export const HomePageModule = () => {
-    // STATIC MODE SEMENTARA BUAT NGARAHIN KALAU YANG KLIK PENGGUNA/PEKERJA
-    const isPekerja = false;
+    const {role} = useUserData();
+    const isPekerja = role === 'pekerja';
+
 
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -40,14 +42,8 @@ export const HomePageModule = () => {
     ];
 
     useEffect(() => {
-        // Menampilkan semua kategori dan subkategori saat halaman pertama kali dimuat
         setFilteredCategories(categories);
     }, []);
-
-    const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedCategory(event.target.value);
-        updateFilteredCategories(event.target.value, searchTerm);
-    };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);

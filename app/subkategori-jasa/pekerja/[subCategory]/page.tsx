@@ -1,15 +1,16 @@
-import React, { Suspense } from "react";
-import { NextPage } from "next";
 import { SubKategoriJasaPekerja } from "@/modules/SubKategoriJasa/SubKategoriJasaPekerja";
+import { Suspense } from "react";
 
-const page: NextPage<{
-  params: {subCategory: string};
-}> = ({ params }) => {
+function page({ params }: {
+  params: {
+    subCategory: string;
+  };
+}) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <SubKategoriJasaPekerja subCategory={params.subCategory.replace("-", " ")} />
     </Suspense>
   );
-};
+}
 
 export default page;

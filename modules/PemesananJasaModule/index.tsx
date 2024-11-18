@@ -143,7 +143,7 @@ const PemesananJasaModule = () => {
                                                     <SelectContent>
                                                         <SelectGroup>
                                                             <SelectLabel>Rating</SelectLabel>
-                                                            {[...Array(5)].map((_, idx) => (
+                                                            {[...Array(10)].map((_, idx) => (
                                                                 <SelectItem key={idx} value={(idx + 1).toString()}>{idx + 1}</SelectItem>
                                                             ))}
                                                         </SelectGroup>
