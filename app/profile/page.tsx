@@ -1,8 +1,11 @@
 import { ProfilePageModule } from '@/modules/ProfilePageModule';
+import { Suspense } from 'react';
 
 const page = () => {
     return (
-        <ProfilePageModule />
+        <Suspense fallback={ <div>Loading ...</div>}>
+            <ProfilePageModule />
+        </Suspense>
     )
 }
 

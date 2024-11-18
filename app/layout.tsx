@@ -5,6 +5,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Catamaran, DM_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Sijarta",
@@ -33,13 +34,17 @@ export default function RootLayout({
       suppressHydrationWarning
       suppressContentEditableWarning
       lang="en">
-      <body
-        className={`${dmsans.variable} ${catamaran.variable} antialiased font-dmsans`}
+      <Suspense
+        fallback={<div>Loading ...</div>}
       >
-        <Navbar />
-        <Layout>{children}</Layout>
-        <Toaster />
-      </body>
+        <body
+          className={`${dmsans.variable} ${catamaran.variable} antialiased font-dmsans`}
+        >
+          <Navbar />
+          <Layout>{children}</Layout>
+          <Toaster />
+        </body>
+      </Suspense>
     </html>
   );
 }
