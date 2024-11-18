@@ -32,7 +32,7 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
             ]
         }
     },
-    "Pelatihan Keterampilan Teknis": {
+    "Pelatihan Keterampilan-Teknis": {
         category: "Pelatihan dan Pendidikan",
         info: {
             description: "Pelatihan keterampilan teknis untuk meningkatkan kompetensi Anda di bidang teknologi.",
@@ -52,7 +52,7 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
             ]
         }
     },
-    "Kursus Bahasa Asing": {
+    "Kursus Bahasa-Asing": {
         category: "Pelatihan dan Pendidikan",
         info: {
             description: "Kursus bahasa asing untuk meningkatkan kemampuan komunikasi Anda.",
@@ -62,7 +62,7 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
             ]
         }
     },
-    "Pengembangan Aplikasi Web": {
+    "Pengembangan Aplikasi-Web": {
         category: "Pengembangan Teknologi",
         info: {
             description: "Layanan pengembangan aplikasi web untuk kebutuhan bisnis Anda.",
@@ -72,7 +72,7 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
             ]
         }
     },
-    "Pengembangan Aplikasi Mobile": {
+    "Pengembangan Aplikasi-Mobile": {
         category: "Pengembangan Teknologi",
         info: {
             description: "Layanan pengembangan aplikasi mobile yang dapat berjalan di iOS dan Android.",
@@ -82,7 +82,7 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
             ]
         }
     },
-    "Pengembangan Perangkat Lunak Khusus": {
+    "Pengembangan Perangkat-Lunak-Khusus": {
         category: "Pengembangan Teknologi",
         info: {
             description: "Pengembangan perangkat lunak yang disesuaikan dengan kebutuhan khusus Anda.",
@@ -102,7 +102,7 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
             ]
         }
     },
-    "Pemasaran Media Sosial": {
+    "Pemasaran Media-Sosial": {
         category: "Layanan Pemasaran",
         info: {
             description: "Strategi pemasaran melalui platform media sosial.",
@@ -112,7 +112,7 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
             ]
         }
     },
-    "Strategi Pemasaran Konten": {
+    "Strategi Pemasaran-Konten": {
         category: "Layanan Pemasaran",
         info: {
             description: "Pengembangan konten yang efektif untuk pemasaran produk Anda.",
@@ -202,7 +202,7 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
             ]
         }
     },
-    "Asuransi Jiwa dan Kesehatan": {
+    "Asuransi Jiwa-dan-Kesehatan": {
         category: "Layanan Keuangan",
         info: {
             description: "Konsultasi dan layanan asuransi jiwa serta kesehatan untuk perlindungan Anda.",
@@ -222,7 +222,7 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
             ]
         }
     },
-    "Layanan Pemandu Wisata": {
+    "Layanan Pemandu-Wisata": {
         category: "Layanan Perjalanan",
         info: {
             description: "Layanan pemandu wisata berpengalaman untuk pengalaman berwisata yang menyenangkan.",
@@ -282,7 +282,7 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
             ]
         }
     },
-    "Penyimpanan dan Gudang": {
+    "Penyimpanan dan-Gudang": {
         category: "Jasa Logistik",
         info: {
             description: "Layanan penyimpanan dan gudang untuk kebutuhan logistik Anda.",
