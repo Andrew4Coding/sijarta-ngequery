@@ -5,11 +5,16 @@ import { TopUp } from "../elements/TopUp";
 import { Withdrawal } from "../elements/Withdrawal";
 import { Transfer } from "../elements/Transfer";
 import { BayarTransaksi } from "../elements/BayarTransaksi";
+import { useUserData } from "@/lib/useUserData";
 
 export const Transaksi = ({ saldo }: { saldo: string }) => {
+  const { userData, role } = useUserData();
   const [value, setValue] = useState("");
   return (
     <div className="flex flex-col ">
+      <p className="font-semibold">
+        Halo, <span className="text-blue-500">{userData.nama}</span>!
+      </p>
       <p className="font-semibold">
         Saldo kamu: <span className="text-green-700">{saldo}</span>
       </p>
@@ -17,8 +22,14 @@ export const Transaksi = ({ saldo }: { saldo: string }) => {
       {value === "TopUp MyPay" && <TopUp />}
       {value === "Withdrawal" && <Withdrawal />}
       {value === "Transfer MyPay" && <Transfer />}
-      {value === "Membayar Transaksi" && <BayarTransaksi />}
-      {value === "" && <p className="text-center font-medium text-gray-400 text-lg">Tidak ada kategori yang dipilih.</p>}
+      {value === "Membayar Transaksi" && role === "pengguna" && (
+        <BayarTransaksi />
+      )}
+      {value === "" && (
+        <p className="text-center font-medium text-gray-400 text-lg">
+          Tidak ada kategori yang dipilih.
+        </p>
+      )}
     </div>
   );
 };
