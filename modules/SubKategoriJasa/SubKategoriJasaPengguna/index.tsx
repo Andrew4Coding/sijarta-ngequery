@@ -227,6 +227,7 @@ export const SubKategoriJasaPengguna = ({
                         </div>
                         <p className="font-medium">{testimonial.customerName}</p>
                         <p className="text-gray-600">{testimonial.review}</p>
+                        <p className="text-gray-400 text-sm mt-2">{testimonial.date}</p>
                     </div>
                 ))}
             </div>

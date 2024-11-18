@@ -349,17 +349,20 @@ export const testimonials: Testimonial[] = [
         rating: 2,
         customerName: "Pelanggan 1",
         review: "Sangat puas dengan pelayanannya! Pekerja sangat profesional dan ramah.",
+        date: "2024-11-17",
     },
     {
         workerName: "Pekerja B",
         rating: 4,
         customerName: "Pelanggan 2",
         review: "Pelayanan cukup memuaskan, hasil sesuai dengan harapan.",
+        date: "2024-11-16",
     },
     {
         workerName: "Pekerja C",
         rating: 5,
         customerName: "Pelanggan 3",
         review: "Luar biasa! Hasil pekerjaan sangat memuaskan dan cepat.",
+        date: "2024-11-15",
     },
 ];

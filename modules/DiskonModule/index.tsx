@@ -69,7 +69,7 @@ export const DiskonModule = () => {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle className="text-center">{voucher.price >= 10000 ? 'Sukses' : 'Gagal' }</DialogTitle>
+                    <DialogTitle className="text-center">{userData.saldoMPay >= voucher.price ? 'Sukses' : 'Gagal' }</DialogTitle>
                   </DialogHeader>
                   <div className="flex flex-col gap-2">
                     <p className="mb-4">
