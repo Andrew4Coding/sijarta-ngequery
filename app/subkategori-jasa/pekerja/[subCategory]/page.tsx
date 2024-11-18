@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
-import { SubKategoriJasaPekerja } from "@/modules/SubKategoriJasaPekerja";
 import { NextPage } from "next";
+import { SubKategoriJasaPekerja } from "@/modules/SubKategoriJasa/SubKategoriJasaPekerja";
 
 const page: NextPage<{
   params: {subCategory: string};
