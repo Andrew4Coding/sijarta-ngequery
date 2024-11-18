@@ -4,6 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { subcategoryData } from './const';
 
+// Fungsi untuk membersihkan format harga
+const cleanPrice = (price: string): number => {
+    // Hapus "Rp", koma, spasi, dan ubah menjadi angka
+    return parseFloat(price.replace(/[^\d.-]/g, '')) || 0;
+};
+
 type Session = {
     name: string;
     price: string;
@@ -105,29 +111,64 @@ export const SubKategoriJasaPengguna = ({
 
     const [showModal, setShowModal] = useState(false);
     const [selectedSession, setSelectedSession] = useState<Session | null>(null);
-    const [newOrder, setNewOrder] = useState({
+    const [newOrder, setNewOrder] = useState<{
+        date: string;
+        discountCode: string;
+        total: string;
+        paymentMethod: string;
+        status: string;
+    }>({
         date: new Date().toLocaleDateString(),
         discountCode: "",
-        total: "",
+        total: "0.00", // Total default dalam format string
         paymentMethod: "",
-        status: "Menunggu Pembayaran"
-    });
+        status: "Menunggu Pembayaran",
+    });    
 
     const handlePesanClick = (session: Session) => {
         setSelectedSession(session);
-        const discountCode = newOrder.discountCode.trim();
-        let discountedPrice = parseFloat(session.price);
+        setNewOrder({
+            ...newOrder,
+            total: parseFloat(session.price).toFixed(2), // Harga awal tanpa diskon
+        });
+        setShowModal(true);
+    };       
     
-        // Contoh implementasi kode diskon
-        if (discountCode === "PROMO10") {
-            discountedPrice = discountedPrice * 0.9; // Diskon 10%
-        } else if (discountCode === "PROMO20") {
-            discountedPrice = discountedPrice * 0.8; // Diskon 20%
+    const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const discountCode = e.target.value.trim();
+        let discountValue = 0;
+    
+        if (!selectedSession) {
+            console.error("Session belum dipilih");
+            return;
         }
     
-        setNewOrder({ ...newOrder, total: discountedPrice.toFixed(2) });
-        setShowModal(true);
-    };    
+        // Bersihkan format harga sebelum digunakan
+        const cleanSessionPrice = cleanPrice(selectedSession.price);
+    
+        // Validasi diskon
+        if (discountCode === "PROMO10") {
+            discountValue = cleanSessionPrice * 0.1; // Diskon 10%
+        } else if (discountCode === "PROMO20") {
+            discountValue = cleanSessionPrice * 0.2; // Diskon 20%
+        } else {
+            discountValue = 0; // Diskon tidak valid
+        }
+    
+        const totalPrice = cleanSessionPrice - discountValue;
+    
+        console.log("Discount Code: ", discountCode);
+        console.log("Price Before Discount: ", cleanSessionPrice);
+        console.log("Discount Value: ", discountValue);
+        console.log("Total After Discount: ", totalPrice);
+    
+        // Gunakan fungsi updater untuk memperbarui state secara aman
+        setNewOrder((prevOrder) => ({
+            ...prevOrder,
+            discountCode,
+            total: totalPrice > 0 ? totalPrice.toFixed(2) : "0.00", // Pastikan total dalam string
+        }));
+    };           
 
     const handleOrderSubmit = () => {
         router.push('/pemesanan-jasa');
@@ -145,7 +186,8 @@ export const SubKategoriJasaPengguna = ({
         setSelectedWorker(null);
         setShowWorkerDialog(false);
     };
-
+    
+    console.log("Total Pembayaran di Render: ", newOrder.total); 
     return (
         <main className="flex flex-col items-center py-40 px-10 md:px-10 bg-gray-100 min-h-screen">
             <div className="w-full max-w-2xl bg-white shadow-md rounded-md p-6">
@@ -232,7 +274,6 @@ export const SubKategoriJasaPengguna = ({
                     </div>
                 ))}
             </div>
-
             {showModal && selectedSession && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg w-80">
@@ -244,11 +285,16 @@ export const SubKategoriJasaPengguna = ({
                             type="text" 
                             placeholder="Kode Diskon" 
                             value={newOrder.discountCode}
-                            onChange={(e) => setNewOrder({ ...newOrder, discountCode: e.target.value })} 
+                            onChange={handleDiscountChange} 
                             className="border p-2 rounded-md w-full mb-4" 
                         />
                         <label className="block mb-2">Total Pembayaran:</label>
-                        <input type="text" value={selectedSession.price} disabled className="border p-2 rounded-md w-full mb-4" />
+                        <input 
+                            type="text" 
+                            value={newOrder.total} // Terhubung ke state total
+                            disabled 
+                            className="border p-2 rounded-md w-full mb-4" 
+                        />
                         <label className="block mb-2">Metode Pembayaran:</label>
                         <select onChange={(e) => setNewOrder({ ...newOrder, paymentMethod: e.target.value })} className="border p-2 rounded-md w-full mb-4">
                             <option value="">Pilih Metode</option>
