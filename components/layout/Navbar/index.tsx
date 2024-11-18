@@ -45,7 +45,7 @@ export const Navbar = () => {
       {!hideMenus && (
         <>
           <div className='hidden md:flex gap-4'>
-            {(role === 'pengguna' ? penggunaMenus : pekerjaMenus).map(menu => (
+            {isAuthenticated && (role === 'pengguna' ? penggunaMenus : pekerjaMenus).map(menu => (
               <Link key={menu.href} href={menu.href}>{menu.label}</Link>
             ))}
           </div>
@@ -77,7 +77,11 @@ export const Navbar = () => {
                 </Button> 
               </div>
               : 
-              <Button>Login</Button>
+              <Button
+                onClick={() => {
+                  router.replace('/login')
+                }}
+              >Login</Button>
             }
           </div>
           <Popover>

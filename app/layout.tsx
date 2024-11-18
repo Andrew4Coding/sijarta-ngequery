@@ -34,17 +34,17 @@ export default function RootLayout({
       suppressHydrationWarning
       suppressContentEditableWarning
       lang="en">
-      <Suspense
-        fallback={<div>Loading ...</div>}
+      <body
+        className={`${dmsans.variable} ${catamaran.variable} antialiased font-dmsans`}
       >
-        <body
-          className={`${dmsans.variable} ${catamaran.variable} antialiased font-dmsans`}
+        <Suspense
+          fallback={<div>Loading ...</div>}
         >
           <Navbar />
           <Layout>{children}</Layout>
           <Toaster />
-        </body>
-      </Suspense>
+        </Suspense>
+      </body>
     </html>
   );
 }

@@ -19,7 +19,10 @@ import { RegisterUserForm } from "./elements/RegisterUserForm";
 export const RegisterPage = () => {
     
     const searchParams = useSearchParams();
-    const roleParams = searchParams.get('role') ?? '';
+    const roleParams = searchParams.get('role') ?? 'pengguna';
+
+    console.log(roleParams);
+    
     
     const [role, setRole] = useState(roleParams);
     const [isPickRole, setIsPickRole] = useState(roleParams === '');
@@ -73,7 +76,7 @@ export const RegisterPage = () => {
 
     return (
         <main>
-            {isPickRole ? <PickRolePage /> : role === 'user' ? <RegisterUserForm /> : <RegisterPekerjaForm />}
+            {isPickRole ? <PickRolePage /> : role === 'pengguna' ? <RegisterUserForm /> : <RegisterPekerjaForm />}
         </main>
     );
 }
