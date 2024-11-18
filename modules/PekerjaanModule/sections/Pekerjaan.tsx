@@ -52,7 +52,7 @@ export const Pekerjaan = () => {
             filteredPekerjaan.map((card) => (
               <div
                 key={card.id}
-                className="flex md:flex-row flex-col max-md:gap-4 justify-between items-center bg-white rounded-md shadow-sm border-2 px-10 py-6 font-dmsans"
+                className="flex md:flex-row flex-col max-md:gap-4 justify-between items-center bg-white rounded-md shadow-sm border-2 px-10 py-6 "
               >
                 <div className="grid md:grid-cols-2 gap-3 md:gap-8 max-md:text-center">
                   <div className="md:border-r md:pr-6 space-y-3 w-[150px]">

@@ -59,7 +59,7 @@ const PemesananJasaModule = () => {
     });
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen pt-40 px-10 md:px-32 font-dmsans">
+        <div className="p-6 bg-gray-100 min-h-screen pt-40 px-10 md:px-32 ">
             <h2 className="font-bold text-3xl mb-4">Pesanan Jasa</h2>
 
             {/* Bagian Filter */}

@@ -16,7 +16,7 @@ export const ProfilePengguna = () => {
     >;
 
     return (
-        <main className="my-40 px-10 md:px-32 font-dmsans flex flex-col gap-5">
+        <main className="my-40 px-10 md:px-32  flex flex-col gap-5">
             <Image
                 src="/psql.png"
                 alt="Profile Picture"
@@ -74,7 +74,7 @@ export const ProfilePekerja = () => {
     >;
 
     return (
-        <main className="my-40 px-10 md:px-32 font-dmsans flex flex-col gap-5">
+        <main className="my-40 px-10 md:px-32  flex flex-col gap-5">
             <Image
                 src="/psql.png"
                 alt="Profile Picture"

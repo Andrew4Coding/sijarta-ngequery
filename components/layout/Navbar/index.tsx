@@ -40,8 +40,8 @@ export const Navbar = () => {
   const hideMenus = pathname === '/login' || pathname === '/register'
 
   return (
-    <nav className='fixed top-0 w-full bg-white shadow-md px-10 md:px-32 py-8 flex justify-between items-center z-50 font-dmsans'>
-      <h1 className='font-extrabold text-3xl font-dmsans'>SIJARTA</h1>
+    <nav className='fixed top-0 w-full bg-white shadow-md px-10 md:px-32 py-8 flex justify-between items-center z-50 '>
+      <h1 className='font-extrabold text-3xl '>SIJARTA</h1>
       {!hideMenus && (
         <>
           <div className='hidden md:flex gap-4'>
@@ -89,7 +89,7 @@ export const Navbar = () => {
               } />
             </PopoverTrigger>
             <PopoverContent className='bg-white'>
-              <ul className='space-y-2 font-dmsans'>
+              <ul className='space-y-2 '>
                 {(role === 'pengguna' ? penggunaMenus : pekerjaMenus).map(menu => (
                   <li key={menu.href}>
                     <Link href={menu.href}>{menu.label}</Link>

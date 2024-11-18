@@ -62,7 +62,7 @@ export const HomePageModule = () => {
     };
 
     return (
-        <main className="flex flex-col items-center bg-gray-100 min-h-screen px-10 md:px-10 py-40 font-dmsans w-full">
+        <main className="flex flex-col items-center bg-gray-100 min-h-screen px-10 md:px-10 py-40  w-full">
             <div className="flex gap-2 mb-6 w-full max-w-lg">
                 <Select
                     onValueChange={(val) => {

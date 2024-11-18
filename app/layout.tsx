@@ -34,7 +34,7 @@ export default function RootLayout({
       suppressContentEditableWarning
       lang="en">
       <body
-        className={`${dmsans.variable} ${catamaran.variable} antialiased`}
+        className={`${dmsans.variable} ${catamaran.variable} antialiased font-dmsans`}
       >
         <Navbar />
         <Layout>{children}</Layout>

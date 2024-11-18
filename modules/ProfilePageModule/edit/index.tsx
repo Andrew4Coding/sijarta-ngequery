@@ -64,7 +64,7 @@ export const EditProfilePengguna = () => {
     }
 
     return (
-        <main className="flex flex-col my-40 px-10 md:px-32 font-dmsans gap-5">
+        <main className="flex flex-col my-40 px-10 md:px-32  gap-5">
             <div className="flex gap-4 items-center">
                 <ArrowLeft className="w-4 cursor-pointer hover:scale-105" onClick={() => {
                     router.back();
@@ -142,7 +142,7 @@ export const EditProfilePekerja = () => {
     }
 
     return (
-        <main className="flex flex-col my-40 px-10 md:px-32 font-dmsans gap-5">
+        <main className="flex flex-col my-40 px-10 md:px-32  gap-5">
             <div className="flex gap-4 items-center">
                 <ArrowLeft className="w-4 cursor-pointer hover:scale-105" onClick={() => {
                     router.back();

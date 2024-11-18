@@ -1,14 +1,14 @@
 import { SubKategoriJasaPekerja } from "@/modules/SubKategoriJasa/SubKategoriJasaPekerja";
 import { Suspense } from "react";
 
-function page({ params }: {
-  params: {
-    subCategory: string;
-  };
+async function page({ params }: {
+  params: Promise<{ subCategory: string }>;
 }) {
+  const subcategory = (await params).subCategory.replace("-", " ");
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <SubKategoriJasaPekerja subCategory={params.subCategory.replace("-", " ")} />
+      <SubKategoriJasaPekerja subCategory={subcategory} />
     </Suspense>
   );
 }

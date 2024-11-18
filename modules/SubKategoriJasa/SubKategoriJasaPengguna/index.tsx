@@ -77,7 +77,7 @@ export const SubKategoriJasaPengguna = ({
     };   
 
     return (
-        <main className="flex flex-col items-center py-40 px-10 md:px-32 bg-gray-100 min-h-screen font-dmsans">
+        <main className="flex flex-col items-center py-40 px-10 md:px-32 bg-gray-100 min-h-screen ">
             <div className="w-full max-w-2xl bg-white shadow-md rounded-md p-6">
                 <div className="mb-4 flex flex-col md:flex-row gap-5">
                     <div className="border p-2 rounded-md w-full text-center font-semibold bg-gray-100">{subCategory}</div>
@@ -145,7 +145,9 @@ export const SubKategoriJasaPengguna = ({
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
-                                        <Button onClick={handleOrderSubmit} className="w-full bg-green-500 text-white p-2 rounded-md">
+                                        <Button onClick={handleOrderSubmit}
+                                            className='w-full'
+                                        >
                                             Pesan Jasa
                                         </Button>
                                     </div>
@@ -179,7 +181,7 @@ export const SubKategoriJasaPengguna = ({
                                     <DialogHeader>
                                         <DialogTitle className="text-center">Profil Pekerja</DialogTitle>
                                     </DialogHeader>
-                                    <div className="bg-white p-6 rounded-lg font-dmsans">
+                                    <div className="bg-white p-6 rounded-lg ">
                                         <img
                                             src={worker.image}
                                             alt={`Foto ${worker.name}`}
