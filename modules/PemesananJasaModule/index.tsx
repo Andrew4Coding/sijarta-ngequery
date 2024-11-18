@@ -1,7 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose, DialogTrigger } from "@/components/ui/dialog";
+
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 type Order = {
     subcategory: string;
@@ -25,7 +39,6 @@ const PemesananJasaModule = () => {
     const [orders, setOrders] = useState<Order[]>(dummyOrders);
     const [subcategoryFilter, setSubcategoryFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
-    const [openDialog, setOpenDialog] = useState(false);
     const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
 
     const handleCancelOrder = (index: number) => {
@@ -36,7 +49,6 @@ const PemesananJasaModule = () => {
 
     const handleCreateTestimonial = (order: Order) => {
         setCurrentOrder(order);
-        setOpenDialog(true);
     };
 
     const filteredOrders = orders.filter(order => {
@@ -47,120 +59,125 @@ const PemesananJasaModule = () => {
     });
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen pt-40 px-10 md:px-32">
-            <h2 className="font-bold text-xl mb-4">Pesanan Jasa</h2>
+        <div className="p-6 bg-gray-100 min-h-screen pt-40 px-10 md:px-32 font-dmsans">
+            <h2 className="font-bold text-3xl mb-4">Pesanan Jasa</h2>
 
             {/* Bagian Filter */}
-            <div className="flex gap-4 mb-4">
-                <select
-                    value={subcategoryFilter}
-                    onChange={(e) => setSubcategoryFilter(e.target.value)}
-                    className="p-2 border rounded-md"
-                >
-                    <option value="">Subkategori</option>
-                    <option value="Konsultasi Bisnis">Konsultasi Bisnis</option>
-                    <option value="Konsultasi Keuangan">Konsultasi Keuangan</option>
-                </select>
+            <div className="flex gap-4 mb-4 max-w-md">
+                <Select value={subcategoryFilter} onValueChange={setSubcategoryFilter}>
+                    <SelectTrigger className="p-2 border rounded-md">
+                        <SelectValue placeholder="Pilih Subkategori ..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>Subkategori</SelectLabel>
+                            <SelectItem value="Konsultasi Bisnis">Konsultasi Bisnis</SelectItem>
+                            <SelectItem value="Konsultasi Keuangan">Konsultasi Keuangan</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
 
-                <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="p-2 border rounded-md"
-                >
-                    <option value="">Status Pesanan</option>
-                    {statuses.map((status, idx) => (
-                        <option key={idx} value={status}>{status}</option>
-                    ))}
-                </select>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="p-2 border rounded-md">
+                        <SelectValue placeholder="Pilih Status Pesanan ... "></SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>Status Pesanan</SelectLabel>
+                            {statuses.map((status, idx) => (
+                                <SelectItem key={idx} value={status}>{status}</SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
             </div>
 
             {/* Daftar Pesanan */}
-            {filteredOrders.map((order, index) => (
-                <div key={index} className="border p-4 mb-2 rounded-lg bg-white shadow-sm">
-                    <div className="grid grid-cols-6 gap-2 text-center">
-                        <div>
-                            <p><strong>Subkategori Jasa:</strong></p>
-                            <p>{order.subcategory}</p>
-                        </div>
-                        <div>
-                            <p><strong>Sesi Layanan:</strong></p>
-                            <p>{order.session}</p>
-                        </div>
-                        <div>
-                            <p><strong>Harga:</strong></p>
-                            <p>{order.price}</p>
-                        </div>
-                        <div>
-                            <p><strong>Nama Pekerja:</strong></p>
-                            <p>{order.workerName || "Belum Ditentukan"}</p>
-                        </div>
-                        <div>
-                            <p><strong>Status:</strong></p>
-                            <p>{order.status}</p>
-                        </div>
-                        <div className="flex items-center justify-center">
-                            {order.status === "Menunggu Pembayaran" || order.status === "Mencari Pekerja Terdekat" ? (
-                                <button
-                                    onClick={() => handleCancelOrder(index)}
-                                    className="px-4 py-2 bg-red-500 text-white rounded-md"
-                                >
-                                    Batalkan
-                                </button>
-                            ) : order.status === "Pesanan Selesai" ? (
-                                <button
-                                    onClick={() => handleCreateTestimonial(order)}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                                >
-                                    Buat Testimoni
-                                </button>
-                            ) : null}
-                        </div>
-                    </div>
-                </div>
-            ))}
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Subkategori Jasa</TableHead>
+                        <TableHead>Sesi Layanan</TableHead>
+                        <TableHead>Harga</TableHead>
+                        <TableHead>Nama Pekerja</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Aksi</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {filteredOrders.map((order, index) => (
+                        <TableRow key={index}>
+                            <TableCell>{order.subcategory}</TableCell>
+                            <TableCell>{order.session}</TableCell>
+                            <TableCell>{order.price}</TableCell>
+                            <TableCell>{order.workerName || "Belum Ditentukan"}</TableCell>
+                            <TableCell>{order.status}</TableCell>
+                            <TableCell>
+                                {order.status === "Menunggu Pembayaran" || order.status === "Mencari Pekerja Terdekat" ? (
+                                    <Button
+                                        onClick={() => handleCancelOrder(index)}
+                                        variant="destructive"
+                                    >
+                                        Batalkan
+                                    </Button>
+                                ) : order.status === "Pesanan Selesai" ? (
+                                    <Dialog>
+                                        <DialogTrigger>
+                                            <Button
+                                                onClick={() => handleCreateTestimonial(order)}
+                                            >
+                                                Buat Testimoni
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent>
+                                            <DialogTitle>Buat Testimoni</DialogTitle>
+                                            <DialogDescription>Berikan rating dan komentar Anda tentang layanan ini</DialogDescription>
 
-            {/* Dialog for Testimonial */}
-            {openDialog && currentOrder && (
-                <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                    <DialogContent>
-                        <DialogTitle>Buat Testimoni</DialogTitle>
-                        <DialogDescription>Berikan rating dan komentar Anda tentang layanan ini</DialogDescription>
+                                            {/* Form Testimonial */}
+                                            <div className="mb-4">
+                                                <Label>Rating</Label>
+                                                <Select>
+                                                    <SelectTrigger className="p-2 border rounded-md w-full">
+                                                        <SelectValue placeholder="Pilih Rating ..." />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectGroup>
+                                                            <SelectLabel>Rating</SelectLabel>
+                                                            {[...Array(5)].map((_, idx) => (
+                                                                <SelectItem key={idx} value={(idx + 1).toString()}>{idx + 1}</SelectItem>
+                                                            ))}
+                                                        </SelectGroup>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
 
-                        {/* Form Testimonial */}
-                        <div className="mb-4">
-                            <label className="block mb-2">Rating:</label>
-                            <select className="p-2 border rounded-md w-full">
-                                {[...Array(10)].map((_, idx) => (
-                                    <option key={idx} value={idx + 1}>{idx + 1}</option>
-                                ))}
-                            </select>
-                        </div>
+                                            <div className="mb-4">
+                                                <Label>Komentar</Label>
+                                                <Textarea
+                                                    rows={4}
+                                                />
+                                            </div>
 
-                        <div className="mb-4">
-                            <label className="block mb-2">Komentar:</label>
-                            <textarea
-                                className="p-2 border rounded-md w-full"
-                                rows={4}
-                            />
-                        </div>
-
-                        <div className="flex justify-end gap-2">
-                            <DialogClose
-                                className="px-4 py-2 bg-gray-500 text-white rounded-md"
-                                onClick={() => setOpenDialog(false)}
-                            >
-                                Batal
-                            </DialogClose>
-                            <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                                onClick={() => setOpenDialog(false)}
-                            >
-                                Submit
-                            </button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            )}
+                                            <div className="flex justify-end gap-2">
+                                                <DialogClose
+                                                    className='flex gap-2'
+                                                >
+                                                    <Button variant="destructive">
+                                                        Batal
+                                                    </Button>
+                                                    <Button>
+                                                        Submit
+                                                    </Button>
+                                                </DialogClose>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
+                                ) : null}
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
         </div>
     );
 };
