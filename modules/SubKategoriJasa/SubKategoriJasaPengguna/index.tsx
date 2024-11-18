@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { subcategoryData, testimonials, workers } from '../const';
 import { Session } from '../type';
+import { useUserData } from "@/lib/useUserData";
 
 import {
     Select,
@@ -75,7 +76,7 @@ export const SubKategoriJasaPengguna = ({
     const handleOrderSubmit = () => {
         router.push('/pemesanan-jasa');
     };   
-
+    const { userData, role } = useUserData();
     return (
         <main className="flex flex-col items-center py-40 px-10 md:px-32 bg-gray-100 min-h-screen ">
             <div className="w-full max-w-2xl bg-white shadow-md rounded-md p-6">
