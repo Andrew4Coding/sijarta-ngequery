@@ -19,11 +19,8 @@ import { RegisterUserForm } from "./elements/RegisterUserForm";
 export const RegisterPage = () => {
     
     const searchParams = useSearchParams();
-    const roleParams = searchParams.get('role') ?? 'pengguna';
+    const roleParams = searchParams.get('role') ?? '';
 
-    console.log(roleParams);
-    
-    
     const [role, setRole] = useState(roleParams);
     const [isPickRole, setIsPickRole] = useState(roleParams === '');
     const { push } = useRouter();

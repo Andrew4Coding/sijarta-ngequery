@@ -5,4 +5,8 @@ export class User extends BaseModel<UserType> {
     constructor() {
         super('"USER"');
     }
+
+    async findByNoHP(noHp: string) {
+        return this.findBy('nohp', noHp);
+    }
 }

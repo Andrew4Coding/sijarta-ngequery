@@ -1,8 +1,9 @@
 'use client'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { RegisterAsPekerjaSchema, RegisterAsUserSchema } from "../schema";
+import { RegisterAsUserSchema } from "../schema";
 
+import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -11,26 +12,80 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
-import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
+
+import {v4 as uuidv4 } from 'uuid';
+import { useRouter } from "next/navigation";
 
 export const RegisterUserForm = () => {
+    const router = useRouter();
     const form = useForm<z.infer<typeof RegisterAsUserSchema>>({
-        resolver: zodResolver(RegisterAsUserSchema)
+        resolver: zodResolver(RegisterAsUserSchema),
+        defaultValues: {
+            noHp: "02123451290",
+            nama: "Andrew Devito Aryo",
+            jenisKelamin: "L",
+            alamat: "Kebon Jeruk",
+            password: "dummy123",
+            confirmPassword: "dummy123",
+            tanggalLahir: "2000-01-01"
+        }
     });
 
-    const onSubmit = (data: z.infer<typeof RegisterAsUserSchema>) => {
+    const { toast } = useToast();
+
+    const onSubmit = async (data: z.infer<typeof RegisterAsUserSchema>) => {
         console.log("Form Data:", data);
+        try {
+            const response = await fetch('/api/auth/register/pengguna', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: uuidv4(),
+                    nama: data.nama,
+                    alamat: data.alamat,
+                    jeniskelamin: data.jenisKelamin,
+                    nohp: data.noHp,
+                    pwd: data.password,
+                    saldompay: 10000,
+                    tgllahir: new Date(data.tanggalLahir)
+                })
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                toast({
+                    title: "Success",
+                    description: "User registered successfully",
+                    variant: 'success'
+                });
+                router.replace('/login');
+            } else {
+                toast({
+                    title: "Failed",
+                    description: result.error,
+                    variant: 'destructive'
+                });
+            }
+        }
+        catch (error: any) {
+            console.error(error);
+            toast({
+                title: "Failed",
+                description: error.message,
+                variant: 'destructive'
+            });
+        }
     };
 
     return (
         <div className="w-full min-h-[100vh] flex items-center justify-center bg-gray-100 py-40">
-            <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center ">
+            <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center w-full max-w-2xl">
                 <h1 className="font-bold text-2xl">Register to Sijarta</h1>
                 <p>by ngeQuery Team</p>
-                <Form {...form}>                    
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 grid grid-cols-2 gap-4 min-w-[400px]">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <FormField
                             control={form.control}
                             name="noHp"
@@ -39,7 +94,7 @@ export const RegisterUserForm = () => {
                                     <FormLabel>Nomor Telepon</FormLabel>
                                     <FormControl>
                                         <Input
-                                            className='min-w-[300px]'
+                                            className='w-full'
                                             label=""
                                             placeholder="08123456789" {...field}
                                         />
@@ -56,7 +111,7 @@ export const RegisterUserForm = () => {
                                     <FormLabel>Nama</FormLabel>
                                     <FormControl>
                                         <Input
-                                            className='min-w-[300px]'
+                                            className='w-full'
                                             label=""
                                             placeholder="Nama Lengkap" {...field}
                                         />
@@ -73,7 +128,7 @@ export const RegisterUserForm = () => {
                                     <FormLabel>Jenis Kelamin</FormLabel>
                                     <FormControl>
                                         <Input
-                                            className='min-w-[300px]'
+                                            className='w-full'
                                             label=""
                                             placeholder="L/P" {...field}
                                         />
@@ -90,7 +145,8 @@ export const RegisterUserForm = () => {
                                     <FormLabel>Tanggal Lahir</FormLabel>
                                     <FormControl>
                                         <Input
-                                            className='min-w-[300px]'
+                                            type="date"
+                                            className='w-full'
                                             label=""
                                             placeholder="YYYY-MM-DD" {...field}
                                         />
@@ -107,7 +163,7 @@ export const RegisterUserForm = () => {
                                     <FormLabel>Alamat</FormLabel>
                                     <FormControl>
                                         <Input
-                                            className='min-w-[300px]'
+                                            className='w-full'
                                             label=""
                                             placeholder="Alamat Lengkap" {...field}
                                         />
@@ -125,7 +181,7 @@ export const RegisterUserForm = () => {
                                     <FormControl>
                                         <Input
                                             type="password"
-                                            className='min-w-[300px]'
+                                            className='w-full'
                                             label=""
                                             placeholder="Password" {...field}
                                         />
@@ -143,7 +199,7 @@ export const RegisterUserForm = () => {
                                     <FormControl>
                                         <Input
                                             type="password"
-                                            className='min-w-[300px]'
+                                            className='w-full'
                                             label=""
                                             placeholder="Konfirmasi Password" {...field}
                                         />
@@ -154,7 +210,7 @@ export const RegisterUserForm = () => {
                         />
                         <Button
                             type="submit"
-                            className="col-span-2"
+                            className="col-span-1 sm:col-span-2"
                         >
                             Register
                         </Button>
