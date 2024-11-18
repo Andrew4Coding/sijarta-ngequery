@@ -7,12 +7,8 @@ import { subcategoryData, testimonials, workers } from '../const';
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { Session } from '../type';
 
-
-type Session = {
-    name: string;
-    price: string;
-};
 
 export const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
     const router = useRouter();

@@ -1,5 +1,4 @@
-import { SubcategoryInfo, Testimonial } from "./SubKategoriJasaPengguna";
-import { Worker } from './SubKategoriJasaPengguna/index';
+import { SubcategoryInfo, Testimonial, Worker } from "./type";
 
 export const subcategoryData: Record<string, { category: string; info: SubcategoryInfo }> = {
     "Konsultasi Bisnis": {
@@ -7,8 +6,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Dapatkan layanan konsultasi untuk mengembangkan bisnis Anda dengan strategi yang efektif.",
             sessions: [
-                { name: 'Sesi Konsultasi Dasar', price: 'Rp 200,000' },
-                { name: 'Sesi Strategi Lanjutan', price: 'Rp 500,000' },
+                { name: 'Sesi Konsultasi Dasar', price: 200000 },
+                { name: 'Sesi Strategi Lanjutan', price: 500000 },
             ]
         }
     },
@@ -17,8 +16,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan konsultasi keuangan untuk mengelola dan merencanakan keuangan Anda dengan baik.",
             sessions: [
-                { name: 'Sesi Manajemen Keuangan', price: 'Rp 300,000' },
-                { name: 'Sesi Perencanaan Pajak', price: 'Rp 450,000' },
+                { name: 'Sesi Manajemen Keuangan', price: 300000 },
+                { name: 'Sesi Perencanaan Pajak', price: 450000 },
             ]
         }
     },
@@ -27,8 +26,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Konsultasi terkait manajemen sumber daya manusia untuk perusahaan Anda.",
             sessions: [
-                { name: 'Sesi Rekrutmen', price: 'Rp 250,000' },
-                { name: 'Sesi Pengembangan SDM', price: 'Rp 400,000' },
+                { name: 'Sesi Rekrutmen', price: 250000 },
+                { name: 'Sesi Pengembangan SDM', price: 400000 },
             ]
         }
     },
@@ -37,8 +36,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Pelatihan keterampilan teknis untuk meningkatkan kompetensi Anda di bidang teknologi.",
             sessions: [
-                { name: 'Pelatihan Dasar', price: 'Rp 150,000' },
-                { name: 'Pelatihan Lanjutan', price: 'Rp 300,000' },
+                { name: 'Pelatihan Dasar', price: 150000 },
+                { name: 'Pelatihan Lanjutan', price: 300000 },
             ]
         }
     },
@@ -47,8 +46,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Pelatihan kepemimpinan untuk mengembangkan kemampuan Anda dalam memimpin tim.",
             sessions: [
-                { name: 'Sesi Dasar Kepemimpinan', price: 'Rp 250,000' },
-                { name: 'Sesi Kepemimpinan Strategis', price: 'Rp 450,000' },
+                { name: 'Sesi Dasar Kepemimpinan', price: 250000 },
+                { name: 'Sesi Kepemimpinan Strategis', price: 450000 },
             ]
         }
     },
@@ -57,8 +56,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Kursus bahasa asing untuk meningkatkan kemampuan komunikasi Anda.",
             sessions: [
-                { name: 'Kursus Bahasa Inggris', price: 'Rp 200,000' },
-                { name: 'Kursus Bahasa Mandarin', price: 'Rp 250,000' },
+                { name: 'Kursus Bahasa Inggris', price: 200000 },
+                { name: 'Kursus Bahasa Mandarin', price: 250000 },
             ]
         }
     },
@@ -67,8 +66,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan pengembangan aplikasi web untuk kebutuhan bisnis Anda.",
             sessions: [
-                { name: 'Pengembangan Website Dasar', price: 'Rp 1,000,000' },
-                { name: 'Pengembangan Website E-Commerce', price: 'Rp 2,500,000' },
+                { name: 'Pengembangan Website Dasar', price: 1000000 },
+                { name: 'Pengembangan Website E-Commerce', price: 2500000 },
             ]
         }
     },
@@ -77,8 +76,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan pengembangan aplikasi mobile yang dapat berjalan di iOS dan Android.",
             sessions: [
-                { name: 'Aplikasi Mobile Dasar', price: 'Rp 2,000,000' },
-                { name: 'Aplikasi Mobile Full-Feature', price: 'Rp 5,000,000' },
+                { name: 'Aplikasi Mobile Dasar', price: 2000000 },
+                { name: 'Aplikasi Mobile Full-Feature', price: 5000000 },
             ]
         }
     },
@@ -87,8 +86,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Pengembangan perangkat lunak yang disesuaikan dengan kebutuhan khusus Anda.",
             sessions: [
-                { name: 'Perangkat Lunak Sederhana', price: 'Rp 3,000,000' },
-                { name: 'Perangkat Lunak Khusus Lanjutan', price: 'Rp 7,500,000' },
+                { name: 'Perangkat Lunak Sederhana', price: 3000000 },
+                { name: 'Perangkat Lunak Khusus Lanjutan', price: 7500000 },
             ]
         }
     },
@@ -97,8 +96,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan pemasaran digital untuk meningkatkan visibilitas bisnis Anda secara online.",
             sessions: [
-                { name: 'Kampanye Iklan Dasar', price: 'Rp 500,000' },
-                { name: 'Kampanye Iklan Lengkap', price: 'Rp 1,500,000' },
+                { name: 'Kampanye Iklan Dasar', price: 500000 },
+                { name: 'Kampanye Iklan Lengkap', price: 1500000 },
             ]
         }
     },
@@ -107,8 +106,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Strategi pemasaran melalui platform media sosial.",
             sessions: [
-                { name: 'Optimasi Akun Sosial', price: 'Rp 300,000' },
-                { name: 'Kampanye Media Sosial', price: 'Rp 800,000' },
+                { name: 'Optimasi Akun Sosial', price: 300000 },
+                { name: 'Kampanye Media Sosial', price: 800000 },
             ]
         }
     },
@@ -117,8 +116,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Pengembangan konten yang efektif untuk pemasaran produk Anda.",
             sessions: [
-                { name: 'Konten Dasar', price: 'Rp 250,000' },
-                { name: 'Strategi Konten Lanjutan', price: 'Rp 750,000' },
+                { name: 'Konten Dasar', price: 250000 },
+                { name: 'Strategi Konten Lanjutan', price: 750000 },
             ]
         }
     },
@@ -127,8 +126,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan desain grafis untuk kebutuhan visual bisnis Anda.",
             sessions: [
-                { name: 'Desain Logo', price: 'Rp 150,000' },
-                { name: 'Desain Brand Identity', price: 'Rp 600,000' },
+                { name: 'Desain Logo', price: 150000 },
+                { name: 'Desain Brand Identity', price: 600000 },
             ]
         }
     },
@@ -137,8 +136,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan fotografi profesional untuk berbagai keperluan.",
             sessions: [
-                { name: 'Fotografi Produk', price: 'Rp 400,000' },
-                { name: 'Fotografi Event', price: 'Rp 1,000,000' },
+                { name: 'Fotografi Produk', price: 400000 },
+                { name: 'Fotografi Event', price: 1000000 },
             ]
         }
     },
@@ -147,8 +146,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan produksi video profesional.",
             sessions: [
-                { name: 'Video Pendek', price: 'Rp 800,000' },
-                { name: 'Video Dokumenter', price: 'Rp 2,000,000' },
+                { name: 'Video Pendek', price: 800000 },
+                { name: 'Video Dokumenter', price: 2000000 },
             ]
         }
     },
@@ -157,8 +156,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan konsultasi gizi untuk menjaga kesehatan Anda.",
             sessions: [
-                { name: 'Konsultasi Gizi Dasar', price: 'Rp 150,000' },
-                { name: 'Rencana Gizi Lengkap', price: 'Rp 400,000' },
+                { name: 'Konsultasi Gizi Dasar', price: 150000 },
+                { name: 'Rencana Gizi Lengkap', price: 400000 },
             ]
         }
     },
@@ -167,8 +166,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan terapi fisik untuk rehabilitasi dan kesehatan fisik Anda.",
             sessions: [
-                { name: 'Terapi Fisik Dasar', price: 'Rp 250,000' },
-                { name: 'Terapi Fisik Intensif', price: 'Rp 500,000' },
+                { name: 'Terapi Fisik Dasar', price: 250000 },
+                { name: 'Terapi Fisik Intensif', price: 500000 },
             ]
         }
     },
@@ -177,8 +176,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Konsultasi psikologis untuk kesehatan mental Anda.",
             sessions: [
-                { name: 'Sesi Konseling Individu', price: 'Rp 300,000' },
-                { name: 'Sesi Konseling Keluarga', price: 'Rp 500,000' },
+                { name: 'Sesi Konseling Individu', price: 300000 },
+                { name: 'Sesi Konseling Keluarga', price: 500000 },
             ]
         }
     },
@@ -187,8 +186,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan manajemen investasi untuk mengoptimalkan aset Anda.",
             sessions: [
-                { name: 'Konsultasi Investasi Dasar', price: 'Rp 350,000' },
-                { name: 'Manajemen Portofolio', price: 'Rp 1,000,000' },
+                { name: 'Konsultasi Investasi Dasar', price: 350000 },
+                { name: 'Manajemen Portofolio', price: 1000000 },
             ]
         }
     },
@@ -197,8 +196,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan perencanaan pajak untuk kepatuhan dan efisiensi pajak Anda.",
             sessions: [
-                { name: 'Konsultasi Pajak Dasar', price: 'Rp 400,000' },
-                { name: 'Perencanaan Pajak Tahunan', price: 'Rp 700,000' },
+                { name: 'Konsultasi Pajak Dasar', price: 400000 },
+                { name: 'Perencanaan Pajak Tahunan', price: 700000 },
             ]
         }
     },
@@ -207,8 +206,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Konsultasi dan layanan asuransi jiwa serta kesehatan untuk perlindungan Anda.",
             sessions: [
-                { name: 'Konsultasi Asuransi Jiwa', price: 'Rp 250,000' },
-                { name: 'Paket Asuransi Kesehatan', price: 'Rp 500,000' },
+                { name: 'Konsultasi Asuransi Jiwa', price: 250000 },
+                { name: 'Paket Asuransi Kesehatan', price: 500000 },
             ]
         }
     },
@@ -217,8 +216,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan perencanaan liburan untuk perjalanan yang tak terlupakan.",
             sessions: [
-                { name: 'Paket Liburan Domestik', price: 'Rp 2,000,000' },
-                { name: 'Paket Liburan Internasional', price: 'Rp 5,000,000' },
+                { name: 'Paket Liburan Domestik', price: 2000000 },
+                { name: 'Paket Liburan Internasional', price: 5000000 },
             ]
         }
     },
@@ -227,8 +226,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan pemandu wisata berpengalaman untuk pengalaman berwisata yang menyenangkan.",
             sessions: [
-                { name: 'Pemandu Wisata Harian', price: 'Rp 500,000' },
-                { name: 'Pemandu Wisata Khusus', price: 'Rp 1,200,000' },
+                { name: 'Pemandu Wisata Harian', price: 500000 },
+                { name: 'Pemandu Wisata Khusus', price: 1200000 },
             ]
         }
     },
@@ -237,8 +236,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan pemesanan hotel dengan pilihan terbaik sesuai kebutuhan Anda.",
             sessions: [
-                { name: 'Hotel Bintang 3', price: 'Rp 800,000' },
-                { name: 'Hotel Bintang 5', price: 'Rp 2,000,000' },
+                { name: 'Hotel Bintang 3', price: 800000 },
+                { name: 'Hotel Bintang 5', price: 2000000 },
             ]
         }
     },
@@ -247,8 +246,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan kebersihan rumah untuk menjaga lingkungan Anda tetap bersih dan nyaman.",
             sessions: [
-                { name: 'Paket Kebersihan Harian', price: 'Rp 200,000' },
-                { name: 'Paket Kebersihan Mingguan', price: 'Rp 700,000' },
+                { name: 'Paket Kebersihan Harian', price: 200000 },
+                { name: 'Paket Kebersihan Mingguan', price: 700000 },
             ]
         }
     },
@@ -257,8 +256,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan kebersihan kantor profesional untuk lingkungan kerja yang bersih.",
             sessions: [
-                { name: 'Kebersihan Kantor Harian', price: 'Rp 300,000' },
-                { name: 'Kebersihan Kantor Bulanan', price: 'Rp 1,200,000' },
+                { name: 'Kebersihan Kantor Harian', price: 300000 },
+                { name: 'Kebersihan Kantor Bulanan', price: 1200000 },
             ]
         }
     },
@@ -267,8 +266,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan laundry profesional untuk pakaian bersih dan rapi.",
             sessions: [
-                { name: 'Laundry Reguler', price: 'Rp 50,000' },
-                { name: 'Laundry Ekspres', price: 'Rp 100,000' },
+                { name: 'Laundry Reguler', price: 50000 },
+                { name: 'Laundry Ekspres', price: 100000 },
             ]
         }
     },
@@ -277,8 +276,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan pengiriman barang cepat dan aman ke seluruh Indonesia.",
             sessions: [
-                { name: 'Pengiriman Reguler', price: 'Rp 100,000' },
-                { name: 'Pengiriman Ekspres', price: 'Rp 200,000' },
+                { name: 'Pengiriman Reguler', price: 100000 },
+                { name: 'Pengiriman Ekspres', price: 200000 },
             ]
         }
     },
@@ -287,8 +286,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan penyimpanan dan gudang untuk kebutuhan logistik Anda.",
             sessions: [
-                { name: 'Sewa Gudang Harian', price: 'Rp 300,000' },
-                { name: 'Sewa Gudang Bulanan', price: 'Rp 5,000,000' },
+                { name: 'Sewa Gudang Harian', price: 300000 },
+                { name: 'Sewa Gudang Bulanan', price: 5000000 },
             ]
         }
     },
@@ -297,8 +296,8 @@ export const subcategoryData: Record<string, { category: string; info: Subcatego
         info: {
             description: "Layanan distribusi produk ke berbagai lokasi dengan jaringan luas.",
             sessions: [
-                { name: 'Distribusi Lokal', price: 'Rp 500,000' },
-                { name: 'Distribusi Nasional', price: 'Rp 2,000,000' },
+                { name: 'Distribusi Lokal', price: 500000 },
+                { name: 'Distribusi Nasional', price: 2000000 },
             ]
         }
     }

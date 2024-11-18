@@ -2,39 +2,22 @@
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { subcategoryData, testimonials, workers } from '../const';
+import { Session } from '../type';
 
-type Session = {
-    name: string;
-    price: string;
-};
-
-export type SubcategoryInfo = {
-    description: string;
-    sessions: Session[];
-};
-
-export type Worker = {
-    name: string;
-    rating: number;
-    completedOrders: number;
-    phone: string;
-    birthDate: string;
-    address: string;
-    image: string; // Tambahkan properti image
-};
-
-export type Testimonial = {
-    workerName: string;
-    rating: number;
-    customerName: string;
-    review: string;
-};
-
-
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 export const SubKategoriJasaPengguna = ({
     subCategory
@@ -48,14 +31,50 @@ export const SubKategoriJasaPengguna = ({
     const [newOrder, setNewOrder] = useState({
         date: new Date().toLocaleDateString(),
         discountCode: "",
-        total: "",
+        total: 0,
         paymentMethod: "",
         status: "Menunggu Pembayaran"
     });
 
+    const handlePesanClick = (session: Session) => {
+        setNewOrder({
+            ...newOrder,
+            total: session.price,
+        });
+    };
+
+    const handleDiscountChange = (discountCode: string, session: Session) => {
+
+        let discountValue = 0;
+
+        if (!session) {
+            return;
+        }
+
+        const sessionPrice = session.price;
+
+        // Validasi diskon
+        if (discountCode === "PROMO10") {
+            discountValue = sessionPrice * 0.1; // Diskon 10%
+        } else if (discountCode === "PROMO20") {
+            discountValue = sessionPrice * 0.2; // Diskon 20%
+        } else {
+            discountValue = 0; // Diskon tidak valid
+        }
+
+        const totalPrice = sessionPrice - discountValue;
+
+        // Gunakan fungsi updater untuk memperbarui state secara aman
+        setNewOrder((prevOrder) => ({
+            ...prevOrder,
+            discountCode,
+            total: totalPrice > 0 ? totalPrice : 0, 
+        }));
+    };
+
     const handleOrderSubmit = () => {
         router.push('/pemesanan-jasa');
-    };    
+    };   
 
     return (
         <main className="flex flex-col items-center py-40 px-10 md:px-32 bg-gray-100 min-h-screen font-dmsans">
@@ -83,7 +102,11 @@ export const SubKategoriJasaPengguna = ({
                                 key={index}
                             >
                                 <DialogTrigger>
-                                    <Button variant={'secondary'}>Pesan</Button>
+                                    <Button
+                                        onClick={() => {
+                                            handlePesanClick(session);
+                                        }}
+                                        variant={'secondary'}>Pesan</Button>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
@@ -92,27 +115,39 @@ export const SubKategoriJasaPengguna = ({
 
                                     <div>
                                         <label className="block mb-2">Tanggal Pemesanan:</label>
-                                        <input type="text" value={newOrder.date} disabled className="border p-2 rounded-md w-full mb-4" />
+                                        <Input
+                                            label='Tanggal Pemesanan'
+                                            type="text" value={newOrder.date} disabled className="border p-2 rounded-md w-full mb-4" />
                                         <label className="block mb-2">Diskon:</label>
-                                        <input
+                                        <Input
+                                            label="Kode Diskon"
                                             type="text"
                                             placeholder="Kode Diskon"
                                             value={newOrder.discountCode}
-                                            onChange={(e) => setNewOrder({ ...newOrder, discountCode: e.target.value })}
+                                            onChange={(e) => handleDiscountChange(e.target.value, session)}
                                             className="border p-2 rounded-md w-full mb-4"
                                         />
                                         <label className="block mb-2">Total Pembayaran:</label>
-                                        <input type="text" value={session.price} disabled className="border p-2 rounded-md w-full mb-4" />
+                                        <Input
+                                            label="Total Pembayaran"
+                                            type="text" value={newOrder.total} disabled className="border p-2 rounded-md w-full mb-4" />
                                         <label className="block mb-2">Metode Pembayaran:</label>
-                                        <select onChange={(e) => setNewOrder({ ...newOrder, paymentMethod: e.target.value })} className="border p-2 rounded-md w-full mb-4">
-                                            <option value="">Pilih Metode</option>
-                                            <option value="Bank Transfer">Bank Transfer</option>
-                                            <option value="Credit Card">Credit Card</option>
-                                            <option value="MyPay">MyPay</option>
-                                        </select>
-                                        <button onClick={handleOrderSubmit} className="w-full bg-green-500 text-white p-2 rounded-md">
+                                        <Select onValueChange={(value) => setNewOrder({ ...newOrder, paymentMethod: value })}>
+                                            <SelectTrigger className="border p-2 rounded-md w-full mb-4">
+                                                <SelectValue placeholder="Pilih Metode ..." />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Metode Pembayaran</SelectLabel>
+                                                    <SelectItem value="Bank Transfer">Bank Transfer</SelectItem>
+                                                    <SelectItem value="Credit Card">Credit Card</SelectItem>
+                                                    <SelectItem value="MyPay">MyPay</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                        <Button onClick={handleOrderSubmit} className="w-full bg-green-500 text-white p-2 rounded-md">
                                             Pesan Jasa
-                                        </button>
+                                        </Button>
                                     </div>
                                 </DialogContent>
 
