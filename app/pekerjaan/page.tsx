@@ -1,8 +1,12 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { PekerjaanModule } from "@/modules/PekerjaanModule";
 
 const page = () => {
-  return <PekerjaanModule />;
+  return (
+    <Suspense fallback={<div> Loading... </div>}>
+      <PekerjaanModule />
+    </Suspense>
+  );
 };
 
 export default page;
