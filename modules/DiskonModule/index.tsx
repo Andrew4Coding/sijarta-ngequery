@@ -29,7 +29,7 @@ export const DiskonModule = () => {
   const {userData } = useUserData();
 
   return (
-    <div className="px-10 md:px-20 font-dmsans py-32">
+    <div className="px-10 md:px-20  py-32">
       <h1 className="text-center font-bold text-2xl my-10">DISKON</h1>
 
       {/* Voucher Section */}
@@ -69,7 +69,7 @@ export const DiskonModule = () => {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle className="text-center">{voucher.price >= 10000 ? 'Sukses' : 'Gagal' }</DialogTitle>
+                    <DialogTitle className="text-center">{userData.saldoMPay >= voucher.price ? 'Sukses' : 'Gagal' }</DialogTitle>
                   </DialogHeader>
                   <div className="flex flex-col gap-2">
                     <p className="mb-4">

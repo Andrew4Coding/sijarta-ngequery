@@ -25,7 +25,7 @@ export const RegisterPekerjaForm = () => {
     };
 
     return (
-        <div className="w-full min-h-[100vh] flex items-center justify-center bg-gray-100 py-32 font-dmsans">
+        <div className="w-full min-h-[100vh] flex items-center justify-center bg-gray-100 py-32 ">
             <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center w-full max-w-4xl mx-4">
                 <h1 className="font-bold text-2xl">Register Pekerja to Sijarta</h1>
                 <p>by ngeQuery Team</p>

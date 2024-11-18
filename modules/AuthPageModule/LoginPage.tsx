@@ -16,18 +16,26 @@ import {
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
 import { LogIn } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export const LoginPage = () => {
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema)
     });
 
+    const { toast } = useToast();
+
     function onSubmit(data: z.infer<typeof LoginSchema>) {
         console.log(data);
+        toast({
+            title: 'Login Berhasil',
+            description: 'Selamat datang di SIJARTA',
+            variant: 'success'
+        });
     }
-    
+
     return (
-        <main className="w-full h-[100vh] flex items-center justify-center bg-gray-100 font-dmsans">
+        <main className="w-full h-[100vh] flex items-center justify-center bg-gray-100 ">
             <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center">
                 <h1 className="font-bold text-2xl font-catamaran">Welcome to SIJARTA</h1>
                 <p className='text-gray-500 mb-5'>by ngeQuery Team</p>

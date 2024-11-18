@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { Input } from '@/components/ui/input';
 import {
     Select,
     SelectContent,
@@ -9,8 +9,10 @@ import {
     SelectLabel,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/select";
+import { useUserData } from '@/lib/useUserData';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 type Category = {
     name: string;
@@ -18,6 +20,10 @@ type Category = {
 };
 
 export const HomePageModule = () => {
+    const {role} = useUserData();
+    const isPekerja = role === 'pekerja';
+
+
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
@@ -36,14 +42,8 @@ export const HomePageModule = () => {
     ];
 
     useEffect(() => {
-        // Menampilkan semua kategori dan subkategori saat halaman pertama kali dimuat
         setFilteredCategories(categories);
     }, []);
-
-    const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedCategory(event.target.value);
-        updateFilteredCategories(event.target.value, searchTerm);
-    };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
@@ -62,10 +62,15 @@ export const HomePageModule = () => {
     };
 
     return (
-        <main className="flex flex-col items-center bg-gray-100 min-h-screen px-10 md:px-10 py-40 font-dmsans w-full">
+        <main className="flex flex-col items-center bg-gray-100 min-h-screen px-10 md:px-10 py-40  w-full">
             <div className="flex gap-2 mb-6 w-full max-w-lg">
                 <Select
                     onValueChange={(val) => {
+                        if (val === 'all') {
+                            setSelectedCategory('');
+                            updateFilteredCategories('', searchTerm);
+                            return;
+                        }
                         setSelectedCategory(val);
                         updateFilteredCategories(val, searchTerm);
                     }}
@@ -78,6 +83,7 @@ export const HomePageModule = () => {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem value="all">Semua Kategori</SelectItem>
                             <SelectLabel>Kategori</SelectLabel>
                             {categories.map((category, index) => (
                                 <SelectItem key={index} value={category.name}>{category.name}</SelectItem>
@@ -101,9 +107,11 @@ export const HomePageModule = () => {
                         <h3 className="bg-gray-100 font-semibold text-base px-4 py-2 border-b border-gray-200 rounded-t-md">{category.name}</h3>
                         <ul className="list-none">
                             {category.subcategories.map((subcategory, subIndex) => (
-                                <li key={subIndex} className="p-2 pl-4 border-b border-gray-200 last:border-b-0">
-                                    {subcategory}
-                                </li>
+                                <Link key={subIndex} href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pengguna'}/${subcategory.split(" ").join("-")}`}>
+                                    <li className="p-2 pl-4 border-b border-gray-200 last:border-b-0 hover:bg-gray-50">
+                                        {subcategory}
+                                    </li>
+                                </Link>
                             ))}
                         </ul>
                     </div>

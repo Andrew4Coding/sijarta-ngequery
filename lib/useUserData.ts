@@ -33,7 +33,7 @@ export type ReturnType =
 
 export const useUserData: () => ReturnType = () => {
     return {
-        role: 'pekerja',
+        role: 'pengguna',
         userData: {
             nama: 'John Doe',
             jenisKelamin: 'L',
@@ -46,7 +46,7 @@ export const useUserData: () => ReturnType = () => {
             urlFotoKtp: 'https://via.placeholder.com/150',
             jumlahPesananSelesai: 10,
             rating: 4.5,
-            saldoMPay: 1000000,
+            saldoMPay: 10000000,
             kategoriJasa: ['Cleaning Service', 'Antar Makanan', 'Car Service'],
         },
         isAuthenticated: true,

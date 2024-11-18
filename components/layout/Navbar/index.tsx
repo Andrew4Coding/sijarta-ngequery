@@ -17,7 +17,7 @@ import { usePathname, useRouter } from 'next/navigation'
 const penggunaMenus = [
   { href: '/', label: 'Home' },
   { href: '/mypay', label: 'MyPay' },
-  { href: '/kelola-pesanan', label: 'Pesanan Saya' },
+  { href: '/pemesanan-jasa', label: 'Pesanan Saya' },
   { href: '/diskon', label: 'Diskon' }
 ]
 
@@ -40,12 +40,12 @@ export const Navbar = () => {
   const hideMenus = pathname === '/login' || pathname === '/register'
 
   return (
-    <nav className='fixed top-0 w-full bg-white shadow-md px-10 md:px-32 py-8 flex justify-between items-center z-50 font-dmsans'>
-      <h1 className='font-extrabold text-3xl font-dmsans'>SIJARTA</h1>
+    <nav className='fixed top-0 w-full bg-white shadow-md px-10 md:px-32 py-8 flex justify-between items-center z-50 '>
+      <h1 className='font-extrabold text-3xl '>SIJARTA</h1>
       {!hideMenus && (
         <>
           <div className='hidden md:flex gap-4'>
-            {(role === 'pengguna' ? penggunaMenus : pekerjaMenus).map(menu => (
+            {isAuthenticated && (role === 'pengguna' ? penggunaMenus : pekerjaMenus).map(menu => (
               <Link key={menu.href} href={menu.href}>{menu.label}</Link>
             ))}
           </div>
@@ -77,7 +77,11 @@ export const Navbar = () => {
                 </Button> 
               </div>
               : 
-              <Button>Login</Button>
+              <Button
+                onClick={() => {
+                  router.replace('/login')
+                }}
+              >Login</Button>
             }
           </div>
           <Popover>
@@ -89,7 +93,7 @@ export const Navbar = () => {
               } />
             </PopoverTrigger>
             <PopoverContent className='bg-white'>
-              <ul className='space-y-2 font-dmsans'>
+              <ul className='space-y-2 '>
                 {(role === 'pengguna' ? penggunaMenus : pekerjaMenus).map(menu => (
                   <li key={menu.href}>
                     <Link href={menu.href}>{menu.label}</Link>
