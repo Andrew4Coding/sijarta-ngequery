@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { subcategoryData } from './const';
+import { subcategoryData } from '../SubKategoriJasa/const';
 
 // Fungsi untuk membersihkan format harga
 const cleanPrice = (price: string): number => {
