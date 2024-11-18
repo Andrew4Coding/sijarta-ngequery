@@ -21,9 +21,11 @@ import { cn } from "@/lib/utils";
 export const KategoriCombobox = ({
   value,
   setValue,
+  isPengguna,
 }: {
   value: string;
   setValue: (value: string) => void;
+  isPengguna: boolean;
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -47,24 +49,29 @@ export const KategoriCombobox = ({
           <CommandList>
             <CommandEmpty>Tidak ada Kategori Terkait.</CommandEmpty>
             <CommandGroup>
-              {paymentTypeData.map((paymentType) => (
-                <CommandItem
-                  key={paymentType}
-                  value={paymentType}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  {paymentType}
-                  <Check
-                    className={cn(
-                      "ml-auto",
-                      value === paymentType ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
+              {paymentTypeData.map((paymentType) => {
+                if (!isPengguna && paymentType === "Membayar Transaksi") {
+                  return null;
+                }
+                return (
+                  <CommandItem
+                    key={paymentType}
+                    value={paymentType}
+                    onSelect={(currentValue) => {
+                      setValue(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {paymentType}
+                    <Check
+                      className={cn(
+                        "ml-auto",
+                        value === paymentType ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                );
+              })}
             </CommandGroup>
           </CommandList>
         </Command>

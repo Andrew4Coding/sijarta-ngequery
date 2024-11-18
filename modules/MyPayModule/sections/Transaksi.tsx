@@ -18,7 +18,11 @@ export const Transaksi = ({ saldo }: { saldo: string }) => {
       <p className="font-semibold">
         Saldo kamu: <span className="text-green-700">{saldo}</span>
       </p>
-      <KategoriCombobox value={value} setValue={setValue} />
+      <KategoriCombobox
+        value={value}
+        setValue={setValue}
+        isPengguna={role === "pengguna"}
+      />
       {value === "TopUp MyPay" && <TopUp />}
       {value === "Withdrawal" && <Withdrawal />}
       {value === "Transfer MyPay" && <Transfer />}
