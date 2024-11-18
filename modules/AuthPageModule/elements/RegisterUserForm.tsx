@@ -154,6 +154,7 @@ export const RegisterUserForm = () => {
                         />
                         <Button
                             type="submit"
+                            className="col-span-2"
                         >
                             Register
                         </Button>
