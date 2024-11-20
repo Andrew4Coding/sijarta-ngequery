@@ -37,7 +37,7 @@ export const Navbar = () => {
   const router = useRouter()
   const pathname = usePathname()
 
-  const {userData, isAuthenticated, role } = useUserData();
+  const {userData, isAuthenticated, role } = useUserData()  ;
 
   const hideMenus = pathname === '/login' || pathname === '/register'
 
@@ -87,20 +87,14 @@ export const Navbar = () => {
                   </Avatar>
                 </div>
                 <Button
-                  onClick={() => {
-                    router.replace('/login')
-                  }}
+                  onClick={logout}
                   className='gap-2' variant={'destructive'}>
                   <LogOut />  
                   Logout
                 </Button> 
               </div>
               : 
-              <Button
-                onClick={() => {
-                  router.replace('/login')
-                }}
-              >Login</Button>
+              <Button>Login</Button>
             }
           </div>
           <Popover>

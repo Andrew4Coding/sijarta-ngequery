@@ -54,7 +54,11 @@ export const LoginPage = () => {
                     description: "User Login successfully",
                     variant: 'success'
                 });
-                router.replace('/');
+                
+                // Set timeout
+                setTimeout(() => {
+                    router.replace('/');
+                }, 1000)
             } else {
                 toast({
                     title: "Failed",

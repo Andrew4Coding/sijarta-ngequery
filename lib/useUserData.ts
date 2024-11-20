@@ -2,7 +2,7 @@
 
 import { useCookies } from "@/hooks/use-cookie";
 import { decode } from "jsonwebtoken";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export type ReturnType = {
@@ -27,9 +27,11 @@ type sessionType = {
 export const useUserData: () => ReturnType = () => {
     const session = useCookies();
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
-        if (!session) {
+        // if not session and not login
+        if (!session && pathname !== '/login') {
             router.replace('/login');
         }
     }, [])
