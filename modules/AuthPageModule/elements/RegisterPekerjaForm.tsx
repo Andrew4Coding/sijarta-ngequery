@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { RegisterAsPekerjaSchema } from "../schema";
 
+import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -11,17 +12,78 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
-import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from 'uuid';
+import { z } from "zod";
 
 export const RegisterPekerjaForm = () => {
     const form = useForm<z.infer<typeof RegisterAsPekerjaSchema>>({
-        resolver: zodResolver(RegisterAsPekerjaSchema)
+        resolver: zodResolver(RegisterAsPekerjaSchema),
+        defaultValues: {
+            nama: "Andrew Devito Aryo",
+            jenisKelamin: "L",
+            noHp: "02123451290",
+            tanggalLahir: "2000-01-01",
+            alamat: "Kebon Jeruk",
+            namaBank: "BCA",
+            noRekening: "1234567890",
+            npwp: "1234567890",
+            urlFotoKtp: "https://via.placeholder.com/150",
+            password: "dummy123",
+            confirmPassword: "dummy123"
+        }
     });
 
-    const onSubmit = (data: z.infer<typeof RegisterAsPekerjaSchema>) => {
+    const { toast } = useToast();
+    const router = useRouter();
+
+    const onSubmit = async (data: z.infer<typeof RegisterAsPekerjaSchema>) => {
         console.log("Form Data:", data);
+        try {
+            const response = await fetch('/api/auth/register/pekerja', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: uuidv4(),
+                    alamat: data.alamat,
+                    jeniskelamin: data.jenisKelamin,
+                    nama: data.nama,
+                    nohp: data.noHp,
+                    pwd: data.password,
+                    saldompay: 10000,
+                    tgllahir: new Date(data.tanggalLahir),
+                    namabank: data.namaBank,
+                    nomorrekening: data.noRekening,
+                    npwp: data.npwp,
+                    linkfoto: data.urlFotoKtp
+                })
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                toast({
+                    title: "Success",
+                    description: "User registered successfully",
+                    variant: 'success'
+                });
+                router.replace('/login');
+            } else {
+                toast({
+                    title: "Failed",
+                    description: result.error,
+                    variant: 'destructive'
+                });
+            }
+        }
+        catch (error: any) {
+            console.error(error);
+            toast({
+                title: "Failed",
+                description: error.message,
+                variant: 'destructive'
+            });
+        }
     };
 
     return (

@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +14,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { RegisterPekerjaForm } from "./elements/RegisterPekerjaForm";
-import { RegisterUserForm } from "./elements/RegisterUserForm";
+import { RegisterPenggunaForm } from "./elements/RegisterUserForm";
+import { useCookies } from "@/hooks/use-cookie";
 
 export const RegisterPage = () => {
     
@@ -23,7 +24,15 @@ export const RegisterPage = () => {
 
     const [role, setRole] = useState(roleParams);
     const [isPickRole, setIsPickRole] = useState(roleParams === '');
-    const { push } = useRouter();
+    const router = useRouter();
+
+    const session = useCookies();
+
+    useEffect(() => {
+        if (session) {
+            router.replace('/');
+        }
+    })
 
     const PickRolePage = () => {
         return (
@@ -59,7 +68,7 @@ export const RegisterPage = () => {
 
                                 params.set('role', role);
 
-                                push(`?${params.toString()}`)
+                                router.push(`?${params.toString()}`)
                             }}
                         >
                             Continue
@@ -73,7 +82,7 @@ export const RegisterPage = () => {
 
     return (
         <main>
-            {isPickRole ? <PickRolePage /> : role === 'pengguna' ? <RegisterUserForm /> : <RegisterPekerjaForm />}
+            {isPickRole ? <PickRolePage /> : role === 'pengguna' ? <RegisterPenggunaForm /> : <RegisterPekerjaForm />}
         </main>
     );
 }

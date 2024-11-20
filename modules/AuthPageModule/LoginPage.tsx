@@ -15,8 +15,11 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
-import { LogIn } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { LogIn } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCookies } from '@/hooks/use-cookie';
+import { useEffect } from 'react';
 
 export const LoginPage = () => {
     const form = useForm<z.infer<typeof LoginSchema>>({
@@ -24,14 +27,50 @@ export const LoginPage = () => {
     });
 
     const { toast } = useToast();
+    const router = useRouter();
 
-    function onSubmit(data: z.infer<typeof LoginSchema>) {
-        console.log(data);
-        toast({
-            title: 'Login Berhasil',
-            description: 'Selamat datang di SIJARTA',
-            variant: 'success'
-        });
+    const session = useCookies();
+
+    useEffect(() => {
+        if (session) {
+            router.replace('/');
+        }
+    })
+
+    async function onSubmit(data: z.infer<typeof LoginSchema>) {
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                body: JSON.stringify({
+                    noHp: data.nomorTelepon,
+                    password: data.password,
+                })
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                toast({
+                    title: "Success",
+                    description: "User Login successfully",
+                    variant: 'success'
+                });
+                router.replace('/');
+            } else {
+                toast({
+                    title: "Failed",
+                    description: result.error,
+                    variant: 'destructive'
+                });
+            }
+        }
+        catch (error: any) {
+            console.error(error);
+            toast({
+                title: "Failed",
+                description: error.message,
+                variant: 'destructive'
+            });
+        }
     }
 
     return (

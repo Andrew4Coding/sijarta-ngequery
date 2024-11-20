@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { ChevronDown, LogOut } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -13,6 +13,8 @@ import {
 
 import { useUserData } from '@/lib/useUserData'
 import { usePathname, useRouter } from 'next/navigation'
+import { useCookies } from '@/hooks/use-cookie'
+import { useToast } from '@/hooks/use-toast'
 
 const penggunaMenus = [
   { href: '/', label: 'Home' },
@@ -39,6 +41,23 @@ export const Navbar = () => {
 
   const hideMenus = pathname === '/login' || pathname === '/register'
 
+  const { toast } = useToast();
+
+  async function logout() {
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST'
+    })
+    console.log(response)
+    if (response.ok) {
+      toast({
+        title: "Success",
+        description: "User logout successfully",
+        variant: 'success'
+      })
+      router.replace('/login')
+    }
+  }
+
   return (
     <nav className='fixed top-0 w-full bg-white shadow-md px-10 md:px-32 py-8 flex justify-between items-center z-50 '>
       <h1 className='font-extrabold text-3xl '>SIJARTA</h1>
@@ -55,7 +74,7 @@ export const Navbar = () => {
                 <div className='flex items-center gap-2 text-sm'>
                   <div className='text-right'>
                     <p className='font-bold'>Hello, {userData.nama}</p>
-                    <p>Rp {userData.saldoMPay}</p>
+                    {/* <p>Rp {userData.saldoMPay}</p> */}
                   </div>
                   <Avatar
                     className='cursor-pointer'
@@ -105,7 +124,7 @@ export const Navbar = () => {
                 <li>
                   <Link href='/login'>
                     <Button className='w-full'
-                      onClick={() => setIsOpen(false)}
+                      onClick={logout}
                     >
                       <LogOut className='w-4' />
                       Logout

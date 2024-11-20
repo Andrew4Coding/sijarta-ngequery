@@ -19,7 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import {v4 as uuidv4 } from 'uuid';
 import { useRouter } from "next/navigation";
 
-export const RegisterUserForm = () => {
+export const RegisterPenggunaForm = () => {
     const router = useRouter();
     const form = useForm<z.infer<typeof RegisterAsUserSchema>>({
         resolver: zodResolver(RegisterAsUserSchema),

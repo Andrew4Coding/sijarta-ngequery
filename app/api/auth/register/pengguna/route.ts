@@ -1,3 +1,4 @@
+import { Pelanggan } from "@/database/models/pelanggan";
 import { User } from "@/database/models/user";
 import { UserType } from "@/database/types";
 import bcrypt from "bcryptjs";
@@ -61,6 +62,12 @@ export async function POST(req: Request) {
             pwd: hashedPassword,
             saldompay,
             tgllahir
+        })
+
+        const pelangganModel = new Pelanggan();
+        await pelangganModel.create({
+            id: newUser.id,
+            level: "-"
         })
 
         return new Response(

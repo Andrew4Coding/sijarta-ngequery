@@ -7,6 +7,9 @@ import { Catamaran, DM_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
 
+import {cookies} from "next/headers";
+import { CookieProvider } from "@/hooks/use-cookie";
+
 export const metadata: Metadata = {
   title: "Sijarta",
   description: "Sijarta by ngeQuery team",
@@ -24,11 +27,13 @@ const catamaran = Catamaran({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 })
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+
   return (
     <html
       suppressHydrationWarning
@@ -40,9 +45,13 @@ export default function RootLayout({
         <Suspense
           fallback={<div>Loading ...</div>}
         >
-          <Navbar />
-          <Layout>{children}</Layout>
-          <Toaster />
+          <CookieProvider
+            cookie={cookieStore.get('sessionToken')?.value}
+          >
+            <Navbar />
+            <Layout>{children}</Layout>
+            <Toaster />
+          </CookieProvider>
         </Suspense>
       </body>
     </html>

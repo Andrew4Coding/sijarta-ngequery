@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { Pekerja } from "@/database/models/pekerja";
+import { User } from "@/database/models/user";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { User } from "@/database/models/user";
-import { UserType } from "@/database/types";
+import { cookies } from "next/headers";
 
 const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key";
 
@@ -11,7 +11,9 @@ interface LoginInterface {
     password: string;
 }
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
+    const cookieStore = await cookies();
+    
     const { noHp, password }: LoginInterface = await req.json();
 
     if (!noHp || !password) {
@@ -38,6 +40,8 @@ export async function GET(req: Request) {
             )
         }
 
+        const role = await userModel.getRole(user.id);
+        
         const isPasswordValid = await bcrypt.compare(password, user.pwd || "");
 
         if (!isPasswordValid) {
@@ -51,14 +55,28 @@ export async function GET(req: Request) {
         }
 
         const token = jwt.sign(
-            { id: user.id, noHp: user.nohp, nama: user.nama },
+            { 
+                data: {
+                    id: user.id,
+                    nama: user.nama,
+                },
+                role: role
+             },
             SECRET_KEY,
             { expiresIn: "365d" }
         );
 
+        // Set cookies
+        cookieStore.set("sessionToken", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+        });
+
         return new Response(
             JSON.stringify({
                 message: "Success",
+                role: role,
                 token,
             }),
             {
@@ -69,7 +87,7 @@ export async function GET(req: Request) {
             },
         );
 
-    } catch (error : any) {
+    } catch (error: any) {
         console.error(error);
         return new Response(
             JSON.stringify({

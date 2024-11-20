@@ -1,5 +1,6 @@
+import { Pekerja } from "@/database/models/pekerja";
 import { User } from "@/database/models/user";
-import { UserType } from "@/database/types";
+import { PekerjaType, UserType } from "@/database/types";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
@@ -12,8 +13,12 @@ export async function POST(req: Request) {
             nohp,
             pwd,
             saldompay,
-            tgllahir
-        }: UserType = await req.json();
+            tgllahir,
+            namabank,
+            nomorrekening,
+            npwp,
+            linkfoto,            
+        }: UserType & PekerjaType = await req.json();
 
         if (
             !id ||
@@ -23,7 +28,11 @@ export async function POST(req: Request) {
             !nohp ||
             !pwd ||
             !saldompay ||
-            !tgllahir
+            !tgllahir ||
+            !namabank ||
+            !nomorrekening ||
+            !npwp ||
+            !linkfoto
         ) {
             return new Response(
                 JSON.stringify({
@@ -57,6 +66,17 @@ export async function POST(req: Request) {
             pwd: hashedPassword,
             saldompay,
             tgllahir
+        })
+
+        const pekerjaModel = new Pekerja();
+        await pekerjaModel.create({
+            id,
+            npwp,
+            namabank,
+            nomorrekening,
+            linkfoto,
+            jumlahpesananaselesai: 0,
+            rating: 0,
         })
 
         return new Response(

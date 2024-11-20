@@ -1,53 +1,57 @@
 'use client';
 
-interface UserPenggunaData {
-    nama: string;
-    jenisKelamin: string;
-    noHp: string;
-    tanggalLahir: string;
-    alamat: string;
-    saldoMPay: number;
-}
+import { useCookies } from "@/hooks/use-cookie";
+import { decode } from "jsonwebtoken";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-interface UserPekerjaData extends UserPenggunaData {
-    namaBank: string;
-    noRekening: string;
-    npwp: string;
-    urlFotoKtp: string;
-    rating: number;
-    jumlahPesananSelesai: number;
-    kategoriJasa: string[];
-}
-
-export type ReturnType =
-    | {
-        role: 'pengguna';
-        userData: UserPenggunaData;
-        isAuthenticated: boolean;
-    }
-    | {
-        role: 'pekerja';
-        userData: UserPekerjaData;
-        isAuthenticated: boolean;
+export type ReturnType = {
+    role: 'pengguna' | 'pekerja';
+    userData: {
+        id: string;
+        nama: string;
     };
+    isAuthenticated: boolean;
+}
+type sessionType = {
+    data: {
+        id: string;
+        nama: string;
+        noHp: string;
+    },
+    exp: number,
+    iat: number,
+    role: 'pengguna' | 'pekerja',
+}
 
 export const useUserData: () => ReturnType = () => {
+    const session = useCookies();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!session) {
+            router.replace('/login');
+        }
+    }, [])
+    
+    const decoded: sessionType = decode(session as string) as sessionType;
+
+    if (!decoded) {
+        return {
+            role: 'pengguna',
+            userData: {
+                id: '',
+                nama: '',
+            },
+            isAuthenticated: false,
+        }
+    }
+    
     return {
-        role: 'pengguna',
+        role: decoded.role,
         userData: {
-            nama: 'John Doe',
-            jenisKelamin: 'L',
-            noHp: '08123456789',
-            tanggalLahir: '2000-01-01',
-            alamat: 'Jl. Jendral Sudirman No. 1',
-            namaBank: 'BCA',
-            noRekening: '1234567890',
-            npwp: '1234567890',
-            urlFotoKtp: 'https://via.placeholder.com/150',
-            jumlahPesananSelesai: 10,
-            rating: 4.5,
-            saldoMPay: 1000000,
-            kategoriJasa: ['Cleaning Service', 'Antar Makanan', 'Car Service'],
+            id: decoded.data.id,
+            nama: decoded.data.nama,
         },
         isAuthenticated: true,
     };
