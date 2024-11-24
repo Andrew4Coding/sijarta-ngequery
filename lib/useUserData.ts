@@ -29,12 +29,12 @@ export const useUserData: () => ReturnType = () => {
     const router = useRouter();
     const pathname = usePathname();
 
-    useEffect(() => {
-        // if not session and not login
-        if (!session && pathname !== '/login') {
-            router.replace('/login');
-        }
-    }, [])
+    // useEffect(() => {
+    //     // if not session and not login
+    //     if (!session && pathname !== '/login') {
+    //         router.replace('/login');
+    //     }
+    // }, [])
     
     const decoded: sessionType = decode(session as string) as sessionType;
 

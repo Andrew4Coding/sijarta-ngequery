@@ -54,7 +54,6 @@ export const Navbar = () => {
         description: "User logout successfully",
         variant: 'success'
       })
-      router.replace('/login')
     }
   }
 

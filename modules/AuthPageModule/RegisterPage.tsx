@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import { RegisterPekerjaForm } from "./elements/RegisterPekerjaForm";
 import { RegisterPenggunaForm } from "./elements/RegisterUserForm";
-import { useCookies } from "@/hooks/use-cookie";
 
 export const RegisterPage = () => {
     
@@ -25,14 +24,6 @@ export const RegisterPage = () => {
     const [role, setRole] = useState(roleParams);
     const [isPickRole, setIsPickRole] = useState(roleParams === '');
     const router = useRouter();
-
-    const session = useCookies();
-
-    useEffect(() => {
-        if (session) {
-            router.replace('/');
-        }
-    })
 
     const PickRolePage = () => {
         return (
