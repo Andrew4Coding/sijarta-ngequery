@@ -2,25 +2,13 @@
 import { Button } from "@/components/ui/button";
 import { PekerjaType, PelangganType, UserType } from "@/database/types";
 import { useUserData } from "@/lib/useUserData";
+import { formatDateToDDMMYYYY } from "@/lib/utils";
 import { Pencil } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-function formatDateToDDMMYYYY(dateInput: Date | string): string {
-    // Ensure the input is parsed as a Date object
-    const date = new Date(dateInput);
 
-    if (isNaN(date.getTime())) {
-        throw new Error("Invalid date input");
-    }
-
-    const day = String(date.getUTCDate()).padStart(2, '0'); // Two-digit day
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Two-digit month
-    const year = date.getUTCFullYear();
-
-    return `${day}/${month}/${year}`;
-}
 
 export const ProfilePengguna = () => {
     const [userDataState, setUserDataState] = useState<PelangganType & UserType>({} as PelangganType & UserType);
