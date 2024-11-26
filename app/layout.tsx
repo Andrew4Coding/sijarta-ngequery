@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { Navbar } from "@/components/layout/Navbar";
-import { Catamaran, DM_Sans } from "next/font/google";
+import { Urbanist } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
 
@@ -15,15 +15,9 @@ export const metadata: Metadata = {
   description: "Sijarta by ngeQuery team",
 };
 
-const dmsans = DM_Sans({
+const urbanist = Urbanist({
   subsets: ['latin'],
-  variable: "--font-dm-sans",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-})
-
-const catamaran = Catamaran({
-  subsets: ['latin'],
-  variable: "--font-catamaran",
+  variable: "--font-urbanist",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 })
 
@@ -40,7 +34,7 @@ export default async function RootLayout({
       suppressContentEditableWarning
       lang="en">
       <body
-        className={`${dmsans.variable} ${catamaran.variable} antialiased font-dmsans`}
+        className={`${urbanist.variable} antialiased font-dmsans`}
       >
         <Suspense
           fallback={<div>Loading ...</div>}

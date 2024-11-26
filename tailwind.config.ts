@@ -11,8 +11,7 @@ const config: Config = {
   theme: {
 	  extend: {
 		  fontFamily: {
-			  dmsans: ['var(--font-dm-sans)', 'sans-serif'],
-			  catamaran: ['var(--font-catamaran)', 'sans-serif'],
+			  urbanist: ['var(--font-urbanist)'],
 		  },
   		colors: {
   			background: 'var(--background)',
