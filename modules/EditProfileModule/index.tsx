@@ -1,8 +1,8 @@
 'use client'
 
 import { useUserData } from '@/lib/useUserData';
-import { EditProfilePekerja } from "./EditProfilePekerja";
-import { EditProfilePelanggan } from "./EditProfilePelanggan";
+import { EditProfilePekerja } from "./sections/EditProfilePekerja";
+import { EditProfilePelanggan } from "./sections/EditProfilePelanggan";
 
 export function dateConverter(date: Date | undefined) {
     if (!date) return "";
@@ -18,17 +18,19 @@ export function dateConverter(date: Date | undefined) {
 export const EditProfilePageModule = () => {
     const { role,  isLoading } = useUserData();
     return (
-        <>
+        <main
+            className='py-40 px-10 md:px-32 w-full min-h-[100vh]'
+        >
             {
                 isLoading ? (
                     <div className="flex justify-center items-center h-screen">
                         <p>Loading...</p>
                     </div>
                 ) :
-                <main>
-                    {role === 'pelanggan' ? <EditProfilePelanggan /> : <EditProfilePekerja />}
-                </main>
+                    <>
+                        {role === 'pelanggan' ? <EditProfilePelanggan /> : <EditProfilePekerja />}
+                    </>
             }
-        </>
+        </main>
     )
 };

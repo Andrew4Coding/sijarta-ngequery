@@ -20,9 +20,8 @@ type Category = {
 };
 
 export const HomePageModule = () => {
-    const {role} = useUserData();
+    const { role } = useUserData();
     const isPekerja = role === 'pekerja';
-
 
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -62,7 +61,7 @@ export const HomePageModule = () => {
     };
 
     return (
-        <main className="flex flex-col items-center bg-gray-100 min-h-screen px-10 md:px-10 py-40  w-full">
+        <main className="flex flex-col items-center bg-background min-h-screen px-10 md:px-10 py-40  w-full">
             <div className="flex gap-2 mb-6 w-full max-w-lg">
                 <Select
                     onValueChange={(val) => {
@@ -104,7 +103,7 @@ export const HomePageModule = () => {
             <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-10">
                 {filteredCategories.map((category, index) => (
                     <div key={index} className="bg-white border border-gray-200 mb-4 rounded-md">
-                        <h3 className="bg-gray-100 font-semibold text-base px-4 py-2 border-b border-gray-200 rounded-t-md">{category.name}</h3>
+                        <h3 className="bg-green-100 font-semibold text-base px-4 py-2 border-b border-gray-200 rounded-t-md">{category.name}</h3>
                         <ul className="list-none">
                             {category.subcategories.map((subcategory, subIndex) => (
                                 <Link key={subIndex} href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pelanggan'}/${subcategory.split(" ").join("-")}`}>

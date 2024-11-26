@@ -26,6 +26,7 @@ type sessionType = {
 
 export const useUserData: () => ReturnType = () => {
     const [sessionToken, setSessionToken] = useState<string | null>(null);
+    const [decodedToken, setDecodedToken] = useState<sessionType | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
     const pathname = usePathname();
@@ -33,16 +34,9 @@ export const useUserData: () => ReturnType = () => {
     async function fetchCookie() {
         try {
             const res = await fetch('/api/auth/cookies');
-            const data: {
-                message: string,
-                token: string,
-            } = await res.json();
-
-            if (data.token) {
-                setSessionToken(data.token);
-            } else {
-                setSessionToken(null);
-            }
+            const data: { message: string; token: string } = await res.json();
+            if (data.token) setSessionToken(data.token);
+            else setSessionToken(null);
         } catch (error) {
             console.error("Error fetching cookie:", error);
             setSessionToken(null);
@@ -56,26 +50,23 @@ export const useUserData: () => ReturnType = () => {
     }, [pathname]);
 
     useEffect(() => {
-        if (!isLoading) {
-            if (sessionToken) {
-                const isAuthPage = pathname === '/login' || pathname === '/register';
-                if (isAuthPage) {
-                    // Redirect authenticated user to homepage
-                    router.push('/');
+        if (sessionToken) {
+            try {
+                const decoded = decode(sessionToken) as sessionType;
+                const isExpired = decoded.exp * 1000 < Date.now();
+                if (isExpired) {
+                    setSessionToken(null); // Handle expired token
+                } else {
+                    setDecodedToken(decoded);
                 }
-            } else {
-                const isProtectedPage = pathname !== '/login' && pathname !== '/register';
-                if (isProtectedPage) {
-                    // Redirect unauthenticated user to login page
-                    router.push('/login');
-                }
+            } catch (error) {
+                console.error("Error decoding token:", error);
+                setDecodedToken(null);
             }
         }
-    }, [isLoading, sessionToken, pathname, router]);
+    }, [sessionToken]);
 
-    const decoded: sessionType = decode(sessionToken as string) as sessionType;
-
-    if (!decoded) {
+    if (isLoading || !decodedToken) {
         return {
             role: 'pelanggan',
             userData: {
@@ -83,17 +74,18 @@ export const useUserData: () => ReturnType = () => {
                 nama: '',
             },
             isAuthenticated: false,
-            isLoading
-        }
+            isLoading,
+        };
     }
 
     return {
-        role: decoded.role,
+        role: decodedToken.role,
         userData: {
-            id: decoded.data.id,
-            nama: decoded.data.nama,
+            id: decodedToken.data.id,
+            nama: decodedToken.data.nama,
         },
         isAuthenticated: true,
-        isLoading
+        isLoading,
     };
 };
+

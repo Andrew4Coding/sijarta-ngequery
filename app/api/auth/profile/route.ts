@@ -3,7 +3,7 @@ import { Pekerja } from "@/database/models/pekerja";
 import { Pelanggan } from "@/database/models/pelanggan";
 import { User } from "@/database/models/user";
 import { PelangganType } from "@/database/types";
-import { EditProfilePekerjaSchema, EditProfilePelangganSchema } from "@/modules/ProfilePageModule/edit/types";
+import { EditProfilePekerjaSchema, EditProfilePelangganSchema } from "@/modules/EditProfileModule/types";
 import { z } from "zod";
 
 export async function GET(req: Request) {
