@@ -17,6 +17,6 @@ export class User extends BaseModel<UserType> {
         );
         const isPekerja: boolean = result[0]['exists'];
 
-        return isPekerja ? 'pekerja' : 'pengguna';
+        return isPekerja ? 'pekerja' : 'pelanggan';
     }
 }

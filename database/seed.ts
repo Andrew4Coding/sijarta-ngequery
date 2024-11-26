@@ -131,7 +131,7 @@ export async function createTable() {
         CREATE TABLE VOUCHER (
             Kode VARCHAR(50) PRIMARY KEY,
             JmlHariBerlaku INT NOT NULL CHECK (JmlHariBerlaku >= 0),
-            KuotaPenggunaan INT,
+            KuotaPelangganan INT,
             Harga DECIMAL NOT NULL CHECK (Harga >= 0),
             FOREIGN KEY (Kode) REFERENCES DISKON(Kode)
         );
@@ -310,7 +310,7 @@ export async function seedDatabase() {
         ('DISKON019', 17.00, 200),
         ('DISKON020', 5.75, 60);
 
-        INSERT INTO VOUCHER (Kode, JmlHariBerlaku, KuotaPenggunaan, Harga) VALUES
+        INSERT INTO VOUCHER (Kode, JmlHariBerlaku, KuotaPelangganan, Harga) VALUES
         ('DISKON001', 30, 100, 1000.00),
         ('DISKON002', 60, 50, 1500.00),
         ('DISKON003', 45, 200, 750.00),

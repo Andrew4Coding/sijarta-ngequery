@@ -21,12 +21,12 @@ export const Transaksi = ({ saldo }: { saldo: string }) => {
       <KategoriCombobox
         value={value}
         setValue={setValue}
-        isPengguna={role === "pengguna"}
+        isPelanggan={role === "pelanggan"}
       />
       {value === "TopUp MyPay" && <TopUp />}
       {value === "Withdrawal" && <Withdrawal />}
       {value === "Transfer MyPay" && <Transfer />}
-      {value === "Membayar Transaksi" && role === "pengguna" && (
+      {value === "Membayar Transaksi" && role === "pelanggan" && (
         <BayarTransaksi />
       )}
       {value === "" && (

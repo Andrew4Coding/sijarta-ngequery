@@ -1,8 +1,8 @@
+import { KategoriJasa } from "@/database/models/kategoriJasa";
 import { Pekerja } from "@/database/models/pekerja";
 import { Pelanggan } from "@/database/models/pelanggan";
 import { User } from "@/database/models/user";
-import { PekerjaType, PelangganType } from "@/database/types";
-import { convertToDate } from "@/lib/utils";
+import { PelangganType } from "@/database/types";
 import { EditProfilePekerjaSchema } from "@/modules/ProfilePageModule/edit/types";
 import { z } from "zod";
 
@@ -46,13 +46,13 @@ export async function GET(req: Request) {
             );
         }
         else {
-            const pelanggan = new Pelanggan().findBy('id', id);
+            const pelanggan = await new Pelanggan().findBy('id', user?.id);
             return new Response(
                 JSON.stringify({
                     message: "Success",
                     data: {
-                        user,
-                        pelanggan,
+                        ...user,
+                        ...pelanggan,
                     },
                 }),
                 {
@@ -73,8 +73,6 @@ export async function GET(req: Request) {
         );
     }
 }
-
-
 
 export async function PATCH(req: Request) {
     try {
@@ -104,8 +102,25 @@ export async function PATCH(req: Request) {
                 alamat: data.alamat,
                 jeniskelamin: data.jeniskelamin as "L" | "P",
                 nohp: data.nohp,
-                tgllahir: convertToDate(data.tanggallahir),
+                tgllahir: new Date(data.tanggallahir),
             })
+
+            await new Pekerja().clearKategoriJasa(pekerja.id);
+
+            for (const kategori of data.kategorijasa) {
+                const kategoriObj = await new KategoriJasa().findBy('namakategori', kategori);
+
+                try {
+                    if (!kategoriObj) {
+                        continue;
+                    }
+
+                    await new Pekerja().addKategoriJasa(pekerja.id, kategoriObj?.id);
+                }
+                catch (error) {
+                    continue;
+                }
+            }
 
             await new Pekerja().update("id", id, {
                 namabank: data.namabank,
@@ -145,8 +160,8 @@ export async function PATCH(req: Request) {
                 JSON.stringify({
                     message: "Success",
                     data: {
-                        user,
-                        pelanggan,
+                        ... user,
+                        ... pelanggan,
                     },
                 }),
                 {

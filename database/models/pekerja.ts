@@ -13,4 +13,12 @@ export class Pekerja extends BaseModel<PekerjaType> {
 
         return result.map((item) => item.namakategori);
     }
+
+    async addKategoriJasa(pekerjaid: string, kategorijasaid: string) {
+        await this.customQuery("INSERT INTO PEKERJA_KATEGORI_JASA (pekerjaid, kategorijasaid) VALUES ($1, $2);", [pekerjaid, kategorijasaid]);
+    }
+
+    async clearKategoriJasa(pekerjaId: string) {
+        await this.customQuery("DELETE FROM PEKERJA_KATEGORI_JASA WHERE pekerjaid = $1;", [pekerjaId]);
+    }
 }

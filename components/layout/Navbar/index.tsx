@@ -16,7 +16,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useCookies } from '@/hooks/use-cookie'
 import { useToast } from '@/hooks/use-toast'
 
-const penggunaMenus = [
+const pelangganMenus = [
   { href: '/', label: 'Home' },
   { href: '/mypay', label: 'MyPay' },
   { href: '/pemesanan-jasa', label: 'Pesanan Saya' },
@@ -63,7 +63,7 @@ export const Navbar = () => {
       {!hideMenus && (
         <>
           <div className='hidden md:flex gap-4'>
-            {isAuthenticated && (role === 'pengguna' ? penggunaMenus : pekerjaMenus).map(menu => (
+            {isAuthenticated && (role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
               <Link key={menu.href} href={menu.href}>{menu.label}</Link>
             ))}
           </div>
@@ -106,7 +106,7 @@ export const Navbar = () => {
             </PopoverTrigger>
             <PopoverContent className='bg-white'>
               <ul className='space-y-2 '>
-                {(role === 'pengguna' ? penggunaMenus : pekerjaMenus).map(menu => (
+                {(role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
                   <li key={menu.href}>
                     <Link href={menu.href}>{menu.label}</Link>
                   </li>

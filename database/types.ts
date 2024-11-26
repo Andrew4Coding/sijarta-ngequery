@@ -121,6 +121,6 @@ export interface TrPemesananStatusType {
 export interface VoucherType {
     kode: string;
     jmlhariberlaku: number;
-    kuotapenggunaan?: number;
+    kuotapelangganan?: number;
     harga: number;
 }

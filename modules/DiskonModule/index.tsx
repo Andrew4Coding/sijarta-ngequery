@@ -55,7 +55,7 @@ export const DiskonModule = () => {
               </div>
               <Separator className='my-2 border-[0.5px] border-black/5' />
               <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-800 text-xs md:text-sm">Kuota Penggunaan</span>
+                <span className="text-gray-800 text-xs md:text-sm">Kuota Pelangganan</span>
                 <span className="text-blue-600 font-bold text-xs md:text-sm">{voucher.quota}</span>
               </div>
               <Separator className='my-2 border-[0.5px] border-black/5' />
@@ -77,7 +77,7 @@ export const DiskonModule = () => {
                         userData.saldoMPay >= voucher.price
                       ) ? (
                         <>
-                          Selamat! Anda berhasil membeli voucher dengan kode <strong>{voucher.code}</strong>. Voucher ini akan berlaku hingga tanggal <strong>{voucher.validity}</strong> dengan kuota penggunaan sebanyak <strong>{voucher.quota}</strong>.
+                          Selamat! Anda berhasil membeli voucher dengan kode <strong>{voucher.code}</strong>. Voucher ini akan berlaku hingga tanggal <strong>{voucher.validity}</strong> dengan kuota pelangganan sebanyak <strong>{voucher.quota}</strong>.
                         </>
                       ) : (
                         <>

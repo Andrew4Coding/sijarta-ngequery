@@ -19,13 +19,13 @@ import { useToast } from "@/hooks/use-toast";
 import {v4 as uuidv4 } from 'uuid';
 import { useRouter } from "next/navigation";
 
-export const RegisterPenggunaForm = () => {
+export const RegisterPelangganForm = () => {
     const router = useRouter();
     const form = useForm<z.infer<typeof RegisterAsUserSchema>>({
         resolver: zodResolver(RegisterAsUserSchema),
         defaultValues: {
-            noHp: "02123451290",
-            nama: "Andrew Devito Aryo",
+            noHp: "08123456789",
+            nama: "Vincentius Filbert Amadeo",
             jenisKelamin: "L",
             alamat: "Kebon Jeruk",
             password: "dummy123",
@@ -39,20 +39,31 @@ export const RegisterPenggunaForm = () => {
     const onSubmit = async (data: z.infer<typeof RegisterAsUserSchema>) => {
         console.log("Form Data:", data);
         try {
-            const response = await fetch('/api/auth/register/pengguna', {
+            console.log(`Date: ${data.tanggalLahir}`);
+            
+            const body = {
+                id: uuidv4(),
+                nama: data.nama,
+                alamat: data.alamat,
+                jeniskelamin: data.jenisKelamin,
+                nohp: data.noHp,
+                pwd: data.password,
+                saldompay: 10000,
+                tgllahir: new Date(data.tanggalLahir)
+            }
+
+            console.log(body);
+            
+
+            const response = await fetch('/api/auth/register/pelanggan', {
                 method: 'POST',
-                body: JSON.stringify({
-                    id: uuidv4(),
-                    nama: data.nama,
-                    alamat: data.alamat,
-                    jeniskelamin: data.jenisKelamin,
-                    nohp: data.noHp,
-                    pwd: data.password,
-                    saldompay: 10000,
-                    tgllahir: new Date(data.tanggalLahir)
-                })
+                body: JSON.stringify(body)
             });
+
             const result = await response.json();
+
+            console.log("Response:", body);
+            
 
             if (response.ok) {
                 toast({

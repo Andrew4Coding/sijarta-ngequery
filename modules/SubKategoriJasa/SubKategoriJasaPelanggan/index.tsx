@@ -20,7 +20,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-export const SubKategoriJasaPengguna = ({
+export const SubKategoriJasaPelanggan = ({
     subCategory
 }: {
     subCategory: string
@@ -235,4 +235,4 @@ export const SubKategoriJasaPengguna = ({
     );
 };
 
-export default SubKategoriJasaPengguna;
+export default SubKategoriJasaPelanggan;

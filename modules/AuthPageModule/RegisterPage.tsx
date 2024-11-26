@@ -14,7 +14,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { RegisterPekerjaForm } from "./elements/RegisterPekerjaForm";
-import { RegisterPenggunaForm } from "./elements/RegisterUserForm";
+import { RegisterPelangganForm } from "./elements/RegisterPelangganForm";
 
 export const RegisterPage = () => {
     
@@ -46,7 +46,7 @@ export const RegisterPage = () => {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Role</SelectLabel>
-                                        <SelectItem value="pengguna">Pengguna</SelectItem>
+                                        <SelectItem value="pelanggan">Pelanggan</SelectItem>
                                         <SelectItem value="pekerja">Pekerja</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
@@ -73,7 +73,7 @@ export const RegisterPage = () => {
 
     return (
         <main>
-            {isPickRole ? <PickRolePage /> : role === 'pengguna' ? <RegisterPenggunaForm /> : <RegisterPekerjaForm />}
+            {isPickRole ? <PickRolePage /> : role === 'pelanggan' ? <RegisterPelangganForm /> : <RegisterPekerjaForm />}
         </main>
     );
 }

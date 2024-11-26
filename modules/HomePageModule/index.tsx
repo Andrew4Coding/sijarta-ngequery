@@ -107,7 +107,7 @@ export const HomePageModule = () => {
                         <h3 className="bg-gray-100 font-semibold text-base px-4 py-2 border-b border-gray-200 rounded-t-md">{category.name}</h3>
                         <ul className="list-none">
                             {category.subcategories.map((subcategory, subIndex) => (
-                                <Link key={subIndex} href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pengguna'}/${subcategory.split(" ").join("-")}`}>
+                                <Link key={subIndex} href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pelanggan'}/${subcategory.split(" ").join("-")}`}>
                                     <li className="p-2 pl-4 border-b border-gray-200 last:border-b-0 hover:bg-gray-50">
                                         {subcategory}
                                     </li>

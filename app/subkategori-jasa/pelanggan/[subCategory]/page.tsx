@@ -1,11 +1,11 @@
-import SubKategoriJasaPengguna from "@/modules/SubKategoriJasa/SubKategoriJasaPengguna";
+import SubKategoriJasaPelanggan from "@/modules/SubKategoriJasa/SubKategoriJasaPelanggan";
 
 async function page({ params }: {
   params: Promise<{ subCategory: string }>;
 }) {
   const subcategory = (await params).subCategory.replace("-", " ");
   return (
-    <SubKategoriJasaPengguna subCategory={subcategory} />
+    <SubKategoriJasaPelanggan subCategory={subcategory} />
   );
 }
 

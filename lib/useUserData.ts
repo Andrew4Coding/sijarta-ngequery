@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export type ReturnType = {
-    role: 'pengguna' | 'pekerja';
+    role: 'pelanggan' | 'pekerja';
     userData: {
         id: string;
         nama: string;
@@ -21,7 +21,7 @@ type sessionType = {
     },
     exp: number,
     iat: number,
-    role: 'pengguna' | 'pekerja',
+    role: 'pelanggan' | 'pekerja',
 }
 
 export const useUserData: () => ReturnType = () => {
@@ -40,7 +40,7 @@ export const useUserData: () => ReturnType = () => {
 
     if (!decoded) {
         return {
-            role: 'pengguna',
+            role: 'pelanggan',
             userData: {
                 id: '',
                 nama: '',

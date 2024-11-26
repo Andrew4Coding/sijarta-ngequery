@@ -1,0 +1,204 @@
+'use client'
+import { Button } from "@/components/ui/button";
+import {
+    Form, FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PelangganType, UserType } from "@/database/types";
+import { useToast } from "@/hooks/use-toast";
+import { useUserData } from "@/lib/useUserData";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft, Save } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { dateConverter } from ".";
+import { EditProfilePelangganSchema } from "./types";
+
+export const EditProfilePelanggan = () => {
+    const [userDataState, setUserDataState] = useState<PelangganType & UserType>({} as PelangganType & UserType);
+    const { userData } = useUserData();
+    const router = useRouter();
+    const { toast } = useToast();
+
+    async function fetchUserProfile() {
+        const response = await fetch(`/api/auth/profile?id=${userData.id}&role=pelanggan`);
+        const data = await response.json();
+
+        setUserDataState(data.data);
+    }
+
+    const form = useForm<z.infer<typeof EditProfilePelangganSchema>>({
+        resolver: zodResolver(EditProfilePelangganSchema),
+        values: {
+            nama: userDataState.nama ?? "",
+            jeniskelamin: userDataState.jeniskelamin ?? "L",
+            nohp: userDataState.nohp ?? "",
+            tanggallahir: dateConverter(userDataState.tgllahir),
+            alamat: userDataState.alamat ?? "",
+            level: userDataState.level ?? "",
+            saldompay: userDataState.saldompay?.toString() ?? "0",
+        },
+    });
+
+    useEffect(() => {
+        fetchUserProfile();
+    }, []);
+
+    async function onSubmit(data: z.infer<typeof EditProfilePelangganSchema>) {
+        console.log(data);
+
+        try {
+            const response = await fetch(`/api/auth/profile?id=${userData.id}&role=pelanggan`, {
+                method: "PATCH",
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                toast({
+                    title: "Success",
+                    description: "Profile updated successfully",
+                    variant: "success",
+                });
+                router.replace(`/profile?role=pelanggan`);
+            } else {
+                throw new Error(result.error);
+            }
+        } catch (error: any) {
+            toast({
+                title: "Error",
+                description: error.message,
+                variant: "destructive",
+            });
+        }
+    }
+
+    return (
+        <main className="flex flex-col my-40 px-10 md:px-32 gap-5">
+            <div className="flex gap-4 items-center">
+                <ArrowLeft
+                    className="w-4 cursor-pointer hover:scale-105"
+                    onClick={() => router.back()}
+                />
+                <h1 className="font-bold text-xl">Edit Profile Pelanggan</h1>
+            </div>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+                    <Image
+                        src="/psql.png"
+                        alt="Profile Picture"
+                        width={150}
+                        height={150}
+                        className="rounded-full"
+                    />
+                    <div className="grid grid-cols-2 gap-5">
+                        <FormField
+                            control={form.control}
+                            name="nama"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Nama</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            label=""
+                                            className="border p-2" type="text" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="jeniskelamin"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Jenis Kelamin</FormLabel>
+                                    <FormControl>
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={(val) => {
+                                                field.onChange(val);
+                                            }}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Pilih jenis kelamin ..." />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Jenis Kelamin</SelectLabel>
+                                                    <SelectItem value="L">Laki-laki</SelectItem>
+                                                    <SelectItem value="P">Perempuan</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="nohp"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>No HP</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            label=""
+                                            className="border p-2" type="text" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="tanggallahir"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Tanggal Lahir</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            label=""
+                                            className="border p-2" type="date" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="alamat"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Alamat</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            label=""
+                                            className="border p-2" type="text" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <Button type="submit">
+                        <Save className="w-4" />
+                        Save Changes
+                    </Button>
+                </form>
+            </Form>
+        </main>
+    );
+};

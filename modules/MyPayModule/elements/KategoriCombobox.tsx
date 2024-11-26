@@ -21,11 +21,11 @@ import { cn } from "@/lib/utils";
 export const KategoriCombobox = ({
   value,
   setValue,
-  isPengguna,
+  isPelanggan,
 }: {
   value: string;
   setValue: (value: string) => void;
-  isPengguna: boolean;
+  isPelanggan: boolean;
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -50,7 +50,7 @@ export const KategoriCombobox = ({
             <CommandEmpty>Tidak ada Kategori Terkait.</CommandEmpty>
             <CommandGroup>
               {paymentTypeData.map((paymentType) => {
-                if (!isPengguna && paymentType === "Membayar Transaksi") {
+                if (!isPelanggan && paymentType === "Membayar Transaksi") {
                   return null;
                 }
                 return (

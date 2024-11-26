@@ -1,13 +1,13 @@
 import z from "zod";
 
 export const EditProfilePelangganSchema = z.object({
-    Nama: z.string().nonempty("Nama is required"),
-    Level: z.string().nonempty("Level is required"),
-    JenisKelamin: z.string().nonempty("Jenis Kelamin is required"),
-    NoHP: z.string().nonempty("No HP is required").regex(/^\d+$/, "No HP must be a number"),
-    TanggalLahir: z.string().nonempty("Tanggal Lahir is required").regex(/^\d{2} \w+ \d{4}$/, "Tanggal Lahir must be in the format DD MMMM YYYY"),
-    Alamat: z.string().nonempty("Alamat is required"),
-    SaldoMPAY: z.string().nonempty("Saldo MPAY is required").regex(/^Rp \d+(\.\d{3})*$/, "Saldo MPAY must be in the format Rp X.XXX.XXX")
+    nama: z.string().nonempty("Nama is required"),
+    level: z.string().nonempty("Level is required"),
+    jeniskelamin: z.string().nonempty("Jenis Kelamin is required"),
+    nohp: z.string().nonempty("No HP is required").regex(/^\d+$/, "No HP must be a number"),
+    tanggallahir: z.string().nonempty("Tanggal Lahir is required"),
+    alamat: z.string().nonempty("Alamat is required"),
+    saldompay: z.string().nonempty("Saldo MPAY is required").regex(/^Rp \d+(\.\d{3})*$/, "Saldo MPAY must be in the format Rp X.XXX.XXX")
 });
 
 export const EditProfilePekerjaSchema = z.object({

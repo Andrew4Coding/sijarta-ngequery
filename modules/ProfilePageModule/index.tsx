@@ -7,10 +7,9 @@ import { Pencil } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { dateConverter } from "./edit";
 
-
-
-export const ProfilePengguna = () => {
+export const ProfilePelanggan = () => {
     const [userDataState, setUserDataState] = useState<PelangganType & UserType>({} as PelangganType & UserType);
 
     const { userData } = useUserData();
@@ -18,6 +17,10 @@ export const ProfilePengguna = () => {
     async function fetchUserProfile() {
         const response = await fetch(`/api/auth/profile?id=${userData.id}&role=pelanggan`);
         const data = await response.json();
+
+        console.log(data);
+        
+
         setUserDataState(data.data);
     }
 
@@ -37,27 +40,27 @@ export const ProfilePengguna = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Nama</h3>
+                    <h3 className="font-bold text-xl">Nama</h3>
                     <p className="text-sm">{userData.nama}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Jenis Kelamin</h3>
+                    <h3 className="font-bold text-xl">Jenis Kelamin</h3>
                     <p className="text-sm">{userDataState.jeniskelamin}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">No HP</h3>
+                    <h3 className="font-bold text-xl">No HP</h3>
                     <p className="text-sm">{userDataState.nohp}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Tanggal Lahir</h3>
-                    <p className="text-sm">{userDataState.tgllahir?.toUTCString()}</p>
+                    <h3 className="font-bold text-xl">Tanggal Lahir</h3>
+                    <p className="text-sm">{dateConverter(userDataState.tgllahir)}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Alamat</h3>
+                    <h3 className="font-bold text-xl">Alamat</h3>
                     <p className="text-sm">{userDataState.alamat}</p>
                 </div>
-                <div className="flex flex-col gap-2">
-                    <a href={`/profile/edit?role=pengguna`}>
+                <div className="flex flex-col gap-2 col-span-2">
+                    <a href={`/profile/edit?role=pelanggan`} className="w-full">
                         <Button>
                             <Pencil className="w-4" />
                             Edit Profile
@@ -102,58 +105,60 @@ export const ProfilePekerja = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Nama</h3>
+                    <h3 className="font-bold text-xl">Nama</h3>
                     <p className="text-sm">{userDataState.nama}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Jenis Kelamin</h3>
+                    <h3 className="font-bold text-xl">Jenis Kelamin</h3>
                     <p className="text-sm">{userDataState.jeniskelamin}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">No HP</h3>
+                    <h3 className="font-bold text-xl">No HP</h3>
                     <p className="text-sm">{userDataState.nohp}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Tanggal Lahir</h3>
+                    <h3 className="font-bold text-xl">Tanggal Lahir</h3>
                     <p className="text-sm">{
                         userDataState.tgllahir ? formatDateToDDMMYYYY(userDataState.tgllahir) : ''
                     }</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Alamat</h3>
+                    <h3 className="font-bold text-xl">Alamat</h3>
                     <p className="text-sm">{userDataState.alamat}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Saldo MPAY</h3>
+                    <h3 className="font-bold text-xl">Saldo MPAY</h3>
                     <p className="text-sm">{userDataState.saldompay}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Nama Bank</h3>
+                    <h3 className="font-bold text-xl">Nama Bank</h3>
                     <p className="text-sm">{userDataState.namabank}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">No Rekening</h3>
+                    <h3 className="font-bold text-xl">No Rekening</h3>
                     <p className="text-sm">{userDataState.nomorrekening}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">NPWP</h3>
+                    <h3 className="font-bold text-xl">NPWP</h3>
                     <p className="text-sm">{userDataState.npwp}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Rating</h3>
+                    <h3 className="font-bold text-xl">Rating</h3>
                     <p className="text-sm">{userDataState.rating}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Jumlah Pesanan Selesai</h3>
+                    <h3 className="font-bold text-xl">Jumlah Pesanan Selesai</h3>
                     <p className="text-sm">{userDataState.jumlahpesananaselesai}</p>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-bold text-2xl">Kategori Jasa</h3>
-                    {
-                        userDataState.kategoriJasa?.map((kategori, index) => (
-                            <p key={index} className="text-sm">{kategori}</p>
-                        ))
-                    }
+                    <h3 className="font-bold text-xl">Kategori Jasa</h3>
+                    <div className="flex gap-2">
+                        {
+                            userDataState.kategoriJasa?.map((kategori, index) => (
+                                <p key={index} className="text-sm bg-blue-100 px-3 py-1 rounded-full font-medium">{kategori}</p>
+                            ))
+                        }
+                    </div>
                 </div>
                 <Button className="col-span-2"
                     onClick={() => {
@@ -172,5 +177,5 @@ export const ProfilePekerja = () => {
 export const ProfilePageModule = () => {
     const { role } = useUserData();
 
-    return (role === 'pengguna' ? <ProfilePengguna /> : <ProfilePekerja />)
+    return (role === 'pelanggan' ? <ProfilePelanggan /> : <ProfilePekerja />)
 }
