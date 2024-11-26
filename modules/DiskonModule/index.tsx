@@ -2,7 +2,7 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
-import { useUserData } from '@/lib/useUserData';
+import { useUserData } from '@/hooks/useUserData';
 
 export interface Voucher {
   code: string;

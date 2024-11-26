@@ -10,7 +10,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useUserData } from '@/lib/useUserData';
+import { useUserData } from '@/hooks/useUserData';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 

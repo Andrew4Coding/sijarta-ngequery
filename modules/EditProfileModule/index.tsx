@@ -1,6 +1,6 @@
 'use client'
 
-import { useUserData } from '@/lib/useUserData';
+import { useUserData } from '@/hooks/useUserData';
 import { EditProfilePekerja } from "./sections/EditProfilePekerja";
 import { EditProfilePelanggan } from "./sections/EditProfilePelanggan";
 

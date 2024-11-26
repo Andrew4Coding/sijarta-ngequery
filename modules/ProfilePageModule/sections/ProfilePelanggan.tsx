@@ -1,7 +1,7 @@
 'use client'
 import { Button } from "@/components/ui/button";
 import { PelangganType, UserType } from "@/database/types";
-import { useUserData } from "@/lib/useUserData";
+import { useUserData } from "@/hooks/useUserData";
 import { dateConverter } from "@/modules/EditProfileModule";
 import { Pencil } from "lucide-react";
 import Image from "next/image";
