@@ -68,10 +68,10 @@ export const LoginPage = () => {
     }
 
     return (
-        <main className="w-full h-[100vh] flex items-center justify-center bg-gray-100 ">
+        <main className="w-full h-[100vh] flex items-center justify-center bg-background ">
             <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center">
-                <h1 className="font-bold text-2xl font-catamaran">Welcome to SIJARTA</h1>
-                <p className='text-gray-500 mb-5'>by ngeQuery Team</p>
+                <h1 className="font-bold text-2xl font-catamaran">SIJARTA</h1>
+                <p className='text-gray-500 mb-5 font-medium text-sm'>by ngeQuery</p>
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -110,14 +110,18 @@ export const LoginPage = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className='w-full'>
+                        <Button
+                            variant={'secondary'}
+                            type="submit" className='w-full'>
                             <LogIn />
                             Login
                         </Button>
                     </form>
                 </Form>
 
-                <p className='mt-4 text-sm'>Belum punya akun <a href="/register" className="font-bold">Register</a></p>
+                <p className='mt-4 text-sm'>
+                    Belum punya akun <a href="/register" className="font-bold transition duration-300 ease-in-out transform hover:scale-105 hover:text-green-600">Register</a>
+                </p>
             </div>
         </main>
     );

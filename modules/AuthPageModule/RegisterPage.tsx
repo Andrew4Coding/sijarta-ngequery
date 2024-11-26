@@ -27,10 +27,9 @@ export const RegisterPage = () => {
 
     const PickRolePage = () => {
         return (
-            <main className="w-full min-h-[100vh] flex items-center justify-center bg-gray-100">
+            <main className="w-full min-h-[100vh] flex items-center justify-center bg-background">
                 <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center">
                     <h1 className="font-bold text-2xl">Pick Role</h1>
-                    <p>by ngeQuery Team</p>
                     <div className="w-full mt-5 flex flex-col gap-4 min-w-[400px]">
                         <div>
                             <label htmlFor="role">Role</label>
@@ -53,6 +52,7 @@ export const RegisterPage = () => {
                             </Select>                          
                         </div>
                         <Button
+                            variant={'secondary'}
                             onClick={() => {
                                 setIsPickRole(false)
                                 const params = new URLSearchParams(searchParams);
@@ -64,7 +64,7 @@ export const RegisterPage = () => {
                         >
                             Continue
                         </Button>
-                        <p className='mt-4 text-sm text-center'>Sudah punya akun? <a href="/login" className="font-bold">Login</a></p>
+                        <p className='mt-4 text-sm text-center'>Sudah punya akun? <a href="/login" className="font-bold duration-300 hover:text-green-600">Login</a></p>
                     </div>
                 </div>
             </main>

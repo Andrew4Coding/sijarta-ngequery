@@ -18,22 +18,11 @@ import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from 'uuid';
 import { z } from "zod";
 
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 export const RegisterPekerjaForm = () => {
     const form = useForm<z.infer<typeof RegisterAsPekerjaSchema>>({
         resolver: zodResolver(RegisterAsPekerjaSchema),
-        defaultValues: {
-            nama: "Andrew Devito Aryo",
-            jenisKelamin: "L",
-            noHp: "02123451290",
-            tanggalLahir: "2000-01-01",
-            alamat: "Kebon Jeruk",
-            namaBank: "BCA",
-            noRekening: "1234567890",
-            npwp: "1234567890",
-            urlFotoKtp: "https://via.placeholder.com/150",
-            password: "dummy123",
-            confirmPassword: "dummy123"
-        }
     });
 
     const { toast } = useToast();
@@ -87,10 +76,9 @@ export const RegisterPekerjaForm = () => {
     };
 
     return (
-        <div className="w-full min-h-[100vh] flex items-center justify-center bg-gray-100 py-32 ">
+        <div className="w-full min-h-[100vh] flex items-center justify-center bg-background py-32 ">
             <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center w-full max-w-4xl mx-4">
-                <h1 className="font-bold text-2xl">Register Pekerja to Sijarta</h1>
-                <p>by ngeQuery Team</p>
+                <h1 className="font-bold text-2xl">Register to Sijarta</h1>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
@@ -117,10 +105,23 @@ export const RegisterPekerjaForm = () => {
                                 <FormItem>
                                     <FormLabel>Jenis Kelamin</FormLabel>
                                     <FormControl>
-                                        <select {...field} className="w-full border border-gray-300 p-2 rounded-md mb-2">
-                                            <option value="L">Laki-laki</option>
-                                            <option value="P">Perempuan</option>
-                                        </select>
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={(val) => {
+                                                field.onChange(val);
+                                            }}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Pilih Jenis Kelamin ..." />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Jenis Kelamin</SelectLabel>
+                                                    <SelectItem value="L">Laki-laki</SelectItem>
+                                                    <SelectItem value="P">Perempuan</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -284,6 +285,7 @@ export const RegisterPekerjaForm = () => {
                             )}
                         />
                         <Button
+                            variant={'secondary'}
                             type="submit"
                             className="col-span-2"
                         >
