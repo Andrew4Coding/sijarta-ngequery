@@ -67,8 +67,9 @@ export const EditProfilePekerja = () => {
     });
 
     useEffect(() => {
-        fetchUserProfile()
-    }, [])
+        if (userData.id) 
+            fetchUserProfile()
+    }, [userData])
 
     async function onSubmit(data: z.infer<typeof EditProfilePekerjaSchema>) {
         console.log(data);

@@ -18,14 +18,14 @@ export const ProfilePelanggan = () => {
         const response = await fetch(`/api/auth/profile?id=${userData.id}&role=pelanggan`);
         const data = await response.json();
 
-        console.log(data);
-        
-
         setUserDataState(data.data);
     }
 
     useEffect(() => {
-        fetchUserProfile()
+        if (userData.id) {    
+            console.log(userData)
+            fetchUserProfile()
+        }
     }, [])
 
     return (
@@ -90,8 +90,10 @@ export const ProfilePekerja = () => {
     }
 
     useEffect(() => {
-        fetchUserProfile()
-    }, [])
+        if (userData.id) {
+            fetchUserProfile()
+        }
+    }, [userData])
 
     return (
         <main className="my-40 px-10 md:px-32  flex flex-col gap-5">

@@ -11,6 +11,7 @@ export type ReturnType = {
         nama: string;
     };
     isAuthenticated: boolean;
+    isLoading: boolean;
 }
 type sessionType = {
     data: {
@@ -82,6 +83,7 @@ export const useUserData: () => ReturnType = () => {
                 nama: '',
             },
             isAuthenticated: false,
+            isLoading
         }
     }
 
@@ -92,5 +94,6 @@ export const useUserData: () => ReturnType = () => {
             nama: decoded.data.nama,
         },
         isAuthenticated: true,
+        isLoading
     };
 };

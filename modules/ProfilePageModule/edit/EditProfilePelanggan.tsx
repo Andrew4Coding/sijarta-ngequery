@@ -32,6 +32,9 @@ export const EditProfilePelanggan = () => {
         const response = await fetch(`/api/auth/profile?id=${userData.id}&role=pelanggan`);
         const data = await response.json();
 
+        console.log(data);
+        
+
         setUserDataState(data.data);
     }
 
@@ -47,8 +50,9 @@ export const EditProfilePelanggan = () => {
     });
 
     useEffect(() => {
-        fetchUserProfile();
-    }, []);
+        if (userData.id)
+            fetchUserProfile();
+    }, [userData]);
 
     async function onSubmit(data: z.infer<typeof EditProfilePelangganSchema>) {
         console.log(data);

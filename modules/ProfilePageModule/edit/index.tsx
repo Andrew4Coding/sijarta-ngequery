@@ -16,10 +16,19 @@ export function dateConverter(date: Date | undefined) {
 }
 
 export const EditProfilePageModule = () => {
-    const { role } = useUserData();
+    const { role,  isLoading } = useUserData();
     return (
-        <main>
-            {role === 'pelanggan' ? <EditProfilePelanggan /> : <EditProfilePekerja />}
-        </main>
+        <>
+            {
+                isLoading ? (
+                    <div className="flex justify-center items-center h-screen">
+                        <p>Loading...</p>
+                    </div>
+                ) :
+                <main>
+                    {role === 'pelanggan' ? <EditProfilePelanggan /> : <EditProfilePekerja />}
+                </main>
+            }
+        </>
     )
 };
