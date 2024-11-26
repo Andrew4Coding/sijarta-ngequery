@@ -18,8 +18,6 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { LogIn } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useCookies } from '@/hooks/use-cookie';
-import { useEffect } from 'react';
 
 export const LoginPage = () => {
     const form = useForm<z.infer<typeof LoginSchema>>({
@@ -28,14 +26,6 @@ export const LoginPage = () => {
 
     const { toast } = useToast();
     const router = useRouter();
-
-    const session = useCookies();
-
-    useEffect(() => {
-        if (session) {
-            router.replace('/');
-        }
-    })
 
     async function onSubmit(data: z.infer<typeof LoginSchema>) {
         try {

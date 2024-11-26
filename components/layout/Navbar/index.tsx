@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { ChevronDown, LogOut } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -11,10 +11,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+import { useToast } from '@/hooks/use-toast'
 import { useUserData } from '@/lib/useUserData'
 import { usePathname, useRouter } from 'next/navigation'
-import { useCookies } from '@/hooks/use-cookie'
-import { useToast } from '@/hooks/use-toast'
 
 const pelangganMenus = [
   { href: '/', label: 'Home' },
@@ -37,8 +36,8 @@ export const Navbar = () => {
   const router = useRouter()
   const pathname = usePathname()
 
-  const {userData, isAuthenticated, role } = useUserData()  ;
-
+  const { userData, isAuthenticated, role } = useUserData();
+  
   const hideMenus = pathname === '/login' || pathname === '/register'
 
   const { toast } = useToast();
@@ -54,6 +53,11 @@ export const Navbar = () => {
         description: "User logout successfully",
         variant: 'success'
       })
+      
+      setTimeout(() => {
+        router.push('/login')
+      }
+      , 1000)
     }
   }
 

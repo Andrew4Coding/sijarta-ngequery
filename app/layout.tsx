@@ -3,12 +3,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { Navbar } from "@/components/layout/Navbar";
-import { Urbanist } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
+import { Urbanist } from "next/font/google";
 import { Suspense } from "react";
-
-import {cookies} from "next/headers";
-import { CookieProvider } from "@/hooks/use-cookie";
 
 export const metadata: Metadata = {
   title: "Sijarta",
@@ -26,8 +23,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-
   return (
     <html
       suppressHydrationWarning
@@ -39,13 +34,9 @@ export default async function RootLayout({
         <Suspense
           fallback={<div>Loading ...</div>}
         >
-          <CookieProvider
-            cookie={cookieStore.get('sessionToken')?.value}
-          >
             <Navbar />
             <Layout>{children}</Layout>
             <Toaster />
-          </CookieProvider>
         </Suspense>
       </body>
     </html>

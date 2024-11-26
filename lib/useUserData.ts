@@ -1,9 +1,8 @@
 'use client';
 
-import { useCookies } from "@/hooks/use-cookie";
 import { decode } from "jsonwebtoken";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export type ReturnType = {
     role: 'pelanggan' | 'pekerja';
@@ -25,18 +24,55 @@ type sessionType = {
 }
 
 export const useUserData: () => ReturnType = () => {
-    const session = useCookies();
+    const [sessionToken, setSessionToken] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
     const pathname = usePathname();
 
-    // useEffect(() => {
-    //     // if not session and not login
-    //     if (!session && pathname !== '/login') {
-    //         router.replace('/login');
-    //     }
-    // }, [])
-    
-    const decoded: sessionType = decode(session as string) as sessionType;
+    async function fetchCookie() {
+        try {
+            const res = await fetch('/api/auth/cookies');
+            const data: {
+                message: string,
+                token: string,
+            } = await res.json();
+
+            if (data.token) {
+                setSessionToken(data.token);
+            } else {
+                setSessionToken(null);
+            }
+        } catch (error) {
+            console.error("Error fetching cookie:", error);
+            setSessionToken(null);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchCookie();
+    }, [pathname]);
+
+    useEffect(() => {
+        if (!isLoading) {
+            if (sessionToken) {
+                const isAuthPage = pathname === '/login' || pathname === '/register';
+                if (isAuthPage) {
+                    // Redirect authenticated user to homepage
+                    router.push('/');
+                }
+            } else {
+                const isProtectedPage = pathname !== '/login' && pathname !== '/register';
+                if (isProtectedPage) {
+                    // Redirect unauthenticated user to login page
+                    router.push('/login');
+                }
+            }
+        }
+    }, [isLoading, sessionToken, pathname, router]);
+
+    const decoded: sessionType = decode(sessionToken as string) as sessionType;
 
     if (!decoded) {
         return {
@@ -48,7 +84,7 @@ export const useUserData: () => ReturnType = () => {
             isAuthenticated: false,
         }
     }
-    
+
     return {
         role: decoded.role,
         userData: {
