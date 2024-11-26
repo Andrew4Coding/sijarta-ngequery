@@ -38,7 +38,7 @@ export const Navbar = () => {
 
   const { userData, isAuthenticated, role } = useUserData();
   
-  const hideMenus = pathname === '/login' || pathname === '/register'
+  const hideMenus: boolean = pathname === '/login' || pathname === '/register'
 
   const { toast } = useToast();
 
@@ -62,79 +62,75 @@ export const Navbar = () => {
   }
 
   return (
-    <nav className='fixed top-0 w-full bg-white shadow-md px-10 md:px-32 py-8 flex justify-between items-center z-50 '>
+    <nav className={`fixed top-0 w-full bg-white shadow-md px-10 md:px-32 py-8 flex justify-between items-center z-50  ${hideMenus ? "hidden" : ""}`}>
       <h1 className='font-extrabold text-3xl '>SIJARTA</h1>
-      {!hideMenus && (
-        <>
-          <div className='hidden md:flex gap-4'>
-            {isAuthenticated && (role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
-              <Link key={menu.href} href={menu.href}>{menu.label}</Link>
-            ))}
-          </div>
-          <div className='hidden md:flex'>
-            {isAuthenticated ? 
-              <div className='flex gap-2 items-center'>
-                <div className='flex items-center gap-2 text-sm'>
-                  <div className='text-right'>
-                    <p className='font-bold'>Hello, {userData.nama}</p>
-                    {/* <p>Rp {userData.saldoMPay}</p> */}
-                  </div>
-                  <Avatar
-                    className='cursor-pointer'
-                    onClick={() => {
-                      router.push('/profile')
-                    }}
-                  >
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                </div>
-                <Button
-                  onClick={logout}
-                  className='gap-2' variant={'destructive'}>
-                  <LogOut />  
-                  Logout
-                </Button> 
+      <div className='hidden md:flex gap-4'>
+        {isAuthenticated && (role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
+          <Link key={menu.href} href={menu.href}>{menu.label}</Link>
+        ))}
+      </div>
+      <div className='hidden md:flex'>
+        {isAuthenticated ?
+          <div className='flex gap-2 items-center'>
+            <div className='flex items-center gap-2 text-sm'>
+              <div className='text-right'>
+                <p className='font-bold'>Hello, {userData.nama}</p>
+                {/* <p>Rp {userData.saldoMPay}</p> */}
               </div>
-              : 
-              <Button
-                    onClick={() => router.push('/login')}
-              >Login</Button>
-            }
+              <Avatar
+                className='cursor-pointer'
+                onClick={() => {
+                  router.push('/profile')
+                }}
+              >
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </div>
+            <Button
+              onClick={logout}
+              className='gap-2' variant={'destructive'}>
+              <LogOut />
+              Logout
+            </Button>
           </div>
-          <Popover>
-            <PopoverTrigger className='flex md:hidden'>
-              <ChevronDown
-                onClick={() => setIsOpen(!isOpen)}
-                className={ 
-                `w-6 h-6 ${isOpen ? 'rotate-180' : ''} duration-200 ease-in-out`
-              } />
-            </PopoverTrigger>
-            <PopoverContent className='bg-white'>
-              <ul className='space-y-2 '>
-                {(role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
-                  <li key={menu.href}>
-                    <Link href={menu.href}>{menu.label}</Link>
-                  </li>
-                ))}
-                <li>
-                  <Link href='/profile'>Profile</Link>
-                </li>
-                <li>
-                  <Link href='/login'>
-                    <Button className='w-full'
-                      onClick={logout}
-                    >
-                      <LogOut className='w-4' />
-                      Logout
-                    </Button>
-                  </Link>
-                </li>
-              </ul>
-            </PopoverContent>
-          </Popover>
-        </>
-      )}
+          :
+          <Button
+            onClick={() => router.push('/login')}
+          >Login</Button>
+        }
+      </div>
+      <Popover>
+        <PopoverTrigger className='flex md:hidden'>
+          <ChevronDown
+            onClick={() => setIsOpen(!isOpen)}
+            className={
+              `w-6 h-6 ${isOpen ? 'rotate-180' : ''} duration-200 ease-in-out`
+            } />
+        </PopoverTrigger>
+        <PopoverContent className='bg-white'>
+          <ul className='space-y-2 '>
+            {(role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
+              <li key={menu.href}>
+                <Link href={menu.href}>{menu.label}</Link>
+              </li>
+            ))}
+            <li>
+              <Link href='/profile'>Profile</Link>
+            </li>
+            <li>
+              <Link href='/login'>
+                <Button className='w-full'
+                  onClick={logout}
+                >
+                  <LogOut className='w-4' />
+                  Logout
+                </Button>
+              </Link>
+            </li>
+          </ul>
+        </PopoverContent>
+      </Popover>
     </nav>
   )
 }
