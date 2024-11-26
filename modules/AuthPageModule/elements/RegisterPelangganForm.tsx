@@ -30,7 +30,10 @@ export const RegisterPelangganForm = () => {
     const { toast } = useToast();
 
     const onSubmit = async (data: z.infer<typeof RegisterAsUserSchema>) => {
-        console.log("Form Data:", data);
+        toast({
+            title: "Loading ...",
+            variant: 'default'
+        });
         try {
             console.log(`Date: ${data.tanggalLahir}`);
             

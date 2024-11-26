@@ -29,7 +29,10 @@ export const RegisterPekerjaForm = () => {
     const router = useRouter();
 
     const onSubmit = async (data: z.infer<typeof RegisterAsPekerjaSchema>) => {
-        console.log("Form Data:", data);
+        toast({
+            title: "Loading ...",
+            variant: 'default'
+        });
         try {
             const response = await fetch('/api/auth/register/pekerja', {
                 method: 'POST',

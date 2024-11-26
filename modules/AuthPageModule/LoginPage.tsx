@@ -28,6 +28,10 @@ export const LoginPage = () => {
     const router = useRouter();
 
     async function onSubmit(data: z.infer<typeof LoginSchema>) {
+        toast({
+            title: "Loading ...",
+            variant: 'default'
+        });
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
