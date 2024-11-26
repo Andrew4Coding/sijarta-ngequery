@@ -4,7 +4,7 @@ import "./globals.css";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Toaster } from "@/components/ui/toaster";
-import { Urbanist } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -12,10 +12,10 @@ export const metadata: Metadata = {
   description: "Sijarta by ngeQuery team",
 };
 
-const urbanist = Urbanist({
+const jakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: "--font-urbanist",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-jakarta-sans",
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
 })
 
 export default async function RootLayout({
@@ -29,7 +29,7 @@ export default async function RootLayout({
       suppressContentEditableWarning
       lang="en">
       <body
-        className={`${urbanist.variable} antialiased font-dmsans`}
+        className={`${jakartaSans.variable} antialiased font-jakarta`}
       >
         <Suspense
           fallback={<div>Loading ...</div>}

@@ -12,6 +12,7 @@ const config: Config = {
 	  extend: {
 		  fontFamily: {
 			  urbanist: ['var(--font-urbanist)'],
+			  jakarta: ['var(--font-jakarta-sans)'],
 		  },
   		colors: {
   			background: 'var(--background)',
