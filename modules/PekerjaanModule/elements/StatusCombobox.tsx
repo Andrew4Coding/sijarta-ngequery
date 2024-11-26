@@ -30,7 +30,6 @@ export const StatusCombobox = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
           role="combobox"
           aria-expanded={open}
           className="w-[250px] justify-between mx-auto"

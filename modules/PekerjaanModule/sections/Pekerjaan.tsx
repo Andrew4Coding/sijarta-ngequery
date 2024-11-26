@@ -84,7 +84,7 @@ export const Pekerjaan = () => {
                     currency: "IDR",
                   })}
                 </h2>
-                <Button variant={"outline"}>Kerjakan Pesanan</Button>
+                <Button>Kerjakan Pesanan</Button>
               </div>
             ))
           )}
