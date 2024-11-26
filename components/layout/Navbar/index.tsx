@@ -93,7 +93,9 @@ export const Navbar = () => {
                 </Button> 
               </div>
               : 
-              <Button>Login</Button>
+              <Button
+                    onClick={() => router.push('/login')}
+              >Login</Button>
             }
           </div>
           <Popover>

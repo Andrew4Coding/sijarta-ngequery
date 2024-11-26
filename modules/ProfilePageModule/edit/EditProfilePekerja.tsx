@@ -37,7 +37,6 @@ export const EditProfilePekerja = () => {
     const [kategoriJasa, setKategoriJasa] = useState<string[]>([]);
 
     const { userData } = useUserData();
-
     const { toast } = useToast();
 
     async function fetchUserProfile() {
@@ -102,10 +101,8 @@ export const EditProfilePekerja = () => {
         // router.replace(`/profile?role=${roleParams}`);
     }
 
-
-
     return (
-        <main className="flex f</FormControl>lex-col my-40 px-10 md:px-32  gap-5">
+        <main className="flex flex-col my-40 px-10 md:px-32  gap-5">
             <div className="flex gap-4 items-center">
                 <ArrowLeft className="w-4 cursor-pointer hover:scale-105" onClick={() => {
                     router.back();

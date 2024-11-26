@@ -43,8 +43,6 @@ export const EditProfilePelanggan = () => {
             nohp: userDataState.nohp ?? "",
             tanggallahir: dateConverter(userDataState.tgllahir),
             alamat: userDataState.alamat ?? "",
-            level: userDataState.level ?? "",
-            saldompay: userDataState.saldompay?.toString() ?? "0",
         },
     });
 
@@ -54,7 +52,7 @@ export const EditProfilePelanggan = () => {
 
     async function onSubmit(data: z.infer<typeof EditProfilePelangganSchema>) {
         console.log(data);
-
+        
         try {
             const response = await fetch(`/api/auth/profile?id=${userData.id}&role=pelanggan`, {
                 method: "PATCH",
@@ -71,7 +69,7 @@ export const EditProfilePelanggan = () => {
                     description: "Profile updated successfully",
                     variant: "success",
                 });
-                router.replace(`/profile?role=pelanggan`);
+                // router.replace(`/profile?role=pelanggan`);
             } else {
                 throw new Error(result.error);
             }

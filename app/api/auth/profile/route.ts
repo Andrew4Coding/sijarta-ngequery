@@ -3,7 +3,7 @@ import { Pekerja } from "@/database/models/pekerja";
 import { Pelanggan } from "@/database/models/pelanggan";
 import { User } from "@/database/models/user";
 import { PelangganType } from "@/database/types";
-import { EditProfilePekerjaSchema } from "@/modules/ProfilePageModule/edit/types";
+import { EditProfilePekerjaSchema, EditProfilePelangganSchema } from "@/modules/ProfilePageModule/edit/types";
 import { z } from "zod";
 
 export async function GET(req: Request) {
@@ -153,8 +153,15 @@ export async function PATCH(req: Request) {
                 );
             }
 
-            const data: PelangganType = await req.json();
-            await new Pelanggan().update("id", id, data);
+            const data: z.infer<typeof EditProfilePelangganSchema> = await req.json();
+
+            await new User().update("id", id, {
+                nama: data.nama,
+                alamat: data.alamat,
+                jeniskelamin: data.jeniskelamin as "L" | "P",
+                nohp: data.nohp,
+                tgllahir: new Date(data.tanggallahir),
+            })
 
             return new Response(
                 JSON.stringify({
