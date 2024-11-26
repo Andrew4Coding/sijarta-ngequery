@@ -14,6 +14,9 @@ const config: Config = {
 			  dmsans: ['var(--font-dm-sans)', 'sans-serif'],
 			  catamaran: ['var(--font-catamaran)', 'sans-serif'],
 		  },
+		boxShadow: {
+			"header": "box-shadow: 0px 2px 10px 0px rgba(255, 255, 255, 1)"
+		},
   		colors: {
   			background: 'var(--background)',
   			foreground: 'var(--foreground)',
