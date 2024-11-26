@@ -193,11 +193,11 @@ export const EditProfilePelanggan = () => {
                                 </FormItem>
                             )}
                         />
+                        <Button type="submit" variant={'secondary'} className="w-full col-span-2">
+                            <Save className="w-4" />
+                            Save Changes
+                        </Button>
                     </div>
-                    <Button type="submit" variant={'secondary'} className="w-full">
-                        <Save className="w-4" />
-                        Save Changes
-                    </Button>
                 </form>
             </Form>
         </main>

@@ -32,7 +32,11 @@ export default async function RootLayout({
         className={`${jakartaSans.variable} antialiased font-jakarta`}
       >
         <Suspense
-          fallback={<div>Loading ...</div>}
+          fallback={
+            <div className="w-full h-[100vh] flex items-center justify-center bg-background">
+              <h3 className="">Loading ... </h3>
+            </div>
+          }
         >
             <Navbar />
             <Layout>{children}</Layout>

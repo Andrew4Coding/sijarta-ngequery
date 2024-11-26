@@ -84,7 +84,7 @@ export const ProfilePekerja = () => {
                     <h3 className="font-semibold text-lg text-green-600">Jumlah Pesanan Selesai</h3>
                     <p className="text-sm">{userDataState.jumlahpesananaselesai}</p>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 md:col-span-2">
                     <h3 className="font-semibold text-lg text-green-600">Kategori Jasa</h3>
                     <div className="flex flex-wrap gap-2">
                         {
