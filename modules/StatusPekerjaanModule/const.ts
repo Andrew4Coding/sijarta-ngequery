@@ -1,0 +1,83 @@
+import { StatusPekerjaanProps } from "./interface";
+
+export const statusPekerjaanCards: StatusPekerjaanProps[] = [
+  {
+    id: "1",
+    subCategory: "Cleaning Service",
+    assignner: "John Doe",
+    todoDate: new Date(),
+    createdAt: new Date(),
+    price: 1000000,
+    status: "Menunggu Pekerja Berangkat",
+  },
+  {
+    id: "2",
+    subCategory: "Home Service",
+    assignner: "John Doe",
+    todoDate: new Date(),
+    createdAt: new Date(),
+    price: 2000000,
+    status: "Menunggu Pekerja Berangkat",
+  },
+  {
+    id: "3",
+    subCategory: "Rennovation",
+    assignner: "John Doe",
+    todoDate: new Date(),
+    createdAt: new Date(),
+    price: 3000000,
+    status: "Tiba Di Lokasi",
+  },
+  {
+    id: "4",
+    subCategory: "Cleaning Service",
+    assignner: "John Doe",
+    todoDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+    createdAt: new Date(),
+    price: 1500000,
+    status: "Tiba Di Lokasi",
+  },
+  {
+    id: "5",
+    subCategory: "Home Service",
+    assignner: "John Doe",
+    todoDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+    createdAt: new Date(),
+    price: 2500000,
+    status: "Melakukan Pelayanan Jasa",
+  },
+  {
+    id: "6",
+    subCategory: "Rennovation",
+    assignner: "John Doe",
+    todoDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+    createdAt: new Date(),
+    price: 3500000,
+    status: "Melakukan Pelayanan Jasa",
+  },
+  {
+    id: "7",
+    subCategory: "Cleaning Service",
+    assignner: "John Doe",
+    todoDate: new Date(new Date().setDate(new Date().getDate() + 2)),
+    createdAt: new Date(),
+    price: 1200000,
+    status: "Selesai",
+  },
+  {
+    id: "8",
+    subCategory: "Home Service",
+    assignner: "John Doe",
+    todoDate: new Date(new Date().setDate(new Date().getDate() + 2)),
+    createdAt: new Date(),
+    price: 2200000,
+    status: "Selesai",
+  },
+];
+
+export const statusPekerjaan = [
+  "Menunggu Pekerja Berangkat",
+  "Tiba Di Lokasi",
+  "Melakukan Pelayanan Jasa",
+  "Selesai",
+];
