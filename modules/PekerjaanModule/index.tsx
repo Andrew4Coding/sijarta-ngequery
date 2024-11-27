@@ -1,29 +1,11 @@
 "use client";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Pekerjaan } from "./sections/Pekerjaan";
-import { StatusPekerjaan } from "./sections/StatusPekerjaan";
-import { useSearchParams } from "next/navigation";
 
 export const PekerjaanModule = () => {
-  const searchParams = useSearchParams();
-  const tabs = searchParams.get('tabs') ?? 'pekerjaan';
-
   return (
-    <main className="min-h-screen flex justify-center px-10 md:px-32 my-40">
-      <Tabs
-        defaultValue={tabs}
-        className="w-full">
-        <TabsList className="w-full">
-          <TabsTrigger value="pekerjaan" className="w-full">
-            Mencari Pekerjaan
-          </TabsTrigger>
-          <TabsTrigger value="history" className="w-full">
-            Status Pekerjaan
-          </TabsTrigger>
-        </TabsList>
-        <Pekerjaan />
-        <StatusPekerjaan />
-      </Tabs>
+    <main className="min-h-screen flex flex-col justify-center px-6 md:px-20 py-32">
+      <h1 className="header text-[60px] mt-[70px] font-newake text-green-500 text-center">Pekerjaan</h1>
+      <Pekerjaan />
     </main>
   );
 };
