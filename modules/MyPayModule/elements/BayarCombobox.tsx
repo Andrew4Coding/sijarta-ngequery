@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { dummyBayarTransaksiData } from "../const";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,15 +32,15 @@ export const BayarCombobox = ({
         <Button
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between mx-auto"
+          className="w-full justify-between mx-auto"
         >
           {value
             ? dummyBayarTransaksiData.find((item) => item.id === value)?.kategori
             : "Pilih Kategori Transaksi"}
-          <ChevronsUpDown className="opacity-50" />
+          <ChevronDown className={cn(open ? "rotate-180" : "", "transition-transform")} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="lg:w-[800px] p-0">
         <Command>
           <CommandInput placeholder="Cari kategori..." />
           <CommandList>
