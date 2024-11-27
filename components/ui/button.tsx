@@ -21,9 +21,9 @@ const buttonVariants = cva(
           "border border-green-500 bg-transparent text-green-500 hover:bg-green-500/10",
       },
       size: {
-        default: "h-10 px-5 py-4",
-        sm: "h-9 rounded-[12px] px-3",
-        lg: "h-11 rounded-[12px] px-8",
+        default: "h-full px-5 py-4",
+        sm: "h-full rounded-[12px] px-3",
+        lg: "h-full rounded-[12px] px-8",
         icon: "h-10 w-10",
       },
     },

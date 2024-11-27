@@ -65,9 +65,9 @@ const InputForm = <
                 <AlertCircle
                   width={14}
                   height={14}
-                  className="md:w-[16px] opacity-90 dark:opacity-100"
+                  className="md:w-[24px] md:h-[24px] opacity-90 dark:opacity-100"
                 />
-                <span className="text-xs opacity-60 dark:opacity-100">
+                <span className="text-xs md:text-[16px] opacity-60 dark:opacity-100">
                   {description}
                 </span>
               </FormDescription>
