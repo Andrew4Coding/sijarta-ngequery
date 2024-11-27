@@ -11,13 +11,11 @@ export const Transaksi = ({ saldo }: { saldo: string }) => {
   const { userData, role } = useUserData();
   const [value, setValue] = useState("");
   return (
-    <div className="flex flex-col ">
-      <p className="font-semibold">
-        Halo, <span className="text-blue-500">{userData.nama}</span>!
-      </p>
-      <p className="font-semibold">
-        Saldo kamu: <span className="text-green-700">{saldo}</span>
-      </p>
+    <div className="flex flex-col gap-5">
+      <div className="grid grid-cols-2 font-medium text-[20px] w-full text-center">
+        <div className="p-5 border border-[#D9D9D9] rounded-l-[12px]">{userData.nama}</div>
+        <div className="p-5 border border-l-0 border-[#D9D9D9] rounded-r-[12px] bg-green-50">Saldo: <span className="font-bold">{saldo}</span></div>
+      </div>
       <KategoriCombobox
         value={value}
         setValue={setValue}
@@ -30,7 +28,7 @@ export const Transaksi = ({ saldo }: { saldo: string }) => {
         <BayarTransaksi />
       )}
       {value === "" && (
-        <p className="text-center font-medium text-gray-400 text-lg">
+        <p className="text-center font-medium text-gray-400 text-lg my-6">
           Tidak ada kategori yang dipilih.
         </p>
       )}

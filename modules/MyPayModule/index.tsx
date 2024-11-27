@@ -40,9 +40,9 @@ export const MyPayModule = () => {
           <DialogTrigger className="bg-white border border-[#D9D9D9] hover:shadow-lg transition-all text-black text-base md:text-[24px] px-8 py-6 rounded-[50px]">
             <p className="mx-auto">Lakukan Transaksi</p>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="lg:min-w-[850px] rounded-[20px]">
             <DialogHeader>
-              <DialogTitle className="text-center">Transaksi</DialogTitle>
+              <DialogTitle className="text-center text-green-500 font-bold text-[24px]">Transaksi</DialogTitle>
             </DialogHeader>
             <Transaksi saldo={saldo} />
           </DialogContent>

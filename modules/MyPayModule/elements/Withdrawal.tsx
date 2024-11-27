@@ -44,7 +44,7 @@ export const Withdrawal = () => {
             type="number"
             form={form}
           />
-          <Button type="submit">Withdraw</Button>
+          <Button variant={'secondary'} type="submit">Withdraw</Button>
         </form>
       </Form>
     </div>

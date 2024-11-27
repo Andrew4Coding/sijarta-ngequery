@@ -44,7 +44,7 @@ export const Transfer = () => {
             type="number"
             form={form}
           />
-          <Button type="submit">Transfer</Button>
+          <Button variant={'secondary'} type="submit">Transfer</Button>
         </form>
       </Form>
     </div>

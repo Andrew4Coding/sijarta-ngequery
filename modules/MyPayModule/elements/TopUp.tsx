@@ -35,7 +35,7 @@ export const TopUp = () => {
             type="number"
             form={form}
           />
-          <Button type="submit">Top Up</Button>
+          <Button variant={'secondary'} type="submit">Top Up</Button>
         </form>
       </Form>
     </div>

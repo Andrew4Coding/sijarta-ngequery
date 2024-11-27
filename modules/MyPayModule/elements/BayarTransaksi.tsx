@@ -15,9 +15,9 @@ export const BayarTransaksi = () => {
     <div>
       <form
         onSubmit={() => onSubmit(value)}
-        className="flex flex-col gap-4 border-t border-gray-300 pt-4"
+        className="flex flex-col gap-5"
       >
-        <h1 className="font-bold text-center">Pilih Tagihan</h1>
+        <h1 className="font-bold text-center text-[20px]">Pilih Tagihan</h1>
         <BayarCombobox value={value} setValue={setValue} />
         {value !== "" && (
           <>
@@ -26,7 +26,7 @@ export const BayarTransaksi = () => {
               .map((data) => (
                 <div
                   key={data.id}
-                  className="flex flex-col gap-3 border border-black rounded-sm px-5 py-5"
+                  className="flex flex-col gap-3 border border-[#D9D9D9] rounded-[12px] px-5 py-5"
                 >
                   <p className="font-semibold">
                     Nominal:{" "}
@@ -50,7 +50,7 @@ export const BayarTransaksi = () => {
               ))}
           </>
         )}
-        <Button type="submit">Bayar</Button>
+        <Button variant={'secondary'} type="submit">Bayar</Button>
       </form>
     </div>
   );
