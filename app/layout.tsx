@@ -1,7 +1,7 @@
 import Layout from "@/components/layout";
 import type { Metadata } from "next";
 import "./globals.css";
-
+import localFont from "next/font/local";
 import { Navbar } from "@/components/layout/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 import { Plus_Jakarta_Sans } from "next/font/google";
@@ -11,6 +11,12 @@ export const metadata: Metadata = {
   title: "Sijarta",
   description: "Sijarta by ngeQuery team",
 };
+
+const newake = localFont({
+  src: "./fonts/NewakeFont.otf",
+  weight: "400",
+  variable: "--font-newake",
+});
 
 const jakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -29,7 +35,7 @@ export default async function RootLayout({
       suppressContentEditableWarning
       lang="en">
       <body
-        className={`${jakartaSans.variable} antialiased font-jakarta`}
+        className={`${jakartaSans.variable} ${newake.variable} antialiased font-jakarta`}
       >
         <Suspense
           fallback={

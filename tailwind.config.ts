@@ -11,7 +11,7 @@ const config: Config = {
   theme: {
 	  extend: {
 		  fontFamily: {
-			  urbanist: ['var(--font-urbanist)'],
+			  newake: ['var(--font-newake)'],
 			  jakarta: ['var(--font-jakarta-sans)'],
 		  },
 		boxShadow: {
