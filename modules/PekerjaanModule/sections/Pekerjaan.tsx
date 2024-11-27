@@ -1,7 +1,6 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TabsContent } from "@/components/ui/tabs";
 import { Clock, Pen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { pekerjaanCards, pekerjaanCategories } from "../const";
@@ -30,66 +29,61 @@ export const Pekerjaan = () => {
     filterData();
   }, [value, subValue]);
   return (
-    <TabsContent value="pekerjaan">
-      <div className="border rounded-lg px-2 md:px-8 py-4 shadow-lg flex flex-col gap-4">
-        <div className="mx-auto md:space-x-4 max-md:flex max-md:flex-col max-md:gap-1">
-          <KategoriCombobox value={value} setValue={setValue} />
-          <SubKategoriCombobox
-            value={subValue}
-            setValue={setSubValue}
-            subCategory={
-              pekerjaanCategories.find((card) => card.category === value)
-                ?.subCategories || []
-            }
-          />
-        </div>
-        <div className="h-[70vh] overflow-y-auto flex flex-col gap-6 px-2 md:px-8">
-          {filteredPekerjaan.length === 0 ? (
-            <div className="text-center my-auto text-2xl font-medium">
-              Tidak ada pekerjaan yang tersedia.
-            </div>
-          ) : (
-            filteredPekerjaan.map((card) => (
-              <div
-                key={card.id}
-                className="flex md:flex-row flex-col max-md:gap-4 justify-between items-center bg-white rounded-md shadow-sm border-2 px-10 py-6 "
-              >
-                <div className="grid md:grid-cols-2 gap-3 md:gap-8 max-md:text-center">
-                  <div className="md:border-r md:pr-6 space-y-3 w-[150px]">
-                    <Badge>{card.subCategory}</Badge>
-                    <p className="text-sm text-gray-500 flex items-center gap-2">
-                      <Pen size={20} />{" "}
-                      {new Date(card.createdAt).toLocaleDateString("id-ID", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </p>
-                  </div>
-                  <div className="space-y-3">
-                    <h2 className="text-lg font-semibold">{card.assignner}</h2>
-                    <p className="text-sm text-gray-500 flex items-center gap-2">
-                      <Clock size={20} />{" "}
-                      {new Date(card.todoDate).toLocaleDateString("id-ID", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </p>
-                  </div>
+    <section className="flex flex-col gap-12">
+      <div className="mx-auto md:space-x-4 max-md:flex max-md:flex-col max-md:gap-1">
+        <KategoriCombobox value={value} setValue={setValue} />
+        <SubKategoriCombobox
+          value={subValue}
+          setValue={setSubValue}
+          subCategory={
+            pekerjaanCategories.find((card) => card.category === value)
+              ?.subCategories || []
+          }
+        />
+      </div>
+      <div className="flex flex-col gap-6">
+        {filteredPekerjaan.length === 0 ? (
+          <div className="text-center my-auto text-2xl font-medium">
+            Tidak ada pekerjaan yang tersedia.
+          </div>
+        ) : (
+          filteredPekerjaan.map((card) => (
+            <div key={card.id} className="flex lg:flex-row flex-col lg:gap-5 items-center">
+              <div className="flex flex-col font-bold w-full lg:w-[30%] xl:w-1/5">
+                <div className="bg-green-500 rounded-t-[12px] py-5 md:py-6 text-[20px] md:text-[24px] text-white text-center">
+                  {card.subCategory}
                 </div>
-                <h2 className="text-base md:text-lg font-semibold text-green-500">
+                <div className="lg:rounded-b-[12px] text-green-500 py-5 md:py-6 border border-[#D9D9D9] text-[16px] md:text-[20px] text-center bg-white">
+                  {new Date(card.createdAt).toLocaleDateString("id-ID", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
+                </div>
+              </div>
+              <div className="w-full h-full flex md:flex-row flex-col max-md:gap-4 justify-between items-center bg-white rounded-b-[20px] lg:rounded-[20px] max-lg:border-t-0 border border-[#D9D9D9] p-6 md:p-9">
+                <div className="space-y-4 font-bold">
+                  <h2 className="text-[24px] md:text-[28px]">{card.assignner}</h2>
+                  <p className="text-[16px] md:text-[20px] text-[#B2B2B2]">
+                    {new Date(card.todoDate).toLocaleDateString("id-ID", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+                <h2 className="text-lg text-[24px] md:text-[28px] font-bold text-green-500">
                   {(500000).toLocaleString("id-ID", {
                     style: "currency",
                     currency: "IDR",
                   })}
                 </h2>
-                <Button>Kerjakan Pesanan</Button>
+                <Button variant={'secondary'} className="md:text-[20px]">Kerjakan Pesanan</Button>
               </div>
-            ))
-          )}
-        </div>
+            </div>
+          ))
+        )}
       </div>
-    </TabsContent>
+    </section>
   );
 };
