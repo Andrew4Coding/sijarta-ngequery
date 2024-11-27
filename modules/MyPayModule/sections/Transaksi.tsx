@@ -5,7 +5,7 @@ import { TopUp } from "../elements/TopUp";
 import { Withdrawal } from "../elements/Withdrawal";
 import { Transfer } from "../elements/Transfer";
 import { BayarTransaksi } from "../elements/BayarTransaksi";
-import { useUserData } from "@/lib/useUserData";
+import { useUserData } from "@/hooks/useUserData";
 
 export const Transaksi = ({ saldo }: { saldo: string }) => {
   const { userData, role } = useUserData();

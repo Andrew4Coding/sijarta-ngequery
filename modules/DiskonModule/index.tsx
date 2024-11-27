@@ -2,7 +2,9 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
-import { useUserData } from '@/lib/useUserData';
+import { PelangganType, UserType } from '@/database/types';
+import { useUserData } from '@/hooks/useUserData';
+import { useEffect, useState } from 'react';
 
 export interface Voucher {
   code: string;
@@ -26,7 +28,21 @@ export const DiskonModule = () => {
     { code: "PROMO50", endDate: "30/11/2024" },
   ];
 
-  const {userData } = useUserData();
+  const [userDataState, setUserDataState] = useState<PelangganType & UserType>({} as PelangganType & UserType );
+  const { userData } = useUserData();
+
+  async function fetchUserProfile() {
+    const response = await fetch(`/api/auth/profile?id=${userData.id}&role=pekerja`);
+    const data = await response.json();
+
+    setUserDataState(data.data);
+  }
+
+  useEffect(() => {
+    if (userData.id)
+      fetchUserProfile()
+  }, [userData])
+  
 
   return (
     <div className="px-10 md:px-20  py-32">
@@ -69,12 +85,12 @@ export const DiskonModule = () => {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle className="text-center">{userData.saldoMPay >= voucher.price ? 'Sukses' : 'Gagal' }</DialogTitle>
+                    <DialogTitle className="text-center">{(userDataState?.saldompay ?? 0) >= voucher.price ? 'Sukses' : 'Gagal' }</DialogTitle>
                   </DialogHeader>
                   <div className="flex flex-col gap-2">
                     <p className="mb-4">
                       {(
-                        userData.saldoMPay >= voucher.price
+                        (userDataState?.saldompay ?? 0) >= voucher.price
                       ) ? (
                         <>
                           Selamat! Anda berhasil membeli voucher dengan kode <strong>{voucher.code}</strong>. Voucher ini akan berlaku hingga tanggal <strong>{voucher.validity}</strong> dengan kuota pelangganan sebanyak <strong>{voucher.quota}</strong>.

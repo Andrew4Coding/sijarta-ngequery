@@ -12,6 +12,8 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
@@ -23,21 +25,15 @@ export const RegisterPelangganForm = () => {
     const router = useRouter();
     const form = useForm<z.infer<typeof RegisterAsUserSchema>>({
         resolver: zodResolver(RegisterAsUserSchema),
-        defaultValues: {
-            noHp: "08123456789",
-            nama: "Vincentius Filbert Amadeo",
-            jenisKelamin: "L",
-            alamat: "Kebon Jeruk",
-            password: "dummy123",
-            confirmPassword: "dummy123",
-            tanggalLahir: "2000-01-01"
-        }
     });
 
     const { toast } = useToast();
 
     const onSubmit = async (data: z.infer<typeof RegisterAsUserSchema>) => {
-        console.log("Form Data:", data);
+        toast({
+            title: "Loading ...",
+            variant: 'default'
+        });
         try {
             console.log(`Date: ${data.tanggalLahir}`);
             
@@ -91,12 +87,11 @@ export const RegisterPelangganForm = () => {
     };
 
     return (
-        <div className="w-full min-h-[100vh] flex items-center justify-center bg-gray-100 py-40">
+        <div className="w-full min-h-[100vh] flex items-center justify-center bg-background py-40">
             <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center w-full max-w-2xl">
                 <h1 className="font-bold text-2xl">Register to Sijarta</h1>
-                <p>by ngeQuery Team</p>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
                         <FormField
                             control={form.control}
                             name="noHp"
@@ -138,11 +133,23 @@ export const RegisterPelangganForm = () => {
                                 <FormItem>
                                     <FormLabel>Jenis Kelamin</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            className='w-full'
-                                            label=""
-                                            placeholder="L/P" {...field}
-                                        />
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={(val) => {
+                                                field.onChange(val);
+                                            }}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Pilih Jenis Kelamin ..." />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Jenis Kelamin</SelectLabel>
+                                                    <SelectItem value="L">Laki-laki</SelectItem>
+                                                    <SelectItem value="P">Perempuan</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -170,7 +177,7 @@ export const RegisterPelangganForm = () => {
                             control={form.control}
                             name="alamat"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="col-span-2">
                                     <FormLabel>Alamat</FormLabel>
                                     <FormControl>
                                         <Input
@@ -220,6 +227,7 @@ export const RegisterPelangganForm = () => {
                             )}
                         />
                         <Button
+                            variant={'secondary'}
                             type="submit"
                             className="col-span-1 sm:col-span-2"
                         >

@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PelangganType, UserType } from "@/database/types";
 import { useToast } from "@/hooks/use-toast";
-import { useUserData } from "@/lib/useUserData";
+import { useUserData } from "@/hooks/useUserData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Save } from "lucide-react";
 import Image from "next/image";
@@ -19,8 +19,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { dateConverter } from ".";
-import { EditProfilePelangganSchema } from "./types";
+import { dateConverter } from "..";
+import { EditProfilePelangganSchema } from "../types";
 
 export const EditProfilePelanggan = () => {
     const [userDataState, setUserDataState] = useState<PelangganType & UserType>({} as PelangganType & UserType);
@@ -43,19 +43,20 @@ export const EditProfilePelanggan = () => {
             nohp: userDataState.nohp ?? "",
             tanggallahir: dateConverter(userDataState.tgllahir),
             alamat: userDataState.alamat ?? "",
-            level: userDataState.level ?? "",
-            saldompay: userDataState.saldompay?.toString() ?? "0",
         },
     });
 
     useEffect(() => {
-        fetchUserProfile();
-    }, []);
+        if (userData.id)
+            fetchUserProfile();
+    }, [userData]);
 
     async function onSubmit(data: z.infer<typeof EditProfilePelangganSchema>) {
-        console.log(data);
-
         try {
+            toast({
+                title: "Loading ...",
+                variant: "default"
+            })
             const response = await fetch(`/api/auth/profile?id=${userData.id}&role=pelanggan`, {
                 method: "PATCH",
                 body: JSON.stringify(data),
@@ -71,7 +72,7 @@ export const EditProfilePelanggan = () => {
                     description: "Profile updated successfully",
                     variant: "success",
                 });
-                router.replace(`/profile?role=pelanggan`);
+                router.back()
             } else {
                 throw new Error(result.error);
             }
@@ -85,7 +86,7 @@ export const EditProfilePelanggan = () => {
     }
 
     return (
-        <main className="flex flex-col my-40 px-10 md:px-32 gap-5">
+        <main className="flex flex-col gap-5">
             <div className="flex gap-4 items-center">
                 <ArrowLeft
                     className="w-4 cursor-pointer hover:scale-105"
@@ -94,7 +95,7 @@ export const EditProfilePelanggan = () => {
                 <h1 className="font-bold text-xl">Edit Profile Pelanggan</h1>
             </div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 items-center">
                     <Image
                         src="/psql.png"
                         alt="Profile Picture"
@@ -102,13 +103,13 @@ export const EditProfilePelanggan = () => {
                         height={150}
                         className="rounded-full"
                     />
-                    <div className="grid grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-white p-10 rounded-xl w-full">
                         <FormField
                             control={form.control}
                             name="nama"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Nama</FormLabel>
+                                    <FormLabel className="text-green-700">Nama</FormLabel>
                                     <FormControl>
                                         <Input
                                             label=""
@@ -123,7 +124,7 @@ export const EditProfilePelanggan = () => {
                             name="jeniskelamin"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Jenis Kelamin</FormLabel>
+                                    <FormLabel className="text-green-700">Jenis Kelamin</FormLabel>
                                     <FormControl>
                                         <Select
                                             value={field.value}
@@ -152,7 +153,7 @@ export const EditProfilePelanggan = () => {
                             name="nohp"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>No HP</FormLabel>
+                                    <FormLabel className="text-green-700">No HP</FormLabel>
                                     <FormControl>
                                         <Input
                                             label=""
@@ -167,7 +168,7 @@ export const EditProfilePelanggan = () => {
                             name="tanggallahir"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Tanggal Lahir</FormLabel>
+                                    <FormLabel className="text-green-700">Tanggal Lahir</FormLabel>
                                     <FormControl>
                                         <Input
                                             label=""
@@ -182,7 +183,7 @@ export const EditProfilePelanggan = () => {
                             name="alamat"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Alamat</FormLabel>
+                                    <FormLabel className="text-green-700">Alamat</FormLabel>
                                     <FormControl>
                                         <Input
                                             label=""
@@ -192,11 +193,11 @@ export const EditProfilePelanggan = () => {
                                 </FormItem>
                             )}
                         />
+                        <Button type="submit" variant={'secondary'} className="w-full col-span-2">
+                            <Save className="w-4" />
+                            Save Changes
+                        </Button>
                     </div>
-                    <Button type="submit">
-                        <Save className="w-4" />
-                        Save Changes
-                    </Button>
                 </form>
             </Form>
         </main>

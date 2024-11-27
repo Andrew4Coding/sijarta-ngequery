@@ -9,11 +9,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-
 import { PekerjaType, UserType } from "@/database/types";
 import { useToast } from "@/hooks/use-toast";
-import { useUserData } from "@/lib/useUserData";
+import { useUserData } from "@/hooks/useUserData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Save } from "lucide-react";
 import Image from "next/image";
@@ -21,8 +19,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { dateConverter } from ".";
-import { EditProfilePekerjaSchema } from "./types";
+import { dateConverter } from "..";
+import { EditProfilePekerjaSchema } from "../types";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -37,7 +35,6 @@ export const EditProfilePekerja = () => {
     const [kategoriJasa, setKategoriJasa] = useState<string[]>([]);
 
     const { userData } = useUserData();
-
     const { toast } = useToast();
 
     async function fetchUserProfile() {
@@ -68,11 +65,15 @@ export const EditProfilePekerja = () => {
     });
 
     useEffect(() => {
-        fetchUserProfile()
-    }, [])
+        if (userData.id) 
+            fetchUserProfile()
+    }, [userData])
 
     async function onSubmit(data: z.infer<typeof EditProfilePekerjaSchema>) {
-        console.log(data);
+        toast({
+            title: "Loading ...",
+            variant: "default"
+        })
 
         const response = await fetch(`/api/auth/profile/?id=${userData.id}&role=pekerja`, {
             method: 'PATCH',
@@ -91,6 +92,8 @@ export const EditProfilePekerja = () => {
                 description: "Profile updated successfully",
                 variant: "success"
             })
+
+            router.back()
         } else {
             toast({
                 title: "Failed",
@@ -98,14 +101,10 @@ export const EditProfilePekerja = () => {
                 variant: "destructive"
             })
         }
-
-        // router.replace(`/profile?role=${roleParams}`);
     }
 
-
-
     return (
-        <main className="flex f</FormControl>lex-col my-40 px-10 md:px-32  gap-5">
+        <main className="flex flex-col gap-5">
             <div className="flex gap-4 items-center">
                 <ArrowLeft className="w-4 cursor-pointer hover:scale-105" onClick={() => {
                     router.back();
@@ -113,7 +112,7 @@ export const EditProfilePekerja = () => {
                 <h1 className="font-bold text-xl">Edit Profile Page</h1>
             </div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 items-center">
                     <Image
                         src="/psql.png"
                         alt="Profile Picture"
@@ -121,7 +120,7 @@ export const EditProfilePekerja = () => {
                         height={150}
                         className="rounded-full"
                     />
-                    <div className="grid grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-white p-10 rounded-xl w-full">
                         <FormField
                             control={form.control}
                             name="nama"
@@ -308,11 +307,11 @@ export const EditProfilePekerja = () => {
                                 </FormItem>
                             )}
                         />
+                        <Button type="submit" variant={'secondary'} className="w-full col-span-2">
+                            <Save className="w-4" />
+                            Save Changes
+                        </Button>
                     </div>
-                    <Button type="submit">
-                        <Save className="w-4" />
-                        Save Changes
-                    </Button>
                 </form>
             </Form>
         </main>

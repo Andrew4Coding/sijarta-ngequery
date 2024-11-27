@@ -1,4 +1,4 @@
-import { EditProfilePageModule } from '@/modules/ProfilePageModule/edit';
+import { EditProfilePageModule } from '@/modules/EditProfileModule';
 
 const page = () => {
     return (

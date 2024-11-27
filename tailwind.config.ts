@@ -11,8 +11,8 @@ const config: Config = {
   theme: {
 	  extend: {
 		  fontFamily: {
-			  dmsans: ['var(--font-dm-sans)', 'sans-serif'],
-			  catamaran: ['var(--font-catamaran)', 'sans-serif'],
+			  urbanist: ['var(--font-urbanist)'],
+			  jakarta: ['var(--font-jakarta-sans)'],
 		  },
 		boxShadow: {
 			"header": "box-shadow: 0px 2px 10px 0px rgba(255, 255, 255, 1)"

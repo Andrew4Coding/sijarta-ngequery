@@ -2,12 +2,10 @@ import z from "zod";
 
 export const EditProfilePelangganSchema = z.object({
     nama: z.string().nonempty("Nama is required"),
-    level: z.string().nonempty("Level is required"),
     jeniskelamin: z.string().nonempty("Jenis Kelamin is required"),
     nohp: z.string().nonempty("No HP is required").regex(/^\d+$/, "No HP must be a number"),
     tanggallahir: z.string().nonempty("Tanggal Lahir is required"),
     alamat: z.string().nonempty("Alamat is required"),
-    saldompay: z.string().nonempty("Saldo MPAY is required").regex(/^Rp \d+(\.\d{3})*$/, "Saldo MPAY must be in the format Rp X.XXX.XXX")
 });
 
 export const EditProfilePekerjaSchema = z.object({
@@ -21,23 +19,3 @@ export const EditProfilePekerjaSchema = z.object({
     npwp: z.string().nonempty("NPWP is required").regex(/^\d+$/, "NPWP must be a number"),
     kategorijasa: z.array(z.string())
 });
-
-export type EditPekerjaProfileType = {
-    nama: string;
-    jeniskelamin: string;
-    nohp: string;
-    tgllahir: string;
-    alamat: string;
-    namabank: string;
-    nomorrekening: string;
-    npwp: string;
-    kategorijasa: string[];
-}
-
-export type EditPelangganProfileType = {
-    nama: string;
-    jeniskelamin: string;
-    nohp: string;
-    tgllahir: string;
-    alamat: string;
-}

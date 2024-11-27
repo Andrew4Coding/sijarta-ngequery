@@ -31,7 +31,6 @@ export const SubKategoriCombobox = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
           role="combobox"
           aria-expanded={open}
           className="md:w-[250px] justify-between mx-auto mb-8 mt-4"
