@@ -29,7 +29,7 @@ export const Pekerjaan = () => {
     filterData();
   }, [value, subValue]);
   return (
-    <section className="flex flex-col gap-12">
+    <section className="flex flex-col gap-12 z-10">
       <div className="mx-auto md:space-x-4 max-md:flex max-md:flex-col max-md:gap-1">
         <KategoriCombobox value={value} setValue={setValue} />
         <SubKategoriCombobox
@@ -62,7 +62,7 @@ export const Pekerjaan = () => {
                 </div>
               </div>
               <div className="w-full h-full flex md:flex-row flex-col max-md:gap-4 justify-between items-center bg-white rounded-b-[20px] lg:rounded-[20px] max-lg:border-t-0 border border-[#D9D9D9] p-6 md:p-9">
-                <div className="space-y-4 font-bold">
+                <div className="md:space-y-4 font-bold max-md:text-center">
                   <h2 className="text-[24px] md:text-[28px]">{card.assignner}</h2>
                   <p className="text-[16px] md:text-[20px] text-[#B2B2B2]">
                     {new Date(card.todoDate).toLocaleDateString("id-ID", {
@@ -78,7 +78,7 @@ export const Pekerjaan = () => {
                     currency: "IDR",
                   })}
                 </h2>
-                <Button variant={'secondary'} className="md:text-[20px]">Kerjakan Pesanan</Button>
+                <Button variant={'secondary'} className="md:text-[20px] max-md:w-full">Kerjakan Pesanan</Button>
               </div>
             </div>
           ))
