@@ -73,11 +73,11 @@ export const StatusPekerjaan = () => {
                   className={cn(
                     "text-center text-[16px] md:text-[20px] font-semibold py-3 md:py-4 border border-[#D9D9D9] rounded-[12px]",
                     card.status === "Selesai" && "text-green-500",
-                    card.status === "Dibatalkan" && "bg-red-500",
+                    card.status === "Dibatalkan" && "text-[#F27575]",
                     card.status === "Melakukan Pelayanan Jasa" &&
                       "text-[#F2AD75]",
                     card.status === "Menunggu Pekerja Berangkat" &&
-                      "text-[#F27575]",
+                      "text-[#AF75F2]",
                     card.status === "Tiba Di Lokasi" && "text-[#759EF2]"
                   )}
                 >
