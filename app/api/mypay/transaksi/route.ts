@@ -79,9 +79,11 @@ export async function POST(req: Request) {
       userid: userId,
       kategoriid: categoryId?.id,
       nominal,
+      tgl: new Date(),
     });
+    const saldo = Number(user.saldompay!) + nominal
     await new User().update("id", userId, {
-      saldompay: user.saldompay! + nominal,
+      saldompay: saldo,
     });
     return new Response(
       JSON.stringify({
