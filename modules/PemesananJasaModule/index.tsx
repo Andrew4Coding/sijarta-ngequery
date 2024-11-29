@@ -34,6 +34,8 @@ const PemesananJasaModule = () => {
     const [orders, setOrders] = useState<Order[]>(dummyOrders);
     const [subcategoryFilter, setSubcategoryFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
+    const [openDialog, setOpenDialog] = useState(false);  
+    const [currentOrder, setCurrentOrder] = useState<Order | null>(null); 
 
     const handleCancelOrder = (index: number) => {
         const updatedOrders = [...orders];
