@@ -8,6 +8,16 @@ export async function GET(req: Request) {
 
   const user = await new User().findBy("id", id);
 
+  if (!user) {
+    return new Response(
+      JSON.stringify({
+        message: "Failed",
+        error: "User not found",
+      }),
+      { status: 404 }
+    );
+  }
+
   const trHistory = await Promise.all(
     (
       await new TrMpay().findMany("userid", id)
@@ -17,7 +27,9 @@ export async function GET(req: Request) {
         tr.kategoriid
       );
       return {
-        ...tr,
+        id: tr.id,
+        tanggal: tr.tgl,
+        nominal: tr.nominal,
         kategoriid: kategori?.id,
         kategori: kategori?.nama,
       };
@@ -28,7 +40,7 @@ export async function GET(req: Request) {
     JSON.stringify({
       message: "Success",
       data: {
-        saldo: user?.saldompay,
+        saldo: user.saldompay,
         trHistory,
       },
     }),
