@@ -3,7 +3,7 @@ import { TrMpay } from "@/database/models/trMpay";
 import { KategoriTransaksiMpay } from "@/database/models/kategoriTrMpay";
 import { v4 } from "uuid";
 
-type category = "TopUp MyPay" | "Membayar Transaksi" | "Transfer MyPay" | "withdrawal";
+type category = "TopUp MyPay" | "Membayar Transaksi" | "Transfer MyPay" | "Withdrawal";
 
 interface TransaksiInterface {
   userId: string;
@@ -123,7 +123,7 @@ export async function POST(req: Request) {
     );
   }
 
-  if (category === "withdrawal" && (!bankName || !bankAccount)) {
+  if (category === "Withdrawal" && (!bankName || !bankAccount)) {
     return new Response(
       JSON.stringify({
         message: "Failed",
