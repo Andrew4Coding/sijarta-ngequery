@@ -6,6 +6,9 @@ import { z } from "zod";
 import InputForm from "@/components/ui/InputForm";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { useUserData } from "@/hooks/useUserData";
+import { toast } from "sonner"
+import { useState } from "react";
 
 const formSchema = z.object({
   nominal: z.string().refine((val) => parseInt(val) > 0, {
@@ -14,11 +17,33 @@ const formSchema = z.object({
 });
 
 export const TopUp = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { userData, role } = useUserData();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    toast.loading("Loading...");
+    const response = await fetch("/api/mypay/transaksi", {
+      method: "POST",
+      body: JSON.stringify({
+        userId: userData.id,
+        role,
+        category: "TopUp MyPay",
+        nominal: parseInt(values.nominal),
+      }),
+    });
+
+    if (response.ok) {
+      const responseData = await response.json();
+      setIsLoading(false);
+      toast.success(responseData.data.message);
+    } else {
+      const error = await response.json();
+      setIsLoading(false);
+      toast.error(error.error);
+    }
   }
   return (
     <div>
@@ -35,7 +60,9 @@ export const TopUp = () => {
             type="number"
             form={form}
           />
-          <Button variant={'secondary'} type="submit">Top Up</Button>
+          <Button disabled={isLoading} variant={"secondary"} type="submit">
+            Top Up
+          </Button>
         </form>
       </Form>
     </div>
