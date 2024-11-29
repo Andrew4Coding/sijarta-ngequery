@@ -3,7 +3,7 @@ import { TrMpay } from "@/database/models/trMpay";
 import { KategoriTransaksiMpay } from "@/database/models/kategoriTrMpay";
 import { v4 } from "uuid";
 
-type category = "topup" | "transaction" | "transfer" | "withdrawal";
+type category = "TopUp MyPay" | "Membayar Transaksi" | "Transfer MyPay" | "withdrawal";
 
 interface TransaksiInterface {
   userId: string;
@@ -13,6 +13,7 @@ interface TransaksiInterface {
   noHp?: string;
   bankName?: string;
   bankAccount?: string;
+  pemesananJadaId?: string;
 }
 
 export async function POST(req: Request) {
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
     );
   }
 
-  if (user.saldompay! < nominal && category !== "topup") {
+  if (user.saldompay! < nominal && category !== "TopUp MyPay") {
     return new Response(
       JSON.stringify({
         message: "Failed",
@@ -68,40 +69,10 @@ export async function POST(req: Request) {
     );
   }
 
-  if (category === "transaction" && role === "pekerja") {
-    return new Response(
-      JSON.stringify({
-        message: "Failed",
-        error: "Access Denied",
-      }),
-      { status: 403 }
-    );
-  }
-
-  if (category === "transfer" && !noHp) {
-    return new Response(
-      JSON.stringify({
-        message: "Failed",
-        error: "Missing noHp field is required",
-      }),
-      { status: 400 }
-    );
-  }
-
-  if (category === "withdrawal" && (!bankName || !bankAccount)) {
-    return new Response(
-      JSON.stringify({
-        message: "Failed",
-        error: "Missing bankName and bankAccount fields are required",
-      }),
-      { status: 400 }
-    );
-  }
-
-  if (category === "topup") {
+  if (category === "TopUp MyPay") {
     const categoryId = await new KategoriTransaksiMpay().findBy(
       "nama",
-      "Topup"
+      "TopUp MyPay"
     );
     await new TrMpay().create({
       id: v4(),
@@ -123,4 +94,44 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   }
+
+  if (category === "Membayar Transaksi") {
+    if (role === "pekerja") {
+        return new Response(
+            JSON.stringify({
+            message: "Failed",
+            error: "Access Denied",
+            }),
+            { status: 403 }
+        );
+    }
+
+    const categoryId = await new KategoriTransaksiMpay().findBy(
+      "nama",
+      "Membayar Transaksi"
+    );
+    
+  }
+
+  if (category === "Transfer MyPay" && !noHp) {
+    return new Response(
+      JSON.stringify({
+        message: "Failed",
+        error: "Missing noHp field is required",
+      }),
+      { status: 400 }
+    );
+  }
+
+  if (category === "withdrawal" && (!bankName || !bankAccount)) {
+    return new Response(
+      JSON.stringify({
+        message: "Failed",
+        error: "Missing bankName and bankAccount fields are required",
+      }),
+      { status: 400 }
+    );
+  }
+
+  //BELUM KELAR
 }
