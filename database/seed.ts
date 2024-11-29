@@ -190,10 +190,10 @@ export async function seedDatabase() {
         ('acd10109-1234-5678-8910-337766338899', 'Bank Danamon', '5678901234', '5678901234567890', 'linkfoto5.jpg', 4.9, 220);
 
         INSERT INTO KATEGORI_TR_MPAY (ID, NAMA) VALUES
-        ('111e0110-1234-5678-8911-abcdefabcdef', 'Topup'),
-        ('222e0111-2234-5678-8912-bcdefbcdefbc', 'Pembayaran Jasa'),
-        ('333e0112-3234-5678-8913-cdefccdefcde', 'Transfer'),
-        ('444e0113-4234-5678-8914-ddefdddefdde', 'Pembelian Produk'),
+        ('111e0110-1234-5678-8911-abcdefabcdef', 'TopUp MyPay'),
+        ('222e0111-2234-5678-8912-bcdefbcdefbc', 'Membayar Transaksi'),
+        ('333e0112-3234-5678-8913-cdefccdefcde', 'Transfer MyPay'),
+        ('444e0113-4234-5678-8914-ddefdddefdde', 'Withdrawal'),
         ('555e0114-5234-5678-8915-eefeeedefeef', 'Pengembalian Dana');
 
         INSERT INTO TR_MPAY (ID, USERID, TGL, NOMINAL, KATEGORIID) VALUES
