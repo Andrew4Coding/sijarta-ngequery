@@ -8,9 +8,9 @@ export const TransaksiHistori = ({
   historyData: PaymentHistoryInterface[];
 }) => {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-8 h-full overflow-y-scroll pr-2 overflow-x-visible w-full">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-8 h-fit overflow-y-scroll pr-2 overflow-x-visible w-full">
       {historyData.map((item, index) => {
-        const date = new Date(item.tanggal.toISOString()).toLocaleDateString(
+        const date = new Date(item.tanggal).toLocaleDateString(
           "id-ID",
           {
             day: "2-digit",
@@ -18,7 +18,7 @@ export const TransaksiHistori = ({
             year: "numeric",
           }
         );
-        const hours = new Date(item.tanggal.toISOString()).toLocaleTimeString(
+        const hours = new Date(item.tanggal).toLocaleTimeString(
           "en-US",
           {
             hour: "2-digit",
@@ -30,13 +30,13 @@ export const TransaksiHistori = ({
             {index === 0 ||
             (index > 0 &&
               historyData[index - 1].tanggal.getDate() !== item.tanggal.getDate()) ? (
-              <div className="xl:col-span-2 bg-green-500 rounded-[12px] p-5 text-white text-[24px] md:text-[32px] font-bold mt-4">
+              <div className="xl:col-span-2 h-fit bg-green-500 rounded-[12px] p-5 text-white text-[24px] md:text-[32px] font-bold mt-4">
                 {date}
               </div>
             ) : null}
             <div
               className={cn(
-                "rounded-lg bg-transparent border border-[#FFCDCD] px-2 xl:px-10 py-6 shadow-sm flex justify-between items-center hover:scale-105 duration-300 xl:mx-6",
+                "rounded-lg bg-transparent h-fit border border-[#FFCDCD] px-2 xl:px-10 py-6 shadow-sm flex justify-between items-center hover:scale-105 duration-300 xl:mx-6",
                 { "border-green-100": item.kategori === "TopUp MyPay" }
               )}
             >
@@ -49,7 +49,7 @@ export const TransaksiHistori = ({
                     }
                   )}
                 >
-                  {item.nominal.toLocaleString("id-ID", {
+                  {Number(item.nominal).toLocaleString("id-ID", {
                     style: "currency",
                     currency: "IDR",
                   })}

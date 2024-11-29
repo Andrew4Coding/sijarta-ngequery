@@ -70,7 +70,7 @@ export const MyPayModule = ({
           </DialogContent>
         </Dialog>
       </div>
-      <div className="bg-white z-10 border border-[#D9D9D9] mt-[50px] rounded-[24px] w-[90%] md:w-[80%] h-[1100px] p-6 md:p-12 flex flex-col items-center justify-center">
+      <div className="bg-white z-10 border border-[#D9D9D9] mt-[50px] rounded-[24px] w-[90%] md:w-[80%] h-[1100px] p-6 md:p-12 flex flex-col">
         {historyTransaksi.length === 0 ? (
           <h1 className="text-[40px] text-center font-bold text-gray-400">
             Anda belum melakukan transaksi menggunakan MyPay
