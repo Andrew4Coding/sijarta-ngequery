@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Input } from '@/components/ui/input';
 import {
@@ -34,10 +34,6 @@ export const HomePageModule = () => {
         { "name": "Layanan Pemasaran", "subcategories": ["Pemasaran Digital", "Pemasaran Media Sosial", "Strategi Pemasaran Konten"] },
         { "name": "Jasa Kreatif", "subcategories": ["Desain Grafis", "Fotografi", "Produksi Video"] },
         { "name": "Layanan Kesehatan", "subcategories": ["Konsultasi Gizi", "Terapi Fisik", "Konsultasi Psikologis"] },
-        { "name": "Layanan Keuangan", "subcategories": ["Manajemen Investasi", "Perencanaan Pajak", "Asuransi Jiwa dan Kesehatan"] },
-        { "name": "Layanan Perjalanan", "subcategories": ["Perencanaan Liburan", "Layanan Pemandu Wisata", "Pemesanan Hotel"] },
-        { "name": "Layanan Kebersihan", "subcategories": ["Kebersihan Rumah", "Kebersihan Kantor", "Jasa Laundry"] },
-        { "name": "Jasa Logistik", "subcategories": ["Pengiriman Barang", "Penyimpanan dan Gudang", "Distribusi Produk"] }
     ];
 
     useEffect(() => {
@@ -61,53 +57,83 @@ export const HomePageModule = () => {
     };
 
     return (
-        <main className="flex flex-col items-center bg-background min-h-screen px-10 md:px-10 py-40  w-full">
-            <div className="flex gap-2 mb-6 w-full max-w-lg">
-                <Select
-                    onValueChange={(val) => {
-                        if (val === 'all') {
-                            setSelectedCategory('');
-                            updateFilteredCategories('', searchTerm);
-                            return;
-                        }
-                        setSelectedCategory(val);
-                        updateFilteredCategories(val, searchTerm);
-                    }}
-                >
-                    <SelectTrigger
-                        className="w-[200px]"
-                        value={selectedCategory}
-                    >
-                        <SelectValue placeholder="Pilih Kategori" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectItem value="all">Semua Kategori</SelectItem>
-                            <SelectLabel>Kategori</SelectLabel>
-                            {categories.map((category, index) => (
-                                <SelectItem key={index} value={category.name}>{category.name}</SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-                <Input
-                    label="Nama Subkategori"
-                    type="text"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    placeholder="Nama Subkategori"
-                    className="w-full md:w-[300px]"
-                />
+        <main className="flex flex-col items-center bg-background min-h-screen px-10 py-40 w-full">
+            <div className="text-center text-6xl font-['Newake'] tracking-[3px] mb-12">
+                <span className="text-black">Selamat Datang di </span>
+                <span className="text-[#1ab35f]">SIJARTA</span>
             </div>
 
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-10">
+            {/* Search and Filter Section */}
+            <div className="h-[66px] justify-start items-center gap-3 inline-flex mb-12 w-full max-w-[1280px]">
+                <div className="h-[66px] w-[300px] flex items-center bg-white rounded-[50px] border border-[#d9d9d9] px-8">
+                    <Select
+                        onValueChange={(val) => {
+                            if (val === 'all') {
+                                setSelectedCategory('');
+                                updateFilteredCategories('', searchTerm);
+                                return;
+                            }
+                            setSelectedCategory(val);
+                            updateFilteredCategories(val, searchTerm);
+                        }}
+                    >
+                        <SelectTrigger className="w-full text-black text-2xl font-['Urbanist'] focus:outline-none bg-transparent">
+                            <SelectValue placeholder="Pilih Kategori" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="all">Semua Kategori</SelectItem>
+                                <SelectLabel>Kategori</SelectLabel>
+                                {categories.map((category, index) => (
+                                    <SelectItem key={index} value={category.name}>
+                                        {category.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div className="h-[66px] px-8 bg-white rounded-[50px] border border-[#d9d9d9] flex items-center flex-1 box-border">
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        placeholder="Nama Subkategori"
+                        className="w-full text-black text-2xl font-['Urbanist'] focus:outline-none placeholder:text-[#acacac] bg-transparent h-full"
+                    />
+                </div>
+            </div>
+
+            {/* Categories and Subcategories */}
+            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1280px]">
                 {filteredCategories.map((category, index) => (
-                    <div key={index} className="bg-white border border-gray-200 mb-4 rounded-md">
-                        <h3 className="bg-green-100 font-semibold text-base px-4 py-2 border-b border-gray-200 rounded-t-md">{category.name}</h3>
-                        <ul className="list-none">
+                    <div key={index} className="flex flex-col">
+                        {/* Category Header */}
+                        <div className="px-5 py-4 bg-[#1ab35f] text-white rounded-xl text-xl font-bold text-center">
+                            {category.name}
+                        </div>
+                        {/* Gap Between Category and Subcategories */}
+                        <div className="h-4 bg-transparent"></div> {/* Tambahkan ini sebagai gap */}
+                        {/* Subcategories */}
+                        <ul className="bg-white border border-[#d9d9d9] rounded-xl">
                             {category.subcategories.map((subcategory, subIndex) => (
-                                <Link key={subIndex} href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pelanggan'}/${subcategory.split(" ").join("-")}`}>
-                                    <li className="p-2 pl-4 border-b border-gray-200 last:border-b-0 hover:bg-gray-50">
+                                <Link
+                                    key={subIndex}
+                                    href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pelanggan'}/${subcategory.split(" ").join("-")}`}
+                                >
+                                    <li
+                                        className={`px-5 py-4 text-center text-[#1ab35f] text-lg font-bold cursor-pointer ${
+                                            subIndex === 0
+                                                ? "rounded-tl-xl rounded-tr-xl"
+                                                : subIndex === category.subcategories.length - 1
+                                                ? "rounded-bl-xl rounded-br-xl"
+                                                : ""
+                                        }`}
+                                        style={{
+                                            borderBottom: subIndex === category.subcategories.length - 1 ? 'none' : '1px solid #d9d9d9',
+                                        }}
+                                    >
                                         {subcategory}
                                     </li>
                                 </Link>
@@ -116,6 +142,7 @@ export const HomePageModule = () => {
                     </div>
                 ))}
             </div>
+
         </main>
     );
 };
