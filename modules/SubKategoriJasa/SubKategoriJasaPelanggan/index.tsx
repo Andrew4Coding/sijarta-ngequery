@@ -174,10 +174,17 @@ export const SubKategoriJasaPelanggan = ({
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
                     {workers.map((worker, index) => (
                         <Dialog key={index}>
-                            {/* DialogTrigger harus ada di dalam Dialog */}
                             <DialogTrigger asChild>
                                 <div className="p-4 bg-[#e8f7ef] rounded-xl text-center hover:bg-[#d7f0e3] transition cursor-pointer border border-[#d9d9d9]">
-                                    <div className="w-[84px] h-[84px] bg-white rounded-xl border border-[#d9d9d9] mb-3 mx-auto"></div>
+                                    <div className="w-[84px] h-[84px] bg-white rounded-xl border border-[#d9d9d9] mb-3 mx-auto overflow-hidden">
+                                        <Image
+                                            src={worker.image}
+                                            alt={`Foto ${worker.name}`}
+                                            width={84}
+                                            height={84}
+                                            className="object-cover w-full h-full"
+                                        />
+                                    </div>
                                     <p className="text-black text-xl font-medium">{worker.name}</p>
                                 </div>
                             </DialogTrigger>
@@ -215,6 +222,7 @@ export const SubKategoriJasaPelanggan = ({
                         </Dialog>
                     ))}
                 </div>
+
 
             </div>
 
