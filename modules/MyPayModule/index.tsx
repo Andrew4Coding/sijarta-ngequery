@@ -22,27 +22,31 @@ export const MyPayModule = ({
     PaymentHistoryInterface[]
   >([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(`/api/mypay?id=${userData.id}`);
+  const fetchData = async () => {
+    const response = await fetch(`/api/mypay?id=${userData.id}`);
 
-      if (response.ok) {
-        const responseData = await response.json();
-        const data: ResponseInterface = responseData.data;
-        console.log(data);
-        setSaldo(
-          Number(data.saldo).toLocaleString("id-ID", {
-            style: "currency",
-            currency: "IDR",
-          })
-        );
-        setHistoryTransaksi(data.trHistory);
-      } else {
-        const error = await response.json();
-        console.log(error);
-      }
-    };
-    fetchData();
+    if (response.ok) {
+      const responseData = await response.json();
+      const data: ResponseInterface = responseData.data;
+      setSaldo(
+        Number(data.saldo).toLocaleString("id-ID", {
+          style: "currency",
+          currency: "IDR",
+        })
+      );
+      setHistoryTransaksi(data.trHistory);
+    } else {
+      const error = await response.json();
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchData();
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
   return (
     <main className="min-h-screen flex flex-col justify-center items-center py-52 z-10">
@@ -66,7 +70,7 @@ export const MyPayModule = ({
                 Transaksi
               </DialogTitle>
             </DialogHeader>
-            <Transaksi saldo={saldo} />
+            <Transaksi saldo={saldo} userId={userData.id} />
           </DialogContent>
         </Dialog>
       </div>
