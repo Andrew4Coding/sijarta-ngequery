@@ -24,7 +24,6 @@ export const TopUp = () => {
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    toast.loading("Loading...");
     const response = await fetch("/api/mypay/transaksi", {
       method: "POST",
       body: JSON.stringify({
@@ -35,15 +34,19 @@ export const TopUp = () => {
       }),
     });
 
-    if (response.ok) {
-      const responseData = await response.json();
-      setIsLoading(false);
-      toast.success(responseData.data.message);
-    } else {
-      const error = await response.json();
-      setIsLoading(false);
-      toast.error(error.error);
-    }
+    const result = await response.json();
+    toast.promise(
+      response.ok
+        ? Promise.resolve(result.message)
+        : Promise.reject(result.error),
+      {
+        loading: "Loading...",
+        success: "Withdrawal Success",
+        error: result.error,
+      }
+    );
+
+    setIsLoading(false);
   }
   return (
     <div>

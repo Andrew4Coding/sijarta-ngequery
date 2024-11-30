@@ -7,7 +7,7 @@ import { Transfer } from "../elements/Transfer";
 import { BayarTransaksi } from "../elements/BayarTransaksi";
 import { useUserData } from "@/hooks/useUserData";
 
-export const Transaksi = ({ saldo }: { saldo: string }) => {
+export const Transaksi = ({ saldo, userId }: { saldo: string, userId: string }) => {
   const { userData, role } = useUserData();
   const [value, setValue] = useState("");
   return (
@@ -25,7 +25,7 @@ export const Transaksi = ({ saldo }: { saldo: string }) => {
       {value === "Withdrawal" && <Withdrawal />}
       {value === "Transfer MyPay" && <Transfer />}
       {value === "Membayar Transaksi" && role === "pelanggan" && (
-        <BayarTransaksi />
+        <BayarTransaksi userId={userId} />
       )}
       {value === "" && (
         <p className="text-center font-medium text-gray-400 text-lg my-6">
