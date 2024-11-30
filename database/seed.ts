@@ -195,6 +195,8 @@ export async function seedDatabase() {
         ('333e0112-3234-5678-8913-cdefccdefcde', 'Transfer MyPay'),
         ('444e0113-4234-5678-8914-ddefdddefdde', 'Withdrawal'),
         ('555e0114-5234-5678-8915-eefeeedefeef', 'Pengembalian Dana');
+        ('666e0115-6234-5678-8916-ffefffefefef', 'Pembayaran Voucher');
+        ('777e0116-7234-5678-8917-001100112223', 'Terima Transfer');
 
         INSERT INTO TR_MPAY (ID, USERID, TGL, NOMINAL, KATEGORIID) VALUES
         ('111f0115-1234-5678-8916-abcdefabcdef', '1c3e0100-1234-5678-8901-abcdefabcdef', '2024-07-01', 50000.00,  '111e0110-1234-5678-8911-abcdefabcdef'),
