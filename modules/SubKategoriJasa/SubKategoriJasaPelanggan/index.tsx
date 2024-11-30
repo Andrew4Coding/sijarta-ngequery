@@ -188,43 +188,50 @@ export const SubKategoriJasaPelanggan = ({
                                     <p className="text-black text-xl font-medium">{worker.name}</p>
                                 </div>
                             </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle className="text-center">Profil Pekerja</DialogTitle>
+                            <DialogContent className="w-[682px] p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-8">
+                                <DialogHeader className="w-full text-center">
+                                    <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">Profil Pekerja</DialogTitle>
                                 </DialogHeader>
-                                <div className="bg-white p-6 rounded-lg">
-                                    <Image
-                                        src={worker.image}
-                                        alt={`Foto ${worker.name}`}
-                                        className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
-                                        width={128}
-                                        height={128}
-                                    />
-                                    <div className="grid grid-cols-2 gap-5 my-5">
-                                        <p className="font-semibold">Nama</p>
-                                        <p>{worker.name}</p>
-                                        <p className="font-semibold">Rating</p>
-                                        <p>{worker.rating}/5</p>
-                                        <p className="font-semibold">Jumlah Pesanan Selesai</p>
-                                        <p>{worker.completedOrders}</p>
-                                        <p className="font-semibold">No HP</p>
-                                        <p>{worker.phone}</p>
-                                        <p className="font-semibold">Tanggal Lahir</p>
-                                        <p>{worker.birthDate}</p>
-                                        <p className="font-semibold">Alamat</p>
-                                        <p>{worker.address}</p>
+                                <div className="flex flex-col items-center">
+                                    <div className="w-[120px] h-[120px] rounded-full overflow-hidden bg-[#f5f5f5] flex items-center justify-center mb-6">
+                                        <Image
+                                            src={worker.image}
+                                            alt={`Foto ${worker.name}`}
+                                            className="w-full h-full object-cover"
+                                            width={120}
+                                            height={120}
+                                        />
                                     </div>
-                                    <DialogClose asChild>
-                                        <Button className="w-full" variant="destructive">Tutup</Button>
-                                    </DialogClose>
+                                    <div className="w-full flex justify-between items-start">
+                                        <div className="flex flex-col gap-7 text-black text-xl font-bold">
+                                            <p>Nama</p>
+                                            <p>Rating</p>
+                                            <p>Jumlah Pesanan Selesai</p>
+                                            <p>No HP</p>
+                                            <p>Tanggal Lahir</p>
+                                            <p>Alamat</p>
+                                        </div>
+                                        <div className="flex flex-col gap-7 text-black text-xl font-normal">
+                                            <p>{worker.name}</p>
+                                            <p>{worker.rating}/5</p>
+                                            <p>{worker.completedOrders}</p>
+                                            <p>{worker.phone}</p>
+                                            <p>{worker.birthDate}</p>
+                                            <p>{worker.address}</p>
+                                        </div>
+                                    </div>
                                 </div>
+                                <DialogClose asChild>
+                                    <Button className="w-full px-5 py-3 bg-[#1ab35f] text-white text-2xl rounded-xl">
+                                        Tutup
+                                    </Button>
+                                </DialogClose>
                             </DialogContent>
                         </Dialog>
                     ))}
                 </div>
-
-
             </div>
+
 
             {/* Testimonials Section */}
             <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mt-8">
