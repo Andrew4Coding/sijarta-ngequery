@@ -110,37 +110,39 @@ export const SubKategoriJasaPelanggan = ({
                                     Pesan
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle className="text-center">Pesan Jasa</DialogTitle>
+                            <DialogContent className="w-[682px] h-[720px] p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col justify-start items-start gap-7">
+                                <DialogHeader className="w-full flex flex-col items-center">
+                                    <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">Pesan Jasa</DialogTitle>
                                 </DialogHeader>
-                                <div>
-                                    <Input
-                                        label="Tanggal Pemesanan"
-                                        type="text"
-                                        value={newOrder.date}
-                                        disabled
-                                        className="border p-2 rounded-md w-full mb-4"
-                                    />
-                                    <Input
-                                        label="Kode Diskon"
-                                        type="text"
-                                        placeholder="Masukkan Kode Diskon"
-                                        value={newOrder.discountCode}
-                                        onChange={(e) => handleDiscountChange(e.target.value, session)}
-                                        className="border p-2 rounded-md w-full mb-4"
-                                    />
-                                    <Input
-                                        label="Total Pembayaran"
-                                        type="text"
-                                        value={newOrder.total}
-                                        disabled
-                                        className="border p-2 rounded-md w-full mb-4"
-                                    />
-                                    <label className="block mb-2">Metode Pembayaran:</label>
+                                <div className="w-full flex flex-col gap-3">
+                                    <label className="text-black text-xl font-medium">Tanggal Pemesanan:</label>
+                                    <div className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] flex items-center">
+                                        <span className="text-[#b2b2b2] text-xl font-medium">{newOrder.date}</span>
+                                    </div>
+                                </div>
+                                <div className="w-full flex flex-col gap-3">
+                                    <label className="text-black text-xl font-medium">Diskon:</label>
+                                    <div className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] flex items-center">
+                                        <input
+                                            type="text"
+                                            placeholder="Kode Diskon"
+                                            value={newOrder.discountCode}
+                                            onChange={(e) => handleDiscountChange(e.target.value, session)}
+                                            className="w-full bg-transparent text-[#b2b2b2] text-xl font-medium focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="w-full flex flex-col gap-3">
+                                    <label className="text-black text-xl font-medium">Total Pembayaran:</label>
+                                    <div className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] flex items-center">
+                                        <span className="text-[#b2b2b2] text-xl font-medium">{newOrder.total}</span>
+                                    </div>
+                                </div>
+                                <div className="w-full flex flex-col gap-3">
+                                    <label className="text-black text-xl font-medium">Metode Pembayaran:</label>
                                     <Select onValueChange={(value) => setNewOrder({ ...newOrder, paymentMethod: value })}>
-                                        <SelectTrigger className="border p-2 rounded-md w-full mb-4">
-                                            <SelectValue placeholder="Pilih Metode ..." />
+                                        <SelectTrigger className="w-full px-4 py-8 rounded-xl border border-[#d9d9d9] flex justify-between items-center">
+                                            <SelectValue placeholder="Pilih Metode" className="text-black text-xl font-medium" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
@@ -151,11 +153,15 @@ export const SubKategoriJasaPelanggan = ({
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
-                                    <Button onClick={handleOrderSubmit} className="w-full">
-                                        Pesan Jasa
-                                    </Button>
                                 </div>
+                                <Button
+                                    onClick={handleOrderSubmit}
+                                    className="w-full px-2.5 py-5 bg-[#1ab35f] rounded-xl text-white text-2xl font-bold flex justify-center items-center"
+                                >
+                                    Pesan Jasa
+                                </Button>
                             </DialogContent>
+
 
                         </Dialog>
                     </div>
