@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
+import { listOfBank } from "../const";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -16,14 +17,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { UnPaidPesananInterface } from "../interface";
 
-export const BayarCombobox = ({
-  data,
+export const BankCombobox = ({
   value,
   setValue,
 }: {
-  data: UnPaidPesananInterface[];
   value: string;
   setValue: (value: string) => void;
 }) => {
@@ -37,31 +35,31 @@ export const BayarCombobox = ({
           className="w-full justify-between mx-auto"
         >
           {value
-            ? data.find((item) => item.id === value)?.subKategori
-            : "Pilih Kategori Transaksi"}
+            ? listOfBank.find((item) => item === value)
+            : "Pilih Bank"}
           <ChevronDown className={cn(open ? "rotate-180" : "", "transition-transform")} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="lg:w-[800px] p-0">
         <Command>
-          <CommandInput placeholder="Cari kategori..." />
+          <CommandInput placeholder="Cari bank..." />
           <CommandList>
-            <CommandEmpty>Tidak ada Sub Kategori.</CommandEmpty>
+            <CommandEmpty>Tidak ada Bank Terkait.</CommandEmpty>
             <CommandGroup>
-              {data.map((item) => (
+              {listOfBank.map((item, index) => (
                 <CommandItem
-                  key={item.id}
-                  value={item.id}
+                  key={index}
+                  value={item}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
                   }}
                 >
-                  {item.subKategori}
+                  {item}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === item.subKategori ? "opacity-100" : "opacity-0"
+                      value === item ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

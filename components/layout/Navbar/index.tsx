@@ -25,7 +25,7 @@ const pelangganMenus = [
 const pekerjaMenus = [
   { href: '/', label: 'Home' },
   { href: '/pekerjaan', label: 'Pekerjaan' },
-  { href: '/pekerjaan?tabs=history', label: 'Status Pekerjaan' },
+  { href: '/status-pekerjaan', label: 'Status Pekerjaan' },
   { href: '/mypay', label: 'MyPay' }
 ]
 

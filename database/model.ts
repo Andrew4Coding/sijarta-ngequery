@@ -55,6 +55,12 @@ export abstract class BaseModel<T extends QueryParams> {
         return result.rows[0] ? (result.rows[0] as T) : null;
     }
 
+    async findMany(column: keyof T, value: any): Promise<T[]> {
+        const query = `SELECT * FROM ${this.tableName} WHERE ${String(column)} = $1`;
+        const result = await pool.query(query, [value]);
+        return result.rows as T[];
+    }
+
     async update(column: keyof T, value: any, data: Partial<T>): Promise<T | null> {
         const updates = Object.keys(data)
             .map((key, idx) => `${key} = $${idx + 1}`)
