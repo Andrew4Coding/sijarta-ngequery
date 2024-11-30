@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { dummyBayarTransaksiData } from "../const";
+import { Check, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -17,11 +16,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { UnPaidPesananInterface } from "../interface";
 
 export const BayarCombobox = ({
+  data,
   value,
   setValue,
 }: {
+  data: UnPaidPesananInterface[];
   value: string;
   setValue: (value: string) => void;
 }) => {
@@ -32,21 +34,21 @@ export const BayarCombobox = ({
         <Button
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between mx-auto"
+          className="w-full justify-between mx-auto"
         >
           {value
-            ? dummyBayarTransaksiData.find((item) => item.id === value)?.kategori
+            ? data.find((item) => item.id === value)?.subKategori
             : "Pilih Kategori Transaksi"}
-          <ChevronsUpDown className="opacity-50" />
+          <ChevronDown className={cn(open ? "rotate-180" : "", "transition-transform")} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="lg:w-[800px] p-0">
         <Command>
           <CommandInput placeholder="Cari kategori..." />
           <CommandList>
-            <CommandEmpty>Tidak ada Kategori Terkait.</CommandEmpty>
+            <CommandEmpty>Tidak ada Sub Kategori.</CommandEmpty>
             <CommandGroup>
-              {dummyBayarTransaksiData.map((item) => (
+              {data.map((item) => (
                 <CommandItem
                   key={item.id}
                   value={item.id}
@@ -55,11 +57,11 @@ export const BayarCombobox = ({
                     setOpen(false);
                   }}
                 >
-                  {item.kategori}
+                  {item.subKategori}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === item.kategori ? "opacity-100" : "opacity-0"
+                      value === item.subKategori ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

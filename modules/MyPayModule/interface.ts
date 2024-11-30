@@ -4,11 +4,17 @@ export type PaymentType =
   | "Transfer MyPay"
   | "Membayar Transaksi";
 
-export interface paymentHistoryInterface {
+export interface PaymentHistoryInterface {
   id: string;
-  amount: number;
-  date: Date;
-  type: PaymentType;
+  nominal: number;
+  tanggal: Date;
+  kategoriid: string;
+  kategori: PaymentType | "Terima Transfer" | "Pembayaran Voucher";
+}
+
+export interface ResponseInterface {
+  saldo: string;
+  trHistory: PaymentHistoryInterface[];
 }
 
 export interface BayarTransaksiInterface {
@@ -16,4 +22,13 @@ export interface BayarTransaksiInterface {
   amount: number;
   date: Date;
   kategori: string;
+}
+
+export interface UnPaidPesananInterface {
+  id: string;
+  nominal: string;
+  tanggalPemesanan: Date;
+  tanggalPekerjaan: Date;
+  subKategori: string;
+  status: string;
 }

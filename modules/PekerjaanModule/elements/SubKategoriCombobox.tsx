@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -33,17 +33,17 @@ export const SubKategoriCombobox = ({
         <Button
           role="combobox"
           aria-expanded={open}
-          className="md:w-[250px] justify-between mx-auto mb-8 mt-4"
+          className="sm:w-[300px] justify-between mx-auto mb-8 mt-4"
         >
           {value
             ? subCategory.find((category) => category === value)
             : "Pilih Subkategori Pekerjaan"}
-          <ChevronsUpDown className="opacity-50" />
+          <ChevronDown className={cn(open ? "rotate-180" : "", "transition-transform")} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="md:w-[250px] w-[200px] p-0">
+      <PopoverContent className="sm:w-[300px] p-0">
         <Command>
-          <CommandInput placeholder="Cari kategori..." />
+          <CommandInput placeholder="Cari Sub kategori..." />
           <CommandList>
             <CommandEmpty>Tidak ada Kategori Terkait.</CommandEmpty>
             <CommandGroup>

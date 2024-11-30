@@ -1,12 +1,16 @@
 import { cn } from "@/lib/utils";
 import React from "react";
-import { dummyData } from "../const";
+import { PaymentHistoryInterface } from "../interface";
 
-export const TransaksiHistori = () => {
+export const TransaksiHistori = ({
+  historyData,
+}: {
+  historyData: PaymentHistoryInterface[];
+}) => {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-6 h-[700px] overflow-y-scroll overflow-x-visible w-full pb-20">
-      {dummyData.map((item, index) => {
-        const date = new Date(item.date.toISOString()).toLocaleDateString(
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-8 pb-2 h-fit overflow-y-scroll pr-2 overflow-x-visible w-full">
+      {historyData.map((item, index) => {
+        const date = new Date(item.tanggal).toLocaleDateString(
           "id-ID",
           {
             day: "2-digit",
@@ -14,7 +18,7 @@ export const TransaksiHistori = () => {
             year: "numeric",
           }
         );
-        const hours = new Date(item.date.toISOString()).toLocaleTimeString(
+        const hours = new Date(item.tanggal).toLocaleTimeString(
           "en-US",
           {
             hour: "2-digit",
@@ -25,37 +29,35 @@ export const TransaksiHistori = () => {
           <React.Fragment key={item.id}>
             {index === 0 ||
             (index > 0 &&
-              dummyData[index - 1].date.getDate() !== item.date.getDate()) ? (
-              <div className="xl:col-span-2 md:text-center text-gray-700 text-base md:text-xl font-bold mt-4">
+              new Date(historyData[index - 1].tanggal).getDate() !== new Date(item.tanggal).getDate()) ? (
+              <div className="xl:col-span-2 h-fit bg-green-500 rounded-[12px] p-5 text-white text-[24px] md:text-[32px] font-bold mt-4">
                 {date}
               </div>
             ) : null}
             <div
               className={cn(
-                "rounded-lg bg-red-50 px-2 xl:px-10 py-6 shadow-sm flex justify-between items-center hover:scale-105 duration-300 xl:mx-6 cursor-pointer",
-                { "bg-blue-50": item.type === "TopUp MyPay" }
+                "rounded-lg bg-transparent h-fit border border-[#FFCDCD] px-2 xl:px-10 py-6 shadow-sm flex justify-between items-center hover:scale-105 duration-300 xl:mx-6",
+                { "border-green-100": item.kategori === "TopUp MyPay" || item.kategori === "Terima Transfer" }
               )}
             >
               <div className="flex flex-col gap-2">
                 <p
                   className={cn(
-                    "text-sm md:text-xl font-semibold text-red-500",
+                    "text-sm md:text-xl font-semibold text-[#F27575]",
                     {
-                      "text-green-500": item.type === "TopUp MyPay",
+                      "text-green-500": item.kategori === "TopUp MyPay" || item.kategori === "Terima Transfer",
                     }
                   )}
                 >
-                  {item.amount.toLocaleString("id-ID", {
+                  {Number(item.nominal).toLocaleString("id-ID", {
                     style: "currency",
                     currency: "IDR",
                   })}
                 </p>
-                <p className="text-xs md:text-sm text-gray-500 font-medium">
-                  {hours}
-                </p>
+                <p className="text-sm md:text-[20px] text-black">{hours}</p>
               </div>
-              <p className="text-sm md:text-base xl:text-sm font-semibold text-[#1f1e1eb7]">
-                {item.type}
+              <p className="text-sm text-end md:text-[20px] font-medium text-black">
+                {item.kategori}
               </p>
             </div>
           </React.Fragment>

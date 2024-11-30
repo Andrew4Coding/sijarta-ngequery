@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -37,7 +37,7 @@ export const StatusCombobox = ({
           {value
             ? statusPekerjaan.find((status) => status === value)
             : "Status Pekerjaan"}
-          <ChevronsUpDown className="opacity-50" />
+          <ChevronDown className={cn(open ? "rotate-180" : "", "transition-transform")} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
