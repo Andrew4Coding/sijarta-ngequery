@@ -5,6 +5,7 @@ export interface Voucher {
     jmlhariberlaku: string;
     kuotapelangganan: string;
     harga: number;
+    idmetodebayar: string;
   }
   
 export interface Promo {

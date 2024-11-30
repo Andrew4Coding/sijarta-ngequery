@@ -1,8 +1,7 @@
-"use client";
-
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Voucher } from "../interface";
+import { v4 } from "uuid";
 
 export const VoucherSection = ({
     voucherData,
@@ -15,38 +14,37 @@ export const VoucherSection = ({
     fetchUserProfile: () => Promise<void>;
     fetchVouchers: () => Promise<void>;
 }) => {
-    const beliVoucher = async (voucherCode: string, price: number) => {
+    const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null); // state untuk menyimpan voucher yang dipilih
+    const [transactionStatus, setTransactionStatus] = useState<string | null>(null); // Menyimpan status transaksi: 'sukses' atau 'gagal'
+
+    const beliVoucher = async (voucher: Voucher) => {
+        const price = voucher.harga;
+
         if (Number(userDataState.saldompay!) < price) {
-            alert("Saldo tidak cukup!");
+            setTransactionStatus("gagal"); // Set status gagal jika saldo tidak cukup
             return;
         }
 
-        // Now we have potongan and mintrpemesanan directly from voucherData
-        const voucher = voucherData.find((v) => v.kode === voucherCode);
-        if (voucher) {
-            const { potongan, mintrpemesanan } = voucher;
-            const purchaseResponse = await fetch("/api/diskon/beliVoucher", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    userId: userDataState.id,
-                    voucherCode,
-                    paymentMethodId: 1,
-                    potongan,
-                    mintrpemesanan,
-                }),
-            });
+        const { potongan, mintrpemesanan } = voucher;
+        const purchaseResponse = await fetch("/api/diskon/beliVoucher", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: userDataState.id,
+                voucherCode: voucher.kode,
+                idmetodepembayaran: v4(),
+                potongan,
+                mintrpemesanan,
+            }),
+        });
 
-            const data = await purchaseResponse.json();
-            if (data.success) {
-                alert("Voucher berhasil dibeli!");
-                await fetchUserProfile();
-                await fetchVouchers();
-            } else {
-                alert(data.message || "Terjadi kesalahan.");
-            }
+        const data = await purchaseResponse.json();
+        if (data.success) {
+            setTransactionStatus("sukses"); // Set status sukses jika transaksi berhasil
+            await fetchUserProfile();
+            await fetchVouchers();
         } else {
-            alert("Voucher not found.");
+            setTransactionStatus("gagal"); // Set status gagal jika transaksi gagal
         }
     };
 
@@ -85,17 +83,11 @@ export const VoucherSection = ({
                             </div>
                             <Dialog>
                                 <DialogTrigger
-                                    className={`mt-4 w-full py-2 rounded-lg text-sm hover:bg-[#159e54] transition-all ${
-                                    (userDataState?.saldompay ?? 0) >= voucher.harga
-                                        ? "bg-[#1ab35f] text-white"
-                                        : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                                    }`}
+                                    className="mt-4 w-full py-2 rounded-lg text-sm hover:bg-[#159e54] transition-all bg-[#1ab35f] text-white"
                                     onClick={() => {
-                                        if ((userDataState?.saldompay ?? 0) >= voucher.harga) {
-                                            beliVoucher(voucher.kode, voucher.harga);
-                                        }
+                                        setSelectedVoucher(voucher); // Set voucher yang dipilih
+                                        beliVoucher(voucher); // Panggil fungsi beliVoucher langsung
                                     }}
-                                    disabled={(userDataState?.saldompay ?? 0) < voucher.harga}
                                 >
                                     Beli Voucher
                                 </DialogTrigger>
@@ -104,6 +96,57 @@ export const VoucherSection = ({
                     </div>
                 ))}
             </div>
+
+            {/* Dialog untuk menampilkan status transaksi */}
+            {transactionStatus && (
+                <Dialog open={Boolean(transactionStatus)} onOpenChange={() => setTransactionStatus(null)}>
+                    <DialogContent className="w-[682px] max-w-none overflow-y-auto max-h-[500px]">
+                        <DialogHeader>
+                            <DialogTitle className={`text-center text-${transactionStatus === 'sukses' ? 'green' : 'red'}-500 text-2xl font-bold`}>
+                                {transactionStatus === 'sukses' ? 'SUKSES' : 'GAGAL'}
+                            </DialogTitle>
+                        </DialogHeader>
+                        <div className="w-full flex flex-col gap-10">
+                            {transactionStatus === 'sukses' ? (
+                                <>
+                                    <div className="self-stretch text-center text-black text-xl font-medium leading-tight">
+                                        Selamat! Anda berhasil membeli voucher!
+                                    </div>
+                                    <div className="self-stretch justify-start items-start gap-3 inline-flex">
+                                        <div className="w-[198px] flex-col justify-center items-center gap-2 inline-flex">
+                                            <div className="self-stretch text-[#1ab35f] text-base font-medium ">Kode</div>
+                                            <div className="self-stretch px-4 py-5 bg-[#e8f7ef] rounded-xl justify-start items-center gap-2.5 inline-flex">
+                                                <div className="grow shrink basis-0 text-black text-xl font-medium">{selectedVoucher?.kode}</div>
+                                            </div>
+                                        </div>
+                                        <div className="w-[198px] flex-col justify-center items-center gap-2 inline-flex">
+                                            <div className="self-stretch text-[#1ab35f] text-base font-medium ">Jumlah Hari Berlaku</div>
+                                            <div className="self-stretch px-4 py-5 bg-[#e8f7ef] rounded-xl justify-start items-center gap-2.5 inline-flex">
+                                                <div className="grow shrink basis-0 text-black text-xl font-medium">{selectedVoucher?.jmlhariberlaku}</div>
+                                            </div>
+                                        </div>
+                                        <div className="w-[198px] flex-col justify-center items-center gap-2 inline-flex">
+                                            <div className="self-stretch text-[#1ab35f] text-base font-medium ">Kuota Penggunaan</div>
+                                            <div className="self-stretch px-4 py-5 bg-[#e8f7ef] rounded-xl justify-start items-center gap-2.5 inline-flex">
+                                                <div className="grow shrink basis-0 text-black text-xl font-medium">{selectedVoucher?.kuotapelangganan}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                // Failure Dialog
+                                <>
+                                    <div className="text-center text-black text-xl font-medium leading-[30px]">
+                                        Maaf, saldo Anda tidak cukup untuk membeli voucher ini.
+                                        <br />
+                                        Silakan top-up saldo Anda.
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            )}
         </div>
     );
 };
