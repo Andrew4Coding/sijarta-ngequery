@@ -79,7 +79,7 @@ export const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string })
                                 </DialogTrigger>
                                 <DialogContent className="w-[682px] p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-8">
                                     <DialogHeader className="w-full text-center">
-                                        <DialogTitle className="text-[#1ab35f] text-2xl font-bold">Profil Pekerja</DialogTitle>
+                                        <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">Profil Pekerja</DialogTitle>
                                     </DialogHeader>
                                     <div className="flex flex-col items-center">
                                         <div className="w-[120px] h-[120px] rounded-full overflow-hidden bg-[#f5f5f5] flex items-center justify-center mb-6">
