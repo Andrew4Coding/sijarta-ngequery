@@ -77,7 +77,7 @@ export const HomePageModule = () => {
                             updateFilteredCategories(val, searchTerm);
                         }}
                     >
-                        <SelectTrigger className="w-full text-black text-2xl font-['Urbanist'] focus:outline-none bg-transparent">
+                        <SelectTrigger className="w-full text-black text-2xl font-['Urbanist'] focus:outline-none bg-transparent border-none shadow-none focus:ring-0">
                             <SelectValue placeholder="Pilih Kategori" />
                         </SelectTrigger>
                         <SelectContent>
