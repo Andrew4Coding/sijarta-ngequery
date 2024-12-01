@@ -25,35 +25,43 @@ export const HomePageModule = () => {
 
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
-
-    const categories: Category[] = [
-        { "name": "Layanan Konsultasi", "subcategories": ["Konsultasi Bisnis", "Konsultasi Keuangan", "Konsultasi SDM"] },
-        { "name": "Pelatihan dan Pendidikan", "subcategories": ["Pelatihan Keterampilan Teknis", "Pelatihan Kepemimpinan", "Kursus Bahasa Asing"] },
-        { "name": "Pengembangan Teknologi", "subcategories": ["Pengembangan Aplikasi Web", "Pengembangan Aplikasi Mobile", "Pengembangan Perangkat Lunak Khusus"] },
-        { "name": "Layanan Pemasaran", "subcategories": ["Pemasaran Digital", "Pemasaran Media Sosial", "Strategi Pemasaran Konten"] },
-        { "name": "Jasa Kreatif", "subcategories": ["Desain Grafis", "Fotografi", "Produksi Video"] },
-        { "name": "Layanan Kesehatan", "subcategories": ["Konsultasi Gizi", "Terapi Fisik", "Konsultasi Psikologis"] },
-    ];
+    const [categories, setCategories] = useState<Category[]>([]);
 
     useEffect(() => {
-        setFilteredCategories(categories);
-    }, []);
+        fetchCategories();
+    }, [selectedCategory, searchTerm]);
+
+    const fetchCategories = async () => {
+        try {
+            const params = new URLSearchParams();
+            if (selectedCategory) params.append('category', selectedCategory);
+            if (searchTerm) params.append('search', searchTerm);
+
+            const response = await fetch(`/api/homepage?${params.toString()}`);
+            const result = await response.json();
+
+            if (response.ok) {
+                const groupedCategories = groupByCategory(result.data);
+                setCategories(groupedCategories);
+            }
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    };
+
+    const groupByCategory = (data: any[]): Category[] => {
+        const grouped: { [key: string]: Category } = {};
+        data.forEach((item) => {
+            if (!grouped[item.namakategori]) {
+                grouped[item.namakategori] = { name: item.namakategori, subcategories: [] };
+            }
+            grouped[item.namakategori].subcategories.push(item.namasubkategori);
+        });
+        return Object.values(grouped);
+    };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
-        updateFilteredCategories(selectedCategory, event.target.value);
-    };
-
-    const updateFilteredCategories = (category: string, term: string) => {
-        const results = categories.filter((categoryItem) => {
-            const matchesCategory = category ? categoryItem.name === category : true;
-            const matchesSearch = categoryItem.subcategories.some((subcategory) =>
-                subcategory.toLowerCase().includes(term.toLowerCase())
-            );
-            return matchesCategory && matchesSearch;
-        });
-        setFilteredCategories(results);
     };
 
     return (
@@ -70,11 +78,9 @@ export const HomePageModule = () => {
                         onValueChange={(val) => {
                             if (val === 'all') {
                                 setSelectedCategory('');
-                                updateFilteredCategories('', searchTerm);
                                 return;
                             }
                             setSelectedCategory(val);
-                            updateFilteredCategories(val, searchTerm);
                         }}
                     >
                         <SelectTrigger className="w-full text-black text-2xl font-['Urbanist'] focus:outline-none bg-transparent border-none shadow-none focus:ring-0">
@@ -95,40 +101,38 @@ export const HomePageModule = () => {
                 </div>
 
                 <div className="h-[66px] px-8 bg-white rounded-[50px] border border-[#d9d9d9] flex items-center flex-1 box-border">
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        placeholder="Nama Subkategori"
-                        className="w-full text-black text-2xl font-['Urbanist'] focus:outline-none placeholder:text-[#acacac] bg-transparent h-full"
-                    />
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Nama Subkategori"
+                    className="w-full text-black text-2xl font-['Urbanist'] focus:outline-none placeholder:text-[#acacac] bg-transparent h-full border-none"
+                />
+
                 </div>
             </div>
 
             {/* Categories and Subcategories */}
             <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1280px]">
-                {filteredCategories.map((category, index) => (
+                {categories.map((category, index) => (
                     <div key={index} className="flex flex-col">
-                        {/* Category Header */}
                         <div className="px-5 py-4 bg-[#1ab35f] text-white rounded-xl text-xl font-bold text-center">
                             {category.name}
                         </div>
-                        {/* Gap Between Category and Subcategories */}
-                        <div className="h-4 bg-transparent"></div> {/* Tambahkan ini sebagai gap */}
-                        {/* Subcategories */}
+                        <div className="h-4 bg-transparent"></div>
                         <ul className="bg-white border border-[#d9d9d9] rounded-xl">
                             {category.subcategories.map((subcategory, subIndex) => (
                                 <Link
                                     key={subIndex}
-                                    href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pelanggan'}/${subcategory.split(" ").join("-")}`}
+                                    href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pelanggan'}/${subcategory.split(' ').join('-')}`}
                                 >
                                     <li
                                         className={`px-5 py-4 text-center text-[#1ab35f] text-lg font-bold cursor-pointer ${
                                             subIndex === 0
-                                                ? "rounded-tl-xl rounded-tr-xl"
+                                                ? 'rounded-tl-xl rounded-tr-xl'
                                                 : subIndex === category.subcategories.length - 1
-                                                ? "rounded-bl-xl rounded-br-xl"
-                                                : ""
+                                                ? 'rounded-bl-xl rounded-br-xl'
+                                                : ''
                                         }`}
                                         style={{
                                             borderBottom: subIndex === category.subcategories.length - 1 ? 'none' : '1px solid #d9d9d9',
@@ -142,7 +146,6 @@ export const HomePageModule = () => {
                     </div>
                 ))}
             </div>
-
         </main>
     );
 };
