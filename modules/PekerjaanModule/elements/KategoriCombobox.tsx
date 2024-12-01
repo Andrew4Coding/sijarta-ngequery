@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { pekerjaanCategories } from "../const";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,15 +32,15 @@ export const KategoriCombobox = ({
         <Button
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between mx-auto"
+          className="sm:w-[300px] justify-between mx-auto"
         >
           {value
             ? pekerjaanCategories.find((category) => category.category === value)?.category
             : "Pilih Kategori Pekerjaan"}
-          <ChevronsUpDown className="opacity-50" />
+          <ChevronDown className={cn(open ? "rotate-180" : "", "transition-transform")} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="sm:w-[300px] p-0">
         <Command>
           <CommandInput placeholder="Cari kategori..." />
           <CommandList>

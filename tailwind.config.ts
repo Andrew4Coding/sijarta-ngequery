@@ -11,9 +11,12 @@ const config: Config = {
   theme: {
 	  extend: {
 		  fontFamily: {
-			  urbanist: ['var(--font-urbanist)'],
+			  newake: ['var(--font-newake)'],
 			  jakarta: ['var(--font-jakarta-sans)'],
 		  },
+		boxShadow: {
+			"header": "box-shadow: 0px 2px 10px 0px rgba(255, 255, 255, 1)"
+		},
   		colors: {
   			background: 'var(--background)',
   			foreground: 'var(--foreground)',
