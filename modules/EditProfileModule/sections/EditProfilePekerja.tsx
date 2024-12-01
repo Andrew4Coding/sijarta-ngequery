@@ -130,7 +130,6 @@ export const EditProfilePekerja = () => {
                                     <FormControl>
                                         <Input
                                             label=''
-                                            className="border p-2"
                                             type="text"
                                             {...field}
                                         />

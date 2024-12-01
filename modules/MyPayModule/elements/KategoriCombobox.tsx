@@ -34,7 +34,7 @@ export const KategoriCombobox = ({
         <Button
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between px-4 py-5 h-full text-[20px] font-medium"
+          className="w-full justify-between px-4 py-5 h-full text-sm font-medium"
         >
           {value
             ? paymentTypeData.find((paymentType) => paymentType === value)

@@ -11,6 +11,7 @@ import { Transaksi } from "./sections/Transaksi";
 import { TransaksiHistori } from "./sections/TransaksiHistori";
 import Image from "next/image";
 import { ResponseInterface, PaymentHistoryInterface } from "./interface";
+import { Button } from "@/components/ui/button";
 
 export const MyPayModule = ({
   userData,
@@ -53,7 +54,7 @@ export const MyPayModule = ({
       <div className="absolute top-0 w-full h-full z-[1]">
         <Image src="/images/MyPayBG.png" alt="MyPay" fill className="" />
       </div>
-      <h1 className="md:text-[60px] text-4xl text-center text-green-500 shadow-header font-newake z-10">
+      <h1 className="md:text-md text-4xl text-center text-green-500 shadow-header font-newake z-10">
         MyPay
       </h1>
       <div className="grid z-10">
@@ -61,12 +62,14 @@ export const MyPayModule = ({
           {saldo}
         </h2>
         <Dialog>
-          <DialogTrigger className="bg-white border border-[#D9D9D9] hover:shadow-lg transition-all text-black text-base md:text-[24px] px-8 py-6 rounded-[50px]">
-            <p className="mx-auto">Lakukan Transaksi</p>
+          <DialogTrigger className="">
+            <Button>
+              Lakukan Transaksi
+            </Button>
           </DialogTrigger>
           <DialogContent className="lg:min-w-[850px] rounded-[20px]">
             <DialogHeader>
-              <DialogTitle className="text-center text-green-500 font-bold text-[24px]">
+              <DialogTitle className="text-center text-green-500 font-bold text-xl">
                 Transaksi
               </DialogTitle>
             </DialogHeader>
@@ -76,7 +79,7 @@ export const MyPayModule = ({
       </div>
       <div className="bg-white z-10 border border-[#D9D9D9] mt-[50px] rounded-[24px] w-[90%] md:w-[80%] h-[1100px] p-6 md:p-12 flex flex-col">
         {historyTransaksi.length === 0 ? (
-          <h1 className="text-[40px] text-center font-bold text-gray-400">
+          <h1 className="text-xl text-center font-medium text-gray-400">
             Anda belum melakukan transaksi menggunakan MyPay
           </h1>
         ) : (
