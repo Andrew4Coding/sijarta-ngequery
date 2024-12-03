@@ -29,7 +29,6 @@ const pekerjaMenus = [
   { href: '/mypay', label: 'MyPay' }
 ]
 
-
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -62,14 +61,14 @@ export const Navbar = () => {
   }
 
   return (
-    <nav className={`fixed top-0 w-full bg-white shadow-md px-10 md:px-32 py-8 flex justify-between items-center z-50  ${hideMenus ? "hidden" : ""}`}>
+    <nav className={`fixed top-0 w-full bg-white shadow-md px-10 lg:px-32 py-8 flex justify-between items-center z-50  ${hideMenus ? "hidden" : ""}`}>
       <h1 className='font-extrabold text-3xl '>SIJARTA</h1>
-      <div className='hidden md:flex gap-4'>
+      <div className='hidden lg:flex gap-4'>
         {isAuthenticated && (role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
           <Link key={menu.href} href={menu.href}>{menu.label}</Link>
         ))}
       </div>
-      <div className='hidden md:flex'>
+      <div className='hidden lg:flex'>
         {isAuthenticated ?
           <div className='flex gap-2 items-center'>
             <div className='flex items-center gap-2 text-sm'>
@@ -100,13 +99,13 @@ export const Navbar = () => {
           >Login</Button>
         }
       </div>
-      <Popover>
-        <PopoverTrigger className='flex md:hidden'>
+      <Popover
+        onOpenChange={(open) => setIsOpen(open)}
+      >
+        <PopoverTrigger className='flex lg:hidden'>
           <ChevronDown
-            onClick={() => setIsOpen(!isOpen)}
-            className={
-              `w-6 h-6 ${isOpen ? 'rotate-180' : ''} duration-200 ease-in-out`
-            } />
+            className={`w-6 h-6 ${isOpen ? 'rotate-180' : ''} duration-200 ease-in-out`}
+          />
         </PopoverTrigger>
         <PopoverContent className='bg-white'>
           <ul className='space-y-2 '>
@@ -121,6 +120,7 @@ export const Navbar = () => {
             <li>
               <Link href='/login'>
                 <Button className='w-full'
+                  variant={'destructive'}
                   onClick={logout}
                 >
                   <LogOut className='w-4' />
