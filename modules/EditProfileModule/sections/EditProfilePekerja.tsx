@@ -21,18 +21,17 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { dateConverter } from "..";
 import { EditProfilePekerjaSchema } from "../types";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { uploadFoto } from "@/lib/s3";
 
-type KategoriJasaType = {
+type ExtraType = {
+    linkfoto: string,
     kategoriJasa: string[]
 }
 
 export const EditProfilePekerja = () => {
     const router = useRouter();
 
-    const [userDataState, setUserDataState] = useState<PekerjaType & UserType & KategoriJasaType>({} as PekerjaType & UserType & KategoriJasaType);
-    const [kategoriJasa, setKategoriJasa] = useState<string[]>([]);
+    const [userDataState, setUserDataState] = useState<PekerjaType & UserType & ExtraType>({} as PekerjaType & UserType & ExtraType);
 
     const { userData } = useUserData();
     const { toast } = useToast();
@@ -42,11 +41,6 @@ export const EditProfilePekerja = () => {
         let data = await response.json();
 
         setUserDataState(data.data);
-
-        response = await fetch(`/api/kategoriJasa`);
-        data = await response.json();
-
-        setKategoriJasa(data.data.map((item: any) => item.namakategori));
     }
 
     const form = useForm<z.infer<typeof EditProfilePekerjaSchema>>({
@@ -60,20 +54,23 @@ export const EditProfilePekerja = () => {
             namabank: userDataState.namabank ?? "",
             nomorrekening: userDataState.nomorrekening ?? "",
             npwp: userDataState.npwp ?? "",
-            kategorijasa: userDataState.kategoriJasa ?? [],
+            filefoto: null,
+            linkfoto: userDataState.linkfoto ?? "",
         }
     });
 
     useEffect(() => {
         if (userData.id) 
             fetchUserProfile()
-    }, [userData])
+    }, [userData.id])
 
     async function onSubmit(data: z.infer<typeof EditProfilePekerjaSchema>) {
         toast({
             title: "Loading ...",
             variant: "default"
         })
+
+        data.linkfoto = await uploadFoto(data.filefoto);
 
         const response = await fetch(`/api/auth/profile/?id=${userData.id}&role=pekerja`, {
             method: 'PATCH',
@@ -86,7 +83,6 @@ export const EditProfilePekerja = () => {
         const result = await response.json();
 
         if (response.ok) {
-            console.log(result);
             toast({
                 title: "Success",
                 description: "Profile updated successfully",
@@ -114,11 +110,11 @@ export const EditProfilePekerja = () => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 items-center">
                     <Image
-                        src="/psql.png"
+                        src={userDataState.linkfoto}
                         alt="Profile Picture"
                         width={150}
                         height={150}
-                        className="rounded-full"
+                        className="rounded-full w-40 h-40 object-cover"
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-white p-10 rounded-xl w-full">
                         <FormField
@@ -130,7 +126,6 @@ export const EditProfilePekerja = () => {
                                     <FormControl>
                                         <Input
                                             label=''
-                                            className="border p-2"
                                             type="text"
                                             {...field}
                                         />
@@ -177,7 +172,7 @@ export const EditProfilePekerja = () => {
                                     <FormControl>
                                         <Input
                                             label=''
-                                            className="border p-2"
+
                                             type="text"
                                             {...field}
                                         />
@@ -196,7 +191,7 @@ export const EditProfilePekerja = () => {
                                     <FormControl>
                                         <Input
                                             label=''
-                                            className="border p-2"
+
                                             type="date"
                                             {...field}
                                         />
@@ -214,7 +209,7 @@ export const EditProfilePekerja = () => {
                                     <FormControl>
                                         <Input
                                             label=''
-                                            className="border p-2"
+
                                             type="text"
                                             {...field}
                                         />
@@ -230,12 +225,26 @@ export const EditProfilePekerja = () => {
                                 <FormItem>
                                     <FormLabel>Nama Bank</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            label=''
-                                            className="border p-2"
-                                            type="text"
-                                            {...field}
-                                        />
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={(val) => {
+                                                field.onChange(val);
+                                            }}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Pilih Nama Bank ..." />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Nama Bank</SelectLabel>
+                                                    <SelectItem value="Gopay">Gopay</SelectItem>
+                                                    <SelectItem value="OVO">OVO</SelectItem>
+                                                    <SelectItem value="Virtual Account BCA">Virtual Account BCA</SelectItem>
+                                                    <SelectItem value="Virtual Account BNI">Virtual Account BNI</SelectItem>
+                                                    <SelectItem value="Virtual Account Mandiri">Virtual Account Mandiri</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -250,7 +259,7 @@ export const EditProfilePekerja = () => {
                                     <FormControl>
                                         <Input
                                             label=''
-                                            className="border p-2"
+
                                             type="text"
                                             {...field}
                                         />
@@ -268,7 +277,7 @@ export const EditProfilePekerja = () => {
                                     <FormControl>
                                         <Input
                                             label=''
-                                            className="border p-2"
+
                                             type="text"
                                             {...field}
                                         />
@@ -279,29 +288,19 @@ export const EditProfilePekerja = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="kategorijasa"
+                            name="filefoto"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Kategori Jasa</FormLabel>
+                                    <FormLabel>File Foto</FormLabel>
                                     <FormControl>
-                                        <div className="flex flex-col gap-4">
-                                            {kategoriJasa.map((kategori, index) => (
-                                                <div key={index} className="flex items-center gap-2">
-                                                    <Checkbox
-                                                        id={kategori}
-                                                        checked={field.value.includes(kategori)}
-                                                        onCheckedChange={(checked) => {
-                                                            if (checked) {
-                                                                field.onChange([...field.value, kategori]);
-                                                            } else {
-                                                                field.onChange(field.value.filter((item) => item !== kategori));
-                                                            }
-                                                        }}
-                                                    />
-                                                    <Label htmlFor={kategori}>{kategori}</Label>
-                                                </div>
-                                            ))}
-                                        </div>
+                                        <Input
+                                            label=''
+                                            type="file"
+                                            onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                                            onBlur={field.onBlur}
+                                            name={field.name}
+                                            ref={field.ref}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

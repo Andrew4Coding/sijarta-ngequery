@@ -105,27 +105,11 @@ export async function PATCH(req: Request) {
                 tgllahir: new Date(data.tanggallahir),
             })
 
-            await new Pekerja().clearKategoriJasa(pekerja.id);
-
-            for (const kategori of data.kategorijasa) {
-                const kategoriObj = await new KategoriJasa().findBy('namakategori', kategori);
-
-                try {
-                    if (!kategoriObj) {
-                        continue;
-                    }
-
-                    await new Pekerja().addKategoriJasa(pekerja.id, kategoriObj?.id);
-                }
-                catch (error) {
-                    continue;
-                }
-            }
-
             await new Pekerja().update("id", id, {
                 namabank: data.namabank,
                 nomorrekening: data.nomorrekening,
                 npwp: data.npwp,
+                linkfoto: data.linkfoto!,
             });
 
             return new Response(

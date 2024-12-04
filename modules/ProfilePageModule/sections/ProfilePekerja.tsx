@@ -8,12 +8,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-type KategoriJasaType = {
+type ExtraType = {
+    linkfoto: string,
     kategoriJasa: string[]
 }
 
 export const ProfilePekerja = () => {
-    const [userDataState, setUserDataState] = useState<PekerjaType & UserType & KategoriJasaType>({} as PekerjaType & UserType & KategoriJasaType);
+    const [userDataState, setUserDataState] = useState<PekerjaType & UserType & ExtraType>({} as PekerjaType & UserType & ExtraType);
     const { userData } = useUserData();
     const router = useRouter();
 
@@ -27,16 +28,16 @@ export const ProfilePekerja = () => {
     useEffect(() => {
         if (userData.id)
             fetchUserProfile()
-    }, [userData])
+    }, [userData.id]);
 
     return (
         <main className="flex flex-col gap-5 items-center p-4 md:p-10">
             <Image
-                src="/psql.png"
+                src={userDataState.linkfoto}
                 alt="Profile Picture"
                 width={150}
                 height={150}
-                className="rounded-full"
+                className="rounded-full w-40 h-40 object-cover"
             />
 
             <h1 className="font-bold text-3xl text-center">{userDataState.nama}</h1>

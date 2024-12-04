@@ -32,11 +32,11 @@ export const BankCombobox = ({
         <Button
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between mx-auto"
+          className="w-full justify-between mx-auto text-sm"
         >
           {value
             ? listOfBank.find((item) => item === value)
-            : "Pilih Bank"}
+            : "Pilih Bank ..."}
           <ChevronDown className={cn(open ? "rotate-180" : "", "transition-transform")} />
         </Button>
       </PopoverTrigger>

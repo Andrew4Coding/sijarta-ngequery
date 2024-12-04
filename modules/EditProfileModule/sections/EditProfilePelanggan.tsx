@@ -113,7 +113,7 @@ export const EditProfilePelanggan = () => {
                                     <FormControl>
                                         <Input
                                             label=""
-                                            className="border p-2" type="text" {...field} />
+                                            type="text" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -157,7 +157,7 @@ export const EditProfilePelanggan = () => {
                                     <FormControl>
                                         <Input
                                             label=""
-                                            className="border p-2" type="text" {...field} />
+                                            type="text" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -172,7 +172,7 @@ export const EditProfilePelanggan = () => {
                                     <FormControl>
                                         <Input
                                             label=""
-                                            className="border p-2" type="date" {...field} />
+                                            type="date" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -187,7 +187,7 @@ export const EditProfilePelanggan = () => {
                                     <FormControl>
                                         <Input
                                             label=""
-                                            className="border p-2" type="text" {...field} />
+                                            type="text" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

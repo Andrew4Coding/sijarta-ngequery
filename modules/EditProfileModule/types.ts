@@ -17,5 +17,6 @@ export const EditProfilePekerjaSchema = z.object({
     namabank: z.string().nonempty("Nama Bank is required"),
     nomorrekening: z.string().nonempty("No Rekening is required").regex(/^\d+$/, "No Rekening must be a number"),
     npwp: z.string().nonempty("NPWP is required").regex(/^\d+$/, "NPWP must be a number"),
-    kategorijasa: z.array(z.string())
+    filefoto: z.instanceof(File).nullable(),
+    linkfoto: z.string().nullable(),
 });

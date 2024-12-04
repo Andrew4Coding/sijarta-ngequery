@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { z } from "zod";
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { uploadFoto } from "@/lib/s3";
 
 export const RegisterPekerjaForm = () => {
     const form = useForm<z.infer<typeof RegisterAsPekerjaSchema>>({
@@ -48,7 +49,7 @@ export const RegisterPekerjaForm = () => {
                     namabank: data.namaBank,
                     nomorrekening: data.noRekening,
                     npwp: data.npwp,
-                    linkfoto: data.urlFotoKtp
+                    linkfoto: await uploadFoto(data.filefoto)
                 })
             });
             const result = await response.json();
@@ -189,11 +190,26 @@ export const RegisterPekerjaForm = () => {
                                 <FormItem>
                                     <FormLabel>Nama Bank</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            label="namabank"
-                                            className='w-full'
-                                            placeholder="Nama Bank" {...field}
-                                        />
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={(val) => {
+                                                field.onChange(val);
+                                            }}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Pilih Nama Bank ..." />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Nama Bank</SelectLabel>
+                                                    <SelectItem value="Gopay">Gopay</SelectItem>
+                                                    <SelectItem value="OVO">OVO</SelectItem>
+                                                    <SelectItem value="Virtual Account BCA">Virtual Account BCA</SelectItem>
+                                                    <SelectItem value="Virtual Account BNI">Virtual Account BNI</SelectItem>
+                                                    <SelectItem value="Virtual Account Mandiri">Virtual Account Mandiri</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -235,16 +251,18 @@ export const RegisterPekerjaForm = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="urlFotoKtp"
+                            name="filefoto"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>URL Foto KTP</FormLabel>
+                                    <FormLabel>URL Foto</FormLabel>
                                     <FormControl>
                                         <Input
-                                            label="ktpURL"
-                                            type="url"
-                                            className='w-full'
-                                            placeholder="URL Foto KTP" {...field}
+                                            label=''
+                                            type="file"
+                                            onChange={(e) => field.onChange(e.target.files?.[0] || null)}
+                                            onBlur={field.onBlur}
+                                            name={field.name}
+                                            ref={field.ref}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -288,6 +306,12 @@ export const RegisterPekerjaForm = () => {
                             )}
                         />
                         <Button
+                            // onClick={() => {
+                            //     console.log(
+                            //         form.getValues()
+                            //     );
+                                
+                            // }}
                             variant={'secondary'}
                             type="submit"
                             className="col-span-2"
