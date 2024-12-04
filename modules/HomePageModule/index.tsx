@@ -23,31 +23,34 @@ export const HomePageModule = () => {
     const { role } = useUserData();
     const isPekerja = role === 'pekerja';
 
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [categories, setCategories] = useState<Category[]>([]);
 
     useEffect(() => {
         fetchCategories();
-    }, [selectedCategory, searchTerm]);
+    }, []);
+
+    useEffect(() => {
+        updateFilteredCategories(selectedCategory, searchTerm);
+    }, [selectedCategory, searchTerm, categories]);
 
     const fetchCategories = async () => {
         try {
-            const params = new URLSearchParams();
-            if (selectedCategory) params.append('category', selectedCategory);
-            if (searchTerm) params.append('search', searchTerm);
-
-            const response = await fetch(`/api/homepage?${params.toString()}`);
-            const result = await response.json();
-
-            if (response.ok) {
-                const groupedCategories = groupByCategory(result.data);
-                setCategories(groupedCategories);
+            const response = await fetch(`/api/homepage`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            const result = await response.json();
+    
+            const groupedCategories = groupByCategory(result.data);
+            setCategories(groupedCategories);
+            setFilteredCategories(groupedCategories); // Initialize filtered categories
         } catch (error) {
             console.error('Error fetching categories:', error);
         }
-    };
+    };    
 
     const groupByCategory = (data: any[]): Category[] => {
         const grouped: { [key: string]: Category } = {};
@@ -58,6 +61,17 @@ export const HomePageModule = () => {
             grouped[item.namakategori].subcategories.push(item.namasubkategori);
         });
         return Object.values(grouped);
+    };
+
+    const updateFilteredCategories = (category: string, term: string) => {
+        const results = categories.filter((categoryItem) => {
+            const matchesCategory = category ? categoryItem.name === category : true;
+            const matchesSearch = categoryItem.subcategories.some((subcategory) =>
+                subcategory.toLowerCase().includes(term.toLowerCase())
+            );
+            return matchesCategory && matchesSearch;
+        });
+        setFilteredCategories(results);
     };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,12 +92,14 @@ export const HomePageModule = () => {
                         onValueChange={(val) => {
                             if (val === 'all') {
                                 setSelectedCategory('');
+                                updateFilteredCategories('', searchTerm);
                                 return;
                             }
                             setSelectedCategory(val);
+                            updateFilteredCategories(val, searchTerm);
                         }}
                     >
-                        <SelectTrigger className="w-full text-black text-2xl font-['Urbanist'] focus:outline-none bg-transparent border-none shadow-none focus:ring-0">
+                        <SelectTrigger className="w-full text-black text-2xl font-['Urbanist'] bg-transparent border-none shadow-none focus:outline-none focus:ring-0 focus:ring-offset-0 rounded-[50px]">
                             <SelectValue placeholder="Pilih Kategori" />
                         </SelectTrigger>
                         <SelectContent>
@@ -101,26 +117,25 @@ export const HomePageModule = () => {
                 </div>
 
                 <div className="h-[66px] px-8 bg-white rounded-[50px] border border-[#d9d9d9] flex items-center flex-1 box-border">
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    placeholder="Nama Subkategori"
-                    className="w-full text-black text-2xl font-['Urbanist'] focus:outline-none placeholder:text-[#acacac] bg-transparent h-full border-none"
-                />
-
+                    <Input
+                        type="text"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        placeholder="Nama Subkategori"
+                        label="Cari Subkategori"
+                        className="h-[66px] px-8 bg-white rounded-[50px] border border-[#d9d9d9] flex-1 text-black text-2xl font-['Urbanist'] focus:outline-none placeholder:text-[#acacac] bg-transparent"
+                    />
                 </div>
             </div>
 
             {/* Categories and Subcategories */}
             <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1280px]">
-                {categories.map((category, index) => (
+                {filteredCategories.map((category, index) => (
                     <div key={index} className="flex flex-col">
                         <div className="px-5 py-4 bg-[#1ab35f] text-white rounded-xl text-xl font-bold text-center">
                             {category.name}
                         </div>
-                        <div className="h-4 bg-transparent"></div>
-                        <ul className="bg-white border border-[#d9d9d9] rounded-xl">
+                        <ul className="bg-white border border-[#d9d9d9] rounded-xl mt-4">
                             {category.subcategories.map((subcategory, subIndex) => (
                                 <Link
                                     key={subIndex}
