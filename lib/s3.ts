@@ -18,4 +18,32 @@ const s3Config = {
     secretAccessKey: process.env.AWS_SECRET_ID as string
 }
 
-export { Bucket, s3, s3Config };
+const uploadFile = async (data: File | null) => {
+    if (data) {
+        const formData = new FormData();
+        formData.append('file', data);
+
+        const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result: {
+            message: string,
+            data: {
+                url: string
+            },
+            error: string
+        } = await response.json();
+
+        if (response.ok) {
+            return result.data.url;
+        } else {
+            return null;
+        }
+    } else {
+        return null;
+    }
+}
+
+export { Bucket, s3, s3Config, uploadFile as uploadFoto};

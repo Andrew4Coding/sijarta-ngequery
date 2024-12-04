@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { dateConverter } from "..";
 import { EditProfilePekerjaSchema } from "../types";
+import { uploadFoto } from "@/lib/s3";
 
 type ExtraType = {
     linkfoto: string,
@@ -69,40 +70,7 @@ export const EditProfilePekerja = () => {
             variant: "default"
         })
 
-        const uploadFoto = async () => {
-            if (data.filefoto) {
-                const formData = new FormData();
-                formData.append('file', data.filefoto);
-
-                const response = await fetch('/api/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result: {
-                    message: string,
-                    data: {
-                        url: string
-                    },
-                    error: string
-                } = await response.json();
-
-                if (response.ok) {
-                    return result.data.url;
-                } else {
-                    toast({
-                        title: "Failed",
-                        description: result.error,
-                        variant: "destructive"
-                    })
-                    return null;
-                }
-            } else {
-                return null;
-            }
-        }
-
-        data.linkfoto = await uploadFoto();
+        data.linkfoto = await uploadFoto(data.filefoto);
 
         const response = await fetch(`/api/auth/profile/?id=${userData.id}&role=pekerja`, {
             method: 'PATCH',
@@ -115,7 +83,6 @@ export const EditProfilePekerja = () => {
         const result = await response.json();
 
         if (response.ok) {
-            console.log(result);
             toast({
                 title: "Success",
                 description: "Profile updated successfully",

@@ -30,7 +30,7 @@ export const RegisterAsPekerjaSchema = z.object({
     namaBank: z.string().min(3, "Nama bank minimal 3 karakter"),
     noRekening: z.string().min(10, "Nomor rekening minimal 10 karakter"),
     npwp: z.string().min(10, "NPWP minimal 10 karakter"),
-    urlFotoKtp: z.string().url("URL foto tidak valid"),
+    filefoto: z.instanceof(File).nullable(),
     password: z.string().min(8, "Password minimal 8 karakter"),
     confirmPassword: z.string().min(8, "Konfirmasi password minimal 8 karakter"),
 }).refine((data) => data.password === data.confirmPassword, {
