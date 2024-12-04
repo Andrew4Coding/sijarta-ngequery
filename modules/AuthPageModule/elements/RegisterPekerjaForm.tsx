@@ -189,11 +189,26 @@ export const RegisterPekerjaForm = () => {
                                 <FormItem>
                                     <FormLabel>Nama Bank</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            label="namabank"
-                                            className='w-full'
-                                            placeholder="Nama Bank" {...field}
-                                        />
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={(val) => {
+                                                field.onChange(val);
+                                            }}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Pilih Nama Bank ..." />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Nama Bank</SelectLabel>
+                                                    <SelectItem value="Gopay">Gopay</SelectItem>
+                                                    <SelectItem value="OVO">OVO</SelectItem>
+                                                    <SelectItem value="Virtual Account BCA">Virtual Account BCA</SelectItem>
+                                                    <SelectItem value="Virtual Account BNI">Virtual Account BNI</SelectItem>
+                                                    <SelectItem value="Virtual Account Mandiri">Virtual Account Mandiri</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -238,13 +253,13 @@ export const RegisterPekerjaForm = () => {
                             name="urlFotoKtp"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>URL Foto KTP</FormLabel>
+                                    <FormLabel>URL Foto</FormLabel>
                                     <FormControl>
                                         <Input
                                             label="ktpURL"
                                             type="url"
                                             className='w-full'
-                                            placeholder="URL Foto KTP" {...field}
+                                            placeholder="URL Foto" {...field}
                                         />
                                     </FormControl>
                                     <FormMessage />
