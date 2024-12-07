@@ -1,7 +1,5 @@
 "use client";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, Pen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { pekerjaanCards, pekerjaanCategories } from "../const";
 import { KategoriCombobox } from "../elements/KategoriCombobox";
@@ -17,6 +15,10 @@ export const Pekerjaan = () => {
 
   useEffect(() => {
     const filterData = async () => {
+      if (value === ""){
+        setSubValue("");
+      }
+
       if (value === "" && subValue === "") {
         setfilteredPekerjaan(pekerjaanCards);
         return;
