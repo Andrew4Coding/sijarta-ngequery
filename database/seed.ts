@@ -368,10 +368,10 @@ export async function seedDatabase() {
         INSERT INTO STATUS_PESANAN (id, Nama) VALUES
         ('a1b2c3d4-e5f6-1234-5678-9abcdef01234', 'Menunggu Pembayaran'),
         ('b2c3d4e5-f6a1-2345-6789-abcdef013456', 'Mencari Pekerja Terdekat'),
-        ('c3d4e5f6-a1b2-3456-7890-bcdef0145678', 'Pekerja Dalam Perjalanan'),
-        ('d4e5f6a1-b2c3-4567-8901-cdef01567890', 'Pekerjaan Sedang Berlangsung'),
-        ('e5f6a1b2-c3d4-5678-9012-def016789012', 'Menunggu Konfirmasi Selesai'),
-        ('f6a1b2c3-d4e5-6789-0123-ef0178901234', 'Pembayaran Selesai'),
+        ('c3d4e5f6-a1b2-3456-7890-bcdef0145678', 'Menunggu Pekerja Berangkat'),
+        ('bzqdssa2-a112-3436-7890-bcded2145678', 'Pekerja Tiba di Lokasi'),
+        ('d4e5f6a1-b2c3-4567-8901-cdef01567890', 'Pelayanan Jasa Sedang Dilakukan'),
+        ('e5f6a1b2-c3d4-5678-9012-def016789012', 'Pesanan Selesai'),
         ('a1b2c3d4-e5f6-7890-1234-f01890123456', 'Pesanan Dibatalkan');
 
         INSERT INTO TR_PEMESANAN_JASA (id, TglPemesanan, TglPekerjaan, WaktuPekerjaan, TotalBiaya, idPelanggan, idPekerja, idKategoriJasa, Sesi, idDiskon, idMetodeBayar) VALUES
