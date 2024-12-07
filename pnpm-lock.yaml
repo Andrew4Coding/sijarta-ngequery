@@ -133,16 +133,16 @@ importers:
         specifier: ^9.0.7
         version: 9.0.7
       '@types/node':
-        specifier: ^20
+        specifier: ^20.17.6
         version: 20.17.6
       '@types/pg':
         specifier: ^8.11.10
         version: 8.11.10
       '@types/react':
-        specifier: ^18
+        specifier: ^18.3.12
         version: 18.3.12
       '@types/react-dom':
-        specifier: ^18
+        specifier: ^18.3.1
         version: 18.3.1
       eslint:
         specifier: ^9.16.0
@@ -157,7 +157,7 @@ importers:
         specifier: ^3.4.14
         version: 3.4.14
       typescript:
-        specifier: ^5
+        specifier: ^5.6.3
         version: 5.6.3
 
 packages:
