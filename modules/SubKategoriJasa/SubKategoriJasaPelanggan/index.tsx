@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Image from "next/image";
+import { workers, testimonials } from "../const"; // Import data workers dan testimonials
 
 export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory: string }) {
   const [subcategoryInfo, setSubcategoryInfo] = useState<{
@@ -28,8 +29,6 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
     namakategori: string;
   } | null>(null);
   const [sessions, setSessions] = useState<{ sesi: number; harga: number }[]>([]);
-  const [workers, setWorkers] = useState<any[]>([]);
-  const [testimonials, setTestimonials] = useState<any[]>([]);
   const [newOrder, setNewOrder] = useState({
     date: new Date().toLocaleDateString(),
     discountCode: "",
@@ -49,32 +48,6 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
         if (response.ok) {
           setSubcategoryInfo(result.data.subcategory);
           setSessions(result.data.sessions);
-
-          // Simulasi data pekerja dan testimoni
-          setWorkers([
-            {
-              name: "Budi",
-              image: "/worker1.jpg",
-              rating: 4.5,
-              completedOrders: 120,
-              phone: "08123456789",
-              birthDate: "1995-02-20",
-              address: "Jakarta",
-            },
-            {
-              name: "Siti",
-              image: "/worker2.jpg",
-              rating: 4.8,
-              completedOrders: 150,
-              phone: "08123456788",
-              birthDate: "1992-06-15",
-              address: "Surabaya",
-            },
-          ]);
-          setTestimonials([
-            { customerName: "Ali", workerName: "Budi", rating: 5, review: "Pekerjaan sangat rapi!", date: "2023-12-01" },
-            { customerName: "Aisyah", workerName: "Siti", rating: 4.7, review: "Pekerjaannya cepat dan memuaskan.", date: "2023-12-05" },
-          ]);
         } else {
           console.error(result.message);
         }
@@ -102,13 +75,12 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
 
     const sessionPrice = session.harga;
 
-    // Validasi diskon
     if (discountCode === "PROMO10") {
-      discountValue = sessionPrice * 0.1; // Diskon 10%
+      discountValue = sessionPrice * 0.1;
     } else if (discountCode === "PROMO20") {
-      discountValue = sessionPrice * 0.2; // Diskon 20%
+      discountValue = sessionPrice * 0.2;
     } else {
-      discountValue = 0; // Diskon tidak valid
+      discountValue = 0;
     }
 
     const totalPrice = sessionPrice - discountValue;
@@ -179,8 +151,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                     value={newOrder.discountCode}
                     onChange={(e) => handleDiscountChange(e.target.value, session)}
                     className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] bg-transparent text-black text-xl font-medium focus:outline-none focus:ring-2 focus:ring-[#d9d9d9] placeholder:text-[#b2b2b2]"
-                    />
-
+                  />
                 </div>
                 <div className="w-full flex flex-col gap-3">
                   <label className="text-black text-xl font-medium">Total Pembayaran:</label>
