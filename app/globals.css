@@ -37,3 +37,9 @@ body {
   background: #48C27F;
   transition-duration: 0.5s;
 }
+
+input {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
