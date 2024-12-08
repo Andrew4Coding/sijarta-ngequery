@@ -98,13 +98,13 @@ export const StatusPekerjaan = ({ userId }: { userId: string }) => {
                 <h2
                   className={cn(
                     "text-center text-[16px] md:text-[20px] font-semibold py-3 md:py-4 border border-[#D9D9D9] rounded-[12px]",
-                    card.status === "Selesai" && "text-green-500",
+                    card.status === "Pesanan Selesai" && "text-green-500",
                     card.status === "Dibatalkan" && "text-[#F27575]",
-                    card.status === "Melakukan Pelayanan Jasa" &&
+                    card.status === "Pelayanan Jasa Sedang Dilakukan" &&
                       "text-[#F2AD75]",
                     card.status === "Menunggu Pekerja Berangkat" &&
                       "text-[#AF75F2]",
-                    card.status === "Tiba Di Lokasi" && "text-[#759EF2]"
+                    card.status === "Pekerja Tiba di Lokasi" && "text-[#759EF2]"
                   )}
                 >
                   {card.status}
@@ -115,6 +115,13 @@ export const StatusPekerjaan = ({ userId }: { userId: string }) => {
                       {card.assignner}
                     </h2>
                     <p className="text-[16px] md:text-[20px] text-[#B2B2B2]">
+                      {card.sesi} Sesi{", "}
+                      {new Date(card.todoDate).toLocaleTimeString("id-ID", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                      {", "}
                       {new Date(card.todoDate).toLocaleDateString("id-ID", {
                         day: "2-digit",
                         month: "2-digit",
