@@ -89,8 +89,8 @@ export async function createTable() {
         CREATE TABLE TR_PEMESANAN_JASA (
             id UUID PRIMARY KEY NOT NULL UNIQUE,
             TglPemesanan DATE NOT NULL,
-            TglPekerjaan DATE NOT NULL,
-            WaktuPekerjaan TIMESTAMP NOT NULL,
+            TglPekerjaan DATE,
+            WaktuPekerjaan TIMESTAMP,
             TotalBiaya DECIMAL NOT NULL CHECK (TotalBiaya >= 0),
             idPelanggan UUID,
             idPekerja UUID,
@@ -400,8 +400,14 @@ export async function seedDatabase() {
         ('0d1af6a3-124e-422b-9c51-25ec5c8810ad', '2024-10-23', '2024-10-27', '2024-10-27 12:00:00', 250000.00, '3a7e0102-3234-5678-8903-cdefccdefcde', '9bde0108-9234-5678-8909-225544226677', 'bf98b6a7-c4b4-492d-95b6-78b76df40c29', 1, 'DISKON003', 'd2c3c141-0c38-4f21-a00b-8b0f58a33a65'),
         ('4a5c7157-3252-445b-a5d7-043cb4f3b009', '2024-10-24', '2024-10-28', '2024-10-28 14:00:00', 320000.00, '4d8e0103-4234-5678-8904-ddefdddefdde', '8ace0107-8234-5678-8908-113322114455', 'bf98b6a7-c4b4-492d-95b6-78b76df40c29', 2, 'DISKON004', '550e8400-e29b-41d4-a716-446655440012'),
         ('a48af308-27bc-403d-88eb-ffa22158218d', '2024-10-25', '2024-10-29', '2024-10-29 09:00:00', 290000.00, '5b9e0104-5234-5678-8905-eefeeedefeef', '7ebe0106-7234-5678-8907-001100112223', 'bf98b6a7-c4b4-492d-95b6-78b76df40c29', 3, 'DISKON005', '123e4567-e89b-12d3-a456-426614174201');
+        ('a48af308-27bc-403d-88eb-ffa221582123', '2024-12-08', null, null, 290000.00, 'e7267792-7350-4f44-a52a-f3b2c099499f', null, 'b3fbb3b6-9a9a-4a56-a7b3-19d7397d2fa5', 2, 'DISKON005', 'f47ac10b-58cc-4372-a567-0e02b2c3d479'),
+        ('a48af308-27bc-403d-88eb-ffa221581231', '2024-12-08', null, null, 290000.00, 'e7267792-7350-4f44-a52a-f3b2c099499f', null, '2d49b1fe-6b14-49d7-87e2-759ba97e1c0a', 2, 'DISKON005', 'f47ac10b-58cc-4372-a567-0e02b2c3d479');
 
         INSERT INTO TR_PEMESANAN_STATUS (IdTrPemesanan, idStatus, TglWaktu) VALUES
+        ('a48af308-27bc-403d-88eb-ffa221582123', 'a1b2c3d4-e5f6-1234-5678-9abcdef01234', '2024-12-08 10:00:00'),
+        ('a48af308-27bc-403d-88eb-ffa221582123', 'b2c3d4e5-f6a1-2345-6789-abcdef013456', '2024-12-08 10:05:00'),
+        ('a48af308-27bc-403d-88eb-ffa221581231', 'a1b2c3d4-e5f6-1234-5678-9abcdef01234', '2024-12-08 10:00:00'),
+        ('a48af308-27bc-403d-88eb-ffa221581231', 'b2c3d4e5-f6a1-2345-6789-abcdef013456', '2024-12-08 10:05:00');
         ('1f3a2b30-1234-5678-8901-abcdefabcdef', 'a1b2c3d4-e5f6-1234-5678-9abcdef01234', '2024-10-11 10:00:00'),
         ('2a4b2b31-2234-5678-8902-bcdefbcdefbc', 'b2c3d4e5-f6a1-2345-6789-abcdef013456', '2024-10-11 10:05:00'),
         ('3c5d2b32-3234-5678-8903-cdefccdefcde', 'c3d4e5f6-a1b2-3456-7890-bcdef0145678', '2024-10-11 10:10:00'),

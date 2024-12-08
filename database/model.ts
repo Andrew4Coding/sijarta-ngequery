@@ -110,7 +110,7 @@ export abstract class BaseModel<T extends QueryParams> {
   /**
    * Execute a custom query with parameterized values
    */
-  async customQuery(query: string, values: any[]): Promise<any[]> {
+  async customQuery(query: string, values?: any[]): Promise<any[]> {
     try {
       const result = await pool.query(query, values);
       return result.rows;
