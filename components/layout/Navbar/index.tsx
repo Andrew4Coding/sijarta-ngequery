@@ -117,12 +117,13 @@ export const Navbar = () => {
               </li>
               <Separator />
               <li>
-                <span
+                <a
+                  href='/'
                   onClick={logout}
-                  className='text-red-500'
+                  className='text-red-500 cursor-pointer duration-300'
                 >
                   Logout
-                </span>
+                </a>
               </li>
             </ul>
           </PopoverContent>
