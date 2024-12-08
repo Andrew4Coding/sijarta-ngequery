@@ -67,6 +67,7 @@ export async function POST(req: Request) {
                     id: user.id,
                     nama: user.nama,
                     linkfoto: pekerja?.linkfoto,  
+                    saldoMpay: user.saldompay,
                 },
                 role: role
              },
