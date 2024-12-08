@@ -114,8 +114,8 @@ export async function createTable() {
         CREATE TABLE TR_PEMESANAN_JASA (
             id UUID PRIMARY KEY NOT NULL UNIQUE,
             TglPemesanan DATE NOT NULL,
-            TglPekerjaan DATE NOT NULL,
-            WaktuPekerjaan TIMESTAMP NOT NULL,
+            TglPekerjaan DATE,
+            WaktuPekerjaan TIMESTAMP,
             TotalBiaya DECIMAL NOT NULL CHECK (TotalBiaya >= 0),
             idPelanggan UUID,
             idPekerja UUID,
@@ -210,11 +210,11 @@ export async function seedDatabase() {
         ('acd10109-1234-5678-8910-337766338898', 'Gold');
 
         INSERT INTO PEKERJA (ID, NAMABANK, NOMORREKENING, NPWP, LINKFOTO, RATING, JUMLAHPESANANASELESAI) VALUES
-        ('6fae0105-6234-5678-8906-ffeeffefefef', 'Virtual Account BCA', '1234567890', '1234567890123456', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/psql.png', 4.5, 150),
-        ('7ebe0106-7234-5678-8907-001100112223', 'Virtual Account Mandiri', '2345678901', '2345678901234567', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/psql.png', 4.8, 200),
-        ('8ace0107-8234-5678-8908-113322114455', 'Virtual Account BNI', '3456789012', '3456789012345678', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/psql.png', 4.6, 180),
-        ('9bde0108-9234-5678-8909-225544226677', 'OVO', '4567890123', '4567890123456789', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/psql.png', 4.7, 190),
-        ('acd10109-1234-5678-8910-337766338899', 'Gopay', '5678901234', '5678901234567890', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/psql.png', 4.9, 220);
+        ('6fae0105-6234-5678-8906-ffeeffefefef', 'Virtual Account BCA', '1234567890', '1234567890123456', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja1.png', 4.5, 150),
+        ('7ebe0106-7234-5678-8907-001100112223', 'Virtual Account Mandiri', '2345678901', '2345678901234567', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja2.png', 4.8, 200),
+        ('8ace0107-8234-5678-8908-113322114455', 'Virtual Account BNI', '3456789012', '3456789012345678', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja3.png', 4.6, 180),
+        ('9bde0108-9234-5678-8909-225544226677', 'OVO', '4567890123', '4567890123456789', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja4.png', 4.7, 190),
+        ('acd10109-1234-5678-8910-337766338899', 'Gopay', '5678901234', '5678901234567890', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja5.png', 4.9, 220);
 
         INSERT INTO KATEGORI_TR_MPAY (ID, NAMA) VALUES
         ('111e0110-1234-5678-8911-abcdefabcdef', 'TopUp MyPay'),
@@ -395,10 +395,10 @@ export async function seedDatabase() {
         INSERT INTO STATUS_PESANAN (id, Nama) VALUES
         ('a1b2c3d4-e5f6-1234-5678-9abcdef01234', 'Menunggu Pembayaran'),
         ('b2c3d4e5-f6a1-2345-6789-abcdef013456', 'Mencari Pekerja Terdekat'),
-        ('c3d4e5f6-a1b2-3456-7890-bcdef0145678', 'Pekerja Dalam Perjalanan'),
-        ('d4e5f6a1-b2c3-4567-8901-cdef01567890', 'Pekerjaan Sedang Berlangsung'),
-        ('e5f6a1b2-c3d4-5678-9012-def016789012', 'Menunggu Konfirmasi Selesai'),
-        ('f6a1b2c3-d4e5-6789-0123-ef0178901234', 'Pembayaran Selesai'),
+        ('c3d4e5f6-a1b2-3456-7890-bcdef0145678', 'Menunggu Pekerja Berangkat'),
+        ('f6a1b2c3-d4e5-6789-0123-ef0178901234', 'Pekerja Tiba di Lokasi'),
+        ('d4e5f6a1-b2c3-4567-8901-cdef01567890', 'Pelayanan Jasa Sedang Dilakukan'),
+        ('e5f6a1b2-c3d4-5678-9012-def016789012', 'Pesanan Selesai'),
         ('a1b2c3d4-e5f6-7890-1234-f01890123456', 'Pesanan Dibatalkan');
 
         INSERT INTO TR_PEMESANAN_JASA (id, TglPemesanan, TglPekerjaan, WaktuPekerjaan, TotalBiaya, idPelanggan, idPekerja, idKategoriJasa, Sesi, idDiskon, idMetodeBayar) VALUES
@@ -494,7 +494,13 @@ export async function seedTrigger() {
         CREATE OR REPLACE FUNCTION check_phone_number_exists() 
         RETURNS TRIGGER AS $$
         BEGIN
-            IF EXISTS (SELECT 1 FROM USERTABLE WHERE nohp = NEW.nohp) THEN
+            -- Check if the phone number exists in another record
+            IF EXISTS (
+                SELECT 1 
+                FROM USERTABLE 
+                WHERE nohp = NEW.nohp 
+                AND id != NEW.id
+            ) THEN
                 RAISE EXCEPTION 'Phone number already registered';
             END IF;
             RETURN NEW;
@@ -502,14 +508,14 @@ export async function seedTrigger() {
         $$ LANGUAGE plpgsql;
 
         CREATE TRIGGER trigger_check_phone_number
-        BEFORE INSERT ON USERTABLE
+        BEFORE INSERT OR UPDATE ON USERTABLE
         FOR EACH ROW EXECUTE FUNCTION check_phone_number_exists();
 
         -- Trigger to check if npwp already exists
         CREATE OR REPLACE FUNCTION check_npwp_exists() 
         RETURNS TRIGGER AS $$
         BEGIN
-            IF EXISTS (SELECT 1 FROM PEKERJA WHERE npwp = NEW.npwp) THEN
+            IF EXISTS (SELECT 1 FROM PEKERJA WHERE npwp = NEW.npwp AND id != NEW.id) THEN
                 RAISE EXCEPTION 'NPWP already registered';
             END IF;
             RETURN NEW;
@@ -517,7 +523,7 @@ export async function seedTrigger() {
         $$ LANGUAGE plpgsql;
 
         CREATE TRIGGER trigger_check_npwp
-        BEFORE INSERT ON PEKERJA
+        BEFORE INSERT OR UPDATE ON PEKERJA
         FOR EACH ROW EXECUTE FUNCTION check_npwp_exists();
 
         -- Trigger to check if bank account combination already exists
@@ -528,6 +534,7 @@ export async function seedTrigger() {
                 SELECT 1 FROM PEKERJA
                 WHERE namabank = NEW.namabank
                 AND nomorrekening = NEW.nomorrekening
+                AND id != NEW.id
             ) THEN
                 RAISE EXCEPTION 'Bank name and account number combination already registered for another worker';
             END IF;
@@ -536,7 +543,7 @@ export async function seedTrigger() {
         $$ LANGUAGE plpgsql;
 
         CREATE TRIGGER trigger_check_bank_account
-        BEFORE INSERT ON PEKERJA
+        BEFORE INSERT OR UPDATE ON PEKERJA
         FOR EACH ROW EXECUTE FUNCTION check_bank_account_combination();
     `);
 

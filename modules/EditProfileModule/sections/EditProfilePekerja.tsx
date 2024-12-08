@@ -30,6 +30,7 @@ type ExtraType = {
 
 export const EditProfilePekerja = () => {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
 
     const [userDataState, setUserDataState] = useState<PekerjaType & UserType & ExtraType>({} as PekerjaType & UserType & ExtraType);
 
@@ -65,13 +66,17 @@ export const EditProfilePekerja = () => {
     }, [userData.id])
 
     async function onSubmit(data: z.infer<typeof EditProfilePekerjaSchema>) {
+        setIsLoading(true);
         toast({
             title: "Loading ...",
             variant: "default"
         })
 
-        data.linkfoto = await uploadFoto(data.filefoto);
-
+        if (data.filefoto) {
+            data.linkfoto = await uploadFoto(data.filefoto);
+    
+        }
+        
         const response = await fetch(`/api/auth/profile/?id=${userData.id}&role=pekerja`, {
             method: 'PATCH',
             body: JSON.stringify(data),
@@ -97,6 +102,7 @@ export const EditProfilePekerja = () => {
                 variant: "destructive"
             })
         }
+        setIsLoading(false);
     }
 
     return (
@@ -306,7 +312,9 @@ export const EditProfilePekerja = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" variant={'secondary'} className="w-full col-span-2">
+                        <Button
+                            disabled={isLoading}
+                            type="submit" variant={'secondary'} className="w-full col-span-2">
                             <Save className="w-4" />
                             Save Changes
                         </Button>

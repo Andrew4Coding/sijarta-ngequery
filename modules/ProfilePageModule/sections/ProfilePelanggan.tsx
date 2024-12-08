@@ -4,7 +4,6 @@ import { PelangganType, UserType } from "@/database/types";
 import { useUserData } from "@/hooks/useUserData";
 import { dateConverter } from "@/modules/EditProfileModule";
 import { Pencil } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export const ProfilePelanggan = () => {
@@ -21,13 +20,12 @@ export const ProfilePelanggan = () => {
 
     useEffect(() => {
         if (userData.id) {
-            console.log(userData)
             fetchUserProfile()
         }
     }, [userData.id])
 
     return (
-        <main className="flex flex-col gap-5 items-center">
+        <main className="flex flex-col gap-5 items-center justify-center pt-20">
             <h1 className="font-bold text-3xl text-center">{ userDataState.nama}</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white p-10 rounded-xl">
@@ -46,6 +44,14 @@ export const ProfilePelanggan = () => {
                 <div className="flex flex-col gap-2">
                     <h3 className="font-semibold text-lg text-green-600">Alamat</h3>
                     <p className="text-sm">{userDataState.alamat}</p>
+                </div>
+                <div className="flex flex-col gap-2">
+                    <h3 className="font-semibold text-lg text-green-600">Saldo Mpay</h3>
+                    <p className="text-sm">{userDataState.saldompay}</p>
+                </div>
+                <div className="flex flex-col gap-2">
+                    <h3 className="font-semibold text-lg text-green-600">Level</h3>
+                    <p className="text-sm">{userDataState.level}</p>
                 </div>
                 <div className="flex flex-col gap-2 col-span-2">
                     <a href={`/profile/edit?role=pelanggan`} className="w-full">
