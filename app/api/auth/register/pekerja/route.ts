@@ -88,7 +88,6 @@ export async function POST(req: Request) {
         )
 
     } catch (error: any) {
-        console.error(error);
         return new Response(
             JSON.stringify({
                 message: "Failed",

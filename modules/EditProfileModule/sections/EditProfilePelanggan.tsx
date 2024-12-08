@@ -27,6 +27,7 @@ export const EditProfilePelanggan = () => {
     const { userData } = useUserData();
     const router = useRouter();
     const { toast } = useToast();
+    const [isLoading, setIsLoading] = useState(false);
 
     async function fetchUserProfile() {
         const response = await fetch(`/api/auth/profile?id=${userData.id}&role=pelanggan`);
@@ -52,6 +53,7 @@ export const EditProfilePelanggan = () => {
     }, [userData.id]);
 
     async function onSubmit(data: z.infer<typeof EditProfilePelangganSchema>) {
+        setIsLoading(true);
         try {
             toast({
                 title: "Loading ...",
@@ -83,6 +85,7 @@ export const EditProfilePelanggan = () => {
                 variant: "destructive",
             });
         }
+        setIsLoading(false);
     }
 
     return (
@@ -186,7 +189,9 @@ export const EditProfilePelanggan = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" variant={'secondary'} className="w-full col-span-2">
+                        <Button
+                            disabled={isLoading}
+                            type="submit" variant={'secondary'} className="w-full col-span-2">
                             <Save className="w-4" />
                             Save Changes
                         </Button>
