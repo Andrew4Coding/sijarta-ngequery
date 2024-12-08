@@ -1,8 +1,33 @@
 import pool from "./db";
 
+export async function resetDatabase() {
+    await pool.query(`
+        DROP TABLE IF EXISTS TR_PEMBELIAN_VOUCHER;
+        DROP TABLE IF EXISTS PROMO;
+        DROP TABLE IF EXISTS VOUCHER;
+        DROP TABLE IF EXISTS TESTIMONI;
+        DROP TABLE IF EXISTS TR_PEMESANAN_STATUS;
+        DROP TABLE IF EXISTS STATUS_PESANAN;
+        DROP TABLE IF EXISTS TR_PEMESANAN_JASA;
+        DROP TABLE IF EXISTS METODE_BAYAR;
+        DROP TABLE IF EXISTS DISKON;
+        DROP TABLE IF EXISTS SESI_LAYANAN;
+        DROP TABLE IF EXISTS SUBKATEGORI_JASA;
+        DROP TABLE IF EXISTS PEKERJA_KATEGORI_JASA;
+        DROP TABLE IF EXISTS KATEGORI_JASA;
+        DROP TABLE IF EXISTS TR_MPAY;
+        DROP TABLE IF EXISTS KATEGORI_TR_MPAY;
+        DROP TABLE IF EXISTS PEKERJA;
+        DROP TABLE IF EXISTS PELANGGAN;
+        DROP TABLE IF EXISTS USERTABLE;
+    `);
+
+    console.log('Reset database done!');
+}
+
 export async function createTable() {
     await pool.query(`
-        CREATE TABLE "USER" (
+        CREATE TABLE USERTABLE (
             ID UUID PRIMARY KEY,
             NAMA VARCHAR(255),
             JENISKELAMIN VARCHAR(1) CHECK(JENISKELAMIN IN ('L', 'P')),
@@ -17,7 +42,7 @@ export async function createTable() {
         CREATE TABLE PELANGGAN (
             ID UUID UNIQUE PRIMARY KEY,
             LEVEL VARCHAR(10),
-            FOREIGN KEY (ID) REFERENCES "USER"(ID)
+            FOREIGN KEY (ID) REFERENCES USERTABLE(ID)
         );
 
         CREATE TABLE PEKERJA (
@@ -28,7 +53,7 @@ export async function createTable() {
             LINKFOTO VARCHAR(255),
             RATING FLOAT,
             JUMLAHPESANANASELESAI INT,
-            FOREIGN KEY (ID) REFERENCES "USER"(ID)
+            FOREIGN KEY (ID) REFERENCES USERTABLE(ID)
         );
 
         CREATE TABLE KATEGORI_TR_MPAY (
@@ -42,7 +67,7 @@ export async function createTable() {
             TGL DATE,
             NOMINAL DECIMAL,
             KATEGORIID UUID,
-            FOREIGN KEY (USERID) REFERENCES "USER"(ID),
+            FOREIGN KEY (USERID) REFERENCES USERTABLE(ID),
             FOREIGN KEY (KATEGORIID) REFERENCES KATEGORI_TR_MPAY(ID)
         );
 
@@ -163,31 +188,33 @@ export async function seedDatabase() {
     await pool.query(`
         -- INSERT DATA DUMMY
         -- AILEEN
-        INSERT INTO "USER" (ID, NAMA, JENISKELAMIN, NOHP, PWD, TGLLAHIR, ALAMAT, SALDOMPAY) VALUES
-        ('1c3e0100-1234-5678-8901-abcdefabcdef', 'Ali Rahman', 'L', '081234567890', 'hashedpassword1', '1990-05-14', 'Jl. Merdeka No. 1', 100000.00),
-        ('2f5e0101-2234-5678-8902-bcdefbcdefbc', 'Budi Santoso', 'L', '081234567891', 'hashedpassword2', '1985-09-23', 'Jl. Angkasa No. 2', 250000.00),
-        ('3a7e0102-3234-5678-8903-cdefccdefcde', 'Citra Sari', 'P', '081234567892', 'hashedpassword3', '1992-11-03', 'Jl. Mawar No. 3', 50000.00),
-        ('4d8e0103-4234-5678-8904-ddefdddefdde', 'Dewi Lestari', 'P', '081234567893', 'hashedpassword4', '1989-07-21', 'Jl. Melati No. 4', 150000.00),
-        ('5b9e0104-5234-5678-8905-eefeeedefeef', 'Eko Wijaya', 'L', '081234567894', 'hashedpassword5', '1993-04-10', 'Jl. Cemara No. 5', 200000.00),
-        ('6fae0105-6234-5678-8906-ffeeffefefef', 'Fitri Hasanah', 'P', '081234567895', 'hashedpassword6', '1991-02-16', 'Jl. Kenanga No. 6', 75000.00),
-        ('7ebe0106-7234-5678-8907-001100112223', 'Gilang Saputra', 'L', '081234567896', 'hashedpassword7', '1988-08-18', 'Jl. Teratai No. 7', 125000.00),
-        ('8ace0107-8234-5678-8908-113322114455', 'Hendra Wijaya', 'L', '081234567897', 'hashedpassword8', '1987-12-30', 'Jl. Bunga No. 8', 175000.00),
-        ('9bde0108-9234-5678-8909-225544226677', 'Indah Puspita', 'P', '081234567898', 'hashedpassword9', '1994-03-19', 'Jl. Anggrek No. 9', 125000.00),
-        ('acd10109-1234-5678-8910-337766338899', 'Joko Subandi', 'L', '081234567899', 'hashedpassword10', '1995-06-28', 'Jl. Kamboja No. 10', 100000.00);
+        INSERT INTO USERTABLE (ID, NAMA, JENISKELAMIN, NOHP, PWD, TGLLAHIR, ALAMAT, SALDOMPAY) VALUES
+        ('1c3e0100-1234-5678-8901-abcdefabcdef', 'Ali Rahman', 'L', '081234567890', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1990-05-14', 'Jl. Merdeka No. 1', 100000.00),
+        ('2f5e0101-2234-5678-8902-bcdefbcdefbc', 'Budi Santoso', 'L', '081234567891', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1985-09-23', 'Jl. Angkasa No. 2', 250000.00),
+        ('3a7e0102-3234-5678-8903-cdefccdefcde', 'Citra Sari', 'P', '081234567892', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1992-11-03', 'Jl. Mawar No. 3', 50000.00),
+        ('4d8e0103-4234-5678-8904-ddefdddefdde', 'Dewi Lestari', 'P', '081234567893', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1989-07-21', 'Jl. Melati No. 4', 150000.00),
+        ('5b9e0104-5234-5678-8905-eefeeedefeef', 'Eko Wijaya', 'L', '081234567894', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1993-04-10', 'Jl. Cemara No. 5', 200000.00),
+        ('6fae0105-6234-5678-8906-ffeeffefefef', 'Fitri Hasanah', 'P', '081234567895', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1991-02-16', 'Jl. Kenanga No. 6', 75000.00),
+        ('7ebe0106-7234-5678-8907-001100112223', 'Gilang Saputra', 'L', '081234567896', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1988-08-18', 'Jl. Teratai No. 7', 125000.00),
+        ('8ace0107-8234-5678-8908-113322114455', 'Hendra Wijaya', 'L', '081234567897', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1987-12-30', 'Jl. Bunga No. 8', 175000.00),
+        ('9bde0108-9234-5678-8909-225544226677', 'Indah Puspita', 'P', '081234567898', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1994-03-19', 'Jl. Anggrek No. 9', 125000.00),
+        ('acd10109-1234-5678-8910-337766338899', 'Joko Subandi', 'L', '081234567899', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1995-06-28', 'Jl. Kamboja No. 10', 100000.00),
+        ('acd10109-1234-5678-8910-337766338898', 'Andrew Devito Aryo', 'L', '08123456789', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1995-06-28', 'Jl. Kamboja No. 10', 100000.00);
 
         INSERT INTO PELANGGAN (ID, LEVEL) VALUES
         ('1c3e0100-1234-5678-8901-abcdefabcdef', 'Silver'),
         ('2f5e0101-2234-5678-8902-bcdefbcdefbc', 'Gold'),
         ('3a7e0102-3234-5678-8903-cdefccdefcde', 'Bronze'),
         ('4d8e0103-4234-5678-8904-ddefdddefdde', 'Silver'),
-        ('5b9e0104-5234-5678-8905-eefeeedefeef', 'Gold');
+        ('5b9e0104-5234-5678-8905-eefeeedefeef', 'Gold'),
+        ('acd10109-1234-5678-8910-337766338898', 'Gold');
 
         INSERT INTO PEKERJA (ID, NAMABANK, NOMORREKENING, NPWP, LINKFOTO, RATING, JUMLAHPESANANASELESAI) VALUES
-        ('6fae0105-6234-5678-8906-ffeeffefefef', 'Bank BCA', '1234567890', '1234567890123456', 'linkfoto1.jpg', 4.5, 150),
-        ('7ebe0106-7234-5678-8907-001100112223', 'Bank Mandiri', '2345678901', '2345678901234567', 'linkfoto2.jpg', 4.8, 200),
-        ('8ace0107-8234-5678-8908-113322114455', 'Bank BNI', '3456789012', '3456789012345678', 'linkfoto3.jpg', 4.6, 180),
-        ('9bde0108-9234-5678-8909-225544226677', 'Bank BRI', '4567890123', '4567890123456789', 'linkfoto4.jpg', 4.7, 190),
-        ('acd10109-1234-5678-8910-337766338899', 'Bank Danamon', '5678901234', '5678901234567890', 'linkfoto5.jpg', 4.9, 220);
+        ('6fae0105-6234-5678-8906-ffeeffefefef', 'Virtual Account BCA', '1234567890', '1234567890123456', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja1.png', 4.5, 150),
+        ('7ebe0106-7234-5678-8907-001100112223', 'Virtual Account Mandiri', '2345678901', '2345678901234567', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja2.png', 4.8, 200),
+        ('8ace0107-8234-5678-8908-113322114455', 'Virtual Account BNI', '3456789012', '3456789012345678', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja3.png', 4.6, 180),
+        ('9bde0108-9234-5678-8909-225544226677', 'OVO', '4567890123', '4567890123456789', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja4.png', 4.7, 190),
+        ('acd10109-1234-5678-8910-337766338899', 'Gopay', '5678901234', '5678901234567890', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja5.png', 4.9, 220);
 
         INSERT INTO KATEGORI_TR_MPAY (ID, NAMA) VALUES
         ('111e0110-1234-5678-8911-abcdefabcdef', 'TopUp MyPay'),
@@ -467,36 +494,66 @@ export async function seedDatabase() {
     console.log('Seeding database done!');
 }
 
-export async function resetDatabase() {
+export async function seedTrigger() {
     await pool.query(`
-        DROP TABLE IF EXISTS TR_PEMBELIAN_VOUCHER;
-        DROP TABLE IF EXISTS PROMO;
-        DROP TABLE IF EXISTS VOUCHER;
-        DROP TABLE IF EXISTS TESTIMONI;
-        DROP TABLE IF EXISTS TR_PEMESANAN_STATUS;
-        DROP TABLE IF EXISTS STATUS_PESANAN;
-        DROP TABLE IF EXISTS TR_PEMESANAN_JASA;
-        DROP TABLE IF EXISTS METODE_BAYAR;
-        DROP TABLE IF EXISTS DISKON;
-        DROP TABLE IF EXISTS SESI_LAYANAN;
-        DROP TABLE IF EXISTS SUBKATEGORI_JASA;
-        DROP TABLE IF EXISTS PEKERJA_KATEGORI_JASA;
-        DROP TABLE IF EXISTS KATEGORI_JASA;
-        DROP TABLE IF EXISTS TR_MPAY;
-        DROP TABLE IF EXISTS KATEGORI_TR_MPAY;
-        DROP TABLE IF EXISTS PEKERJA;
-        DROP TABLE IF EXISTS PELANGGAN;
-        DROP TABLE IF EXISTS "USER";
+        -- Trigger to check if phone number already exists
+        CREATE OR REPLACE FUNCTION check_phone_number_exists() 
+        RETURNS TRIGGER AS $$
+        BEGIN
+            IF EXISTS (SELECT 1 FROM USERTABLE WHERE nohp = NEW.nohp) THEN
+                RAISE EXCEPTION 'Phone number already registered';
+            END IF;
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        CREATE TRIGGER trigger_check_phone_number
+        BEFORE INSERT ON USERTABLE
+        FOR EACH ROW EXECUTE FUNCTION check_phone_number_exists();
+
+        -- Trigger to check if npwp already exists
+        CREATE OR REPLACE FUNCTION check_npwp_exists() 
+        RETURNS TRIGGER AS $$
+        BEGIN
+            IF EXISTS (SELECT 1 FROM PEKERJA WHERE npwp = NEW.npwp) THEN
+                RAISE EXCEPTION 'NPWP already registered';
+            END IF;
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        CREATE TRIGGER trigger_check_npwp
+        BEFORE INSERT ON PEKERJA
+        FOR EACH ROW EXECUTE FUNCTION check_npwp_exists();
+
+        -- Trigger to check if bank account combination already exists
+        CREATE OR REPLACE FUNCTION check_bank_account_combination() 
+        RETURNS TRIGGER AS $$
+        BEGIN
+            IF EXISTS (
+                SELECT 1 FROM PEKERJA
+                WHERE namabank = NEW.namabank
+                AND nomorrekening = NEW.nomorrekening
+            ) THEN
+                RAISE EXCEPTION 'Bank name and account number combination already registered for another worker';
+            END IF;
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        CREATE TRIGGER trigger_check_bank_account
+        BEFORE INSERT ON PEKERJA
+        FOR EACH ROW EXECUTE FUNCTION check_bank_account_combination();
     `);
 
-    console.log('Reset database done!');
+    console.log('Seeding trigger done!');
 }
-
 
 async function seedDatabaseRun() {
     await resetDatabase();
     await createTable();
     await seedDatabase();
+    await seedTrigger();
 }
 
 
