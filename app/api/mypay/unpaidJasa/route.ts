@@ -39,6 +39,11 @@ export async function GET(req: Request) {
     "Menunggu Pembayaran"
   );
 
+  const dibatalkanStatus = await new StatusPesanan().findBy(
+    "nama",
+    "Pesanan Dibatalkan"
+  );
+
   const metodeBayar = await new MetodeBayar().findBy("nama", "MPay");
 
   const unpaidPesanan = await Promise.all(
@@ -49,6 +54,11 @@ export async function GET(req: Request) {
         "idtrpemesanan",
         tr.id
       );
+
+      if (statusPesanan.find((s) => s.idstatus === dibatalkanStatus?.id)) {
+        return;
+      }
+
       if (
         statusPesanan[0].idstatus === status?.id &&
         statusPesanan.length === 1 &&

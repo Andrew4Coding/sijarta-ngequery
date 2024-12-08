@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
-import { pekerjaanCategories } from "../const";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -21,9 +20,11 @@ import { cn } from "@/lib/utils";
 export const KategoriCombobox = ({
   value,
   setValue,
+  categories,
 }: {
   value: string;
   setValue: (value: string) => void;
+  categories: string[];
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -35,7 +36,7 @@ export const KategoriCombobox = ({
           className="sm:w-[300px] justify-between mx-auto"
         >
           {value
-            ? pekerjaanCategories.find((category) => category.category === value)?.category
+            ? categories.find((category) => category === value)
             : "Pilih Kategori Pekerjaan"}
           <ChevronDown className={cn(open ? "rotate-180" : "", "transition-transform")} />
         </Button>
@@ -46,20 +47,20 @@ export const KategoriCombobox = ({
           <CommandList>
             <CommandEmpty>Tidak ada Kategori Terkait.</CommandEmpty>
             <CommandGroup>
-              {pekerjaanCategories.map((category) => (
+              {categories.map((category) => (
                 <CommandItem
-                  key={category.category}
-                  value={category.category}
+                  key={category}
+                  value={category}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
                   }}
                 >
-                  {category.category}
+                  {category}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === category.category ? "opacity-100" : "opacity-0"
+                      value === category ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

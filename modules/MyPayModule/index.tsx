@@ -54,13 +54,13 @@ export const MyPayModule = ({
       <div className="absolute top-0 w-full h-full z-[1]">
         <Image src="/images/MyPayBG.png" alt="MyPay" fill className="" />
       </div>
-      <h1 className="md:text-md text-4xl text-center text-green-500 shadow-header font-newake z-10">
+      <h1 className="text-4xl md:text-6xl text-center text-green-500 shadow-header font-newake z-10">
         MyPay
       </h1>
       <div className="grid z-10">
         <h2 className="text-[24px] md:text-[32px] text-center font-bold text-white  bg-green-500 px-8 py-6 rounded-[50px] mt-8 mb-3">
           {saldo}
-        </h2>
+        </h2> 
         <Dialog>
           <DialogTrigger className="">
             <Button>
