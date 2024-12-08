@@ -194,8 +194,8 @@ export async function seedDatabase() {
         ('222e0111-2234-5678-8912-bcdefbcdefbc', 'Membayar Transaksi'),
         ('333e0112-3234-5678-8913-cdefccdefcde', 'Transfer MyPay'),
         ('444e0113-4234-5678-8914-ddefdddefdde', 'Withdrawal'),
-        ('555e0114-5234-5678-8915-eefeeedefeef', 'Pengembalian Dana');
-        ('666e0115-6234-5678-8916-ffefffefefef', 'Pembayaran Voucher');
+        ('555e0114-5234-5678-8915-eefeeedefeef', 'Pengembalian Dana'),
+        ('666e0115-6234-5678-8916-ffefffefefef', 'Pembayaran Voucher'),
         ('777e0116-7234-5678-8917-001100112223', 'Terima Transfer');
 
         INSERT INTO TR_MPAY (ID, USERID, TGL, NOMINAL, KATEGORIID) VALUES
@@ -486,6 +486,12 @@ export async function resetDatabase() {
     console.log('Reset database done!');
 }
 
-await resetDatabase();
-await createTable();
-await seedDatabase();
+
+async function seedDatabaseRun() {
+    await resetDatabase();
+    await createTable();
+    await seedDatabase();
+}
+
+
+seedDatabaseRun()
