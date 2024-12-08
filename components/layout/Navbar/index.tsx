@@ -74,7 +74,6 @@ export const Navbar = () => {
             <div className='flex items-center gap-2 text-sm'>
               <div className='text-right'>
                 <p className='font-bold'>Hello, {userData.nama}</p>
-                {/* <p>Rp {userData.saldoMPay}</p> */}
               </div>
               <Avatar
                 className='cursor-pointer'
@@ -82,7 +81,7 @@ export const Navbar = () => {
                   router.push('/profile')
                 }}
               >
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage src={userData.linkfoto ?? `https://github.com/shadcn.png`} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </div>

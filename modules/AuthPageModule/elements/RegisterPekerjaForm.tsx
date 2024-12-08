@@ -82,7 +82,7 @@ export const RegisterPekerjaForm = () => {
     return (
         <div className="w-full min-h-[100vh] flex items-center justify-center bg-background py-32 ">
             <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center w-full max-w-4xl mx-4">
-                <h1 className="font-bold text-2xl">Register to Sijarta</h1>
+                <h1 className="font-bold text-2xl">Daftar Sebagai Pekerja</h1>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
@@ -254,7 +254,7 @@ export const RegisterPekerjaForm = () => {
                             name="filefoto"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>URL Foto</FormLabel>
+                                    <FormLabel>Foto Profil</FormLabel>
                                     <FormControl>
                                         <Input
                                             label=''
@@ -292,13 +292,13 @@ export const RegisterPekerjaForm = () => {
                             name="confirmPassword"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormLabel>Konfirmasi Password</FormLabel>
                                     <FormControl>
                                         <Input
                                             label="password"
                                             type="password"
                                             className='w-full'
-                                            placeholder="Confirm Password" {...field}
+                                            placeholder="Konfirmasi Password" {...field}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -306,17 +306,11 @@ export const RegisterPekerjaForm = () => {
                             )}
                         />
                         <Button
-                            // onClick={() => {
-                            //     console.log(
-                            //         form.getValues()
-                            //     );
-                                
-                            // }}
                             variant={'secondary'}
                             type="submit"
                             className="col-span-2"
                         >
-                            Register
+                            Daftar
                         </Button>
                     </form>
                 </Form>

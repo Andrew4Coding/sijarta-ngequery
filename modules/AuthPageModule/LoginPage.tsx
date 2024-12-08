@@ -124,7 +124,7 @@ export const LoginPage = () => {
                 </Form>
 
                 <p className='mt-4 text-sm'>
-                    Belum punya akun <a href="/register" className="font-bold transition duration-300 ease-in-out transform hover:scale-105 hover:text-green-600">Register</a>
+                    Belum punya akun <a href="/register" className="font-bold transition duration-300 ease-in-out transform hover:scale-105 hover:text-green-600">Daftar</a>
                 </p>
             </div>
         </main>

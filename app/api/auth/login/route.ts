@@ -54,11 +54,19 @@ export async function POST(req: Request) {
             )
         }
 
+        const pekerjaModel = new Pekerja();
+        let pekerja;;
+        if (role == "pekerja") {
+            pekerja = await pekerjaModel.findBy('id', user.id);
+        }
+
+
         const token = jwt.sign(
             { 
                 data: {
                     id: user.id,
                     nama: user.nama,
+                    linkfoto: pekerja?.linkfoto,  
                 },
                 role: role
              },
