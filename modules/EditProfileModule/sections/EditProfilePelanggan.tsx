@@ -49,7 +49,7 @@ export const EditProfilePelanggan = () => {
     useEffect(() => {
         if (userData.id)
             fetchUserProfile();
-    }, [userData]);
+    }, [userData.id]);
 
     async function onSubmit(data: z.infer<typeof EditProfilePelangganSchema>) {
         try {
@@ -96,13 +96,6 @@ export const EditProfilePelanggan = () => {
             </div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 items-center">
-                    <Image
-                        src="/psql.png"
-                        alt="Profile Picture"
-                        width={150}
-                        height={150}
-                        className="rounded-full"
-                    />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-white p-10 rounded-xl w-full">
                         <FormField
                             control={form.control}

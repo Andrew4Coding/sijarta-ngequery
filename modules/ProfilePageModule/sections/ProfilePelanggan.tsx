@@ -24,18 +24,10 @@ export const ProfilePelanggan = () => {
             console.log(userData)
             fetchUserProfile()
         }
-    }, [userData])
+    }, [userData.id])
 
     return (
         <main className="flex flex-col gap-5 items-center">
-            <Image
-                src="/psql.png"
-                alt="Profile Picture"
-                width={150}
-                height={150}
-                className="rounded-full"
-            />
-
             <h1 className="font-bold text-3xl text-center">{ userDataState.nama}</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white p-10 rounded-xl">
