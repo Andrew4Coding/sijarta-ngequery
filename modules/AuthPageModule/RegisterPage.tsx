@@ -53,6 +53,7 @@ export const RegisterPage = () => {
                         </div>
                         <Button
                             variant={'secondary'}
+                            disabled={!role}
                             onClick={() => {
                                 setIsPickRole(false)
                                 const params = new URLSearchParams(searchParams);
