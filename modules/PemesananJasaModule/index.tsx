@@ -173,24 +173,24 @@ const PemesananJasaModule = () => {
                                                             )}
                                                         />
 
-                                                        {/* Comment Field */}
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="comment"
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>Komentar</FormLabel>
-                                                                    <FormControl>
-                                                                        <Textarea
-                                                                            rows={4}
-                                                                            placeholder="Tulis komentar Anda ..."
-                                                                            {...field}
-                                                                        />
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
+                            {/* Comment Field */}
+                            <FormField
+                              control={form.control}
+                              name="comment"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Komentar</FormLabel>
+                                  <FormControl>
+                                    <Textarea
+                                      rows={4}
+                                      placeholder="Tulis komentar Anda ..."
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
 
                                                         <div className="flex justify-end gap-2">
                                                             <DialogClose asChild>
