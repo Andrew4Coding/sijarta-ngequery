@@ -210,11 +210,11 @@ export async function seedDatabase() {
         ('acd10109-1234-5678-8910-337766338898', 'Gold');
 
         INSERT INTO PEKERJA (ID, NAMABANK, NOMORREKENING, NPWP, LINKFOTO, RATING, JUMLAHPESANANASELESAI) VALUES
-        ('6fae0105-6234-5678-8906-ffeeffefefef', 'Virtual Account BCA', '1234567890', '1234567890123456', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/psql.png', 4.5, 150),
-        ('7ebe0106-7234-5678-8907-001100112223', 'Virtual Account Mandiri', '2345678901', '2345678901234567', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/psql.png', 4.8, 200),
-        ('8ace0107-8234-5678-8908-113322114455', 'Virtual Account BNI', '3456789012', '3456789012345678', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/psql.png', 4.6, 180),
-        ('9bde0108-9234-5678-8909-225544226677', 'OVO', '4567890123', '4567890123456789', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/psql.png', 4.7, 190),
-        ('acd10109-1234-5678-8910-337766338899', 'Gopay', '5678901234', '5678901234567890', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/psql.png', 4.9, 220);
+        ('6fae0105-6234-5678-8906-ffeeffefefef', 'Virtual Account BCA', '1234567890', '1234567890123456', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja1.png', 4.5, 150),
+        ('7ebe0106-7234-5678-8907-001100112223', 'Virtual Account Mandiri', '2345678901', '2345678901234567', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja2.png', 4.8, 200),
+        ('8ace0107-8234-5678-8908-113322114455', 'Virtual Account BNI', '3456789012', '3456789012345678', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja3.png', 4.6, 180),
+        ('9bde0108-9234-5678-8909-225544226677', 'OVO', '4567890123', '4567890123456789', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja4.png', 4.7, 190),
+        ('acd10109-1234-5678-8910-337766338899', 'Gopay', '5678901234', '5678901234567890', 'https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/pekerja5.png', 4.9, 220);
 
         INSERT INTO KATEGORI_TR_MPAY (ID, NAMA) VALUES
         ('111e0110-1234-5678-8911-abcdefabcdef', 'TopUp MyPay'),
