@@ -2,36 +2,62 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { StatusCombobox } from "../elements/StatusCombobox";
-import { Clock, Pen, SearchIcon } from "lucide-react";
-import { statusPekerjaanCards } from "../const";
+import { SearchIcon } from "lucide-react";
 import { StatusPekerjaanProps } from "../interface";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export const StatusPekerjaan = () => {
+export const StatusPekerjaan = ({ userId }: { userId: string }) => {
   const [value, setValue] = useState("");
   const [search, setSearch] = useState("");
   const [filteredPekerjaan, setfilteredPekerjaan] = useState<
     StatusPekerjaanProps[]
   >([]);
 
+  const fetchAllPekerjaan = async () => {
+    const response = await fetch(`/api/statuspekerjaan?id=${userId}`);
+    if (response.ok) {
+      const responseData = await response.json();
+      const data: StatusPekerjaanProps[] = responseData.data;
+      setfilteredPekerjaan(data);
+    } else {
+      const error = await response.json();
+      console.log(error);
+    }
+  };
+
+  const fetchPekerjaanBySearchAndStatus = async (
+    search: string | null,
+    status: string | null
+  ) => {
+    const response = await fetch(
+      `/api/statuspekerjaan/filter?id=${userId}&namaKategori=${search}&status=${status}`
+    );
+    if (response.ok) {
+      const responseData = await response.json();
+      const data: StatusPekerjaanProps[] = responseData.data;
+      setfilteredPekerjaan(data);
+    } else {
+      const error = await response.json();
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const filterData = async () => {
       if (value === "" && search === "") {
-        setfilteredPekerjaan(statusPekerjaanCards);
+        fetchAllPekerjaan();
         return;
       }
-      const filteredData = statusPekerjaanCards.filter(
-        (card) =>
-          (value === "" || card.status === value) &&
-          (search === "" ||
-            card.subCategory.toLowerCase().includes(search.toLowerCase()))
-      );
-      setfilteredPekerjaan(filteredData);
+      fetchPekerjaanBySearchAndStatus(search, value);
     };
     filterData();
   }, [value, search]);
+
+  useEffect(() => {
+    fetchAllPekerjaan();
+  }, []);
+
   return (
     <section className="flex flex-col gap-12 z-10">
       <div className="mx-auto flex md:flex-row flex-col gap-3">
@@ -102,7 +128,10 @@ export const StatusPekerjaan = () => {
                       currency: "IDR",
                     })}
                   </h2>
-                  <Button variant={"secondary"} className="md:text-[20px] md:ml-auto max-h-[60px]">
+                  <Button
+                    variant={"secondary"}
+                    className="md:text-[20px] md:ml-auto max-h-[60px]"
+                  >
                     Update Status
                   </Button>
                 </div>
