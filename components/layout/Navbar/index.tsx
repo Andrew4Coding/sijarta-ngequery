@@ -14,6 +14,7 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import { useUserData } from '@/hooks/useUserData'
 import { usePathname, useRouter } from 'next/navigation'
+import { Separator } from '@/components/ui/separator'
 
 const pelangganMenus = [
   { href: '/', label: 'Home' },
@@ -36,22 +37,25 @@ export const Navbar = () => {
   const pathname = usePathname()
 
   const { userData, isAuthenticated, role } = useUserData();
-  
+
   const hideMenus: boolean = pathname === '/login' || pathname === '/register'
 
   const { toast } = useToast();
 
   async function logout() {
+    setIsOpen(false)
     const response = await fetch('/api/auth/logout', {
       method: 'POST'
     })
-    console.log(response)
     if (response.ok) {
       toast({
         title: "Success",
         description: "User logout successfully",
         variant: 'success'
       })
+
+      setIsOpen(false)
+
       
       setTimeout(() => {
         router.push('/login')
@@ -61,75 +65,74 @@ export const Navbar = () => {
   }
 
   return (
-    <nav className={`fixed top-0 w-full bg-white shadow-md px-10 lg:px-32 py-8 flex justify-between items-center z-50  ${hideMenus ? "hidden" : ""}`}>
-      <h1 className='font-extrabold text-3xl '>SIJARTA</h1>
-      <div className='hidden lg:flex gap-4'>
+    <nav className={`fixed top-0 w-full bg-white shadow-sm px-10 lg:px-32 py-8 flex justify-between items-center z-50`}>
+      <h1 className='font-extrabold text-4xl font-newake text-green-500'>SIJARTA</h1>
+      <div className='hidden lg:flex gap-12'>
         {isAuthenticated && (role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
-          <Link key={menu.href} href={menu.href}>{menu.label}</Link>
+          <Link key={menu.href} href={menu.href} className='hover:font-extrabold duration-300'>{menu.label}</Link>
         ))}
       </div>
-      <div className='hidden lg:flex'>
-        {isAuthenticated ?
-          <div className='flex gap-2 items-center'>
-            <div className='flex items-center gap-2 text-sm'>
-              <div className='text-right'>
-                <p className='font-bold'>Hello, {userData.nama}</p>
-              </div>
-              <Avatar
-                className='cursor-pointer'
-                onClick={() => {
-                  router.push('/profile')
-                }}
-              >
-                <AvatarImage src={userData.linkfoto ?? `https://github.com/shadcn.png`} />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </div>
-            <Button
-              onClick={logout}
-              className='gap-2' variant={'destructive'}>
-              <LogOut />
-              Logout
-            </Button>
-          </div>
-          :
-          <Button
-            onClick={() => router.push('/login')}
-          >Login</Button>
-        }
-      </div>
-      <Popover
-        onOpenChange={(open) => setIsOpen(open)}
-      >
-        <PopoverTrigger className='flex lg:hidden'>
-          <ChevronDown
-            className={`w-6 h-6 ${isOpen ? 'rotate-180' : ''} duration-200 ease-in-out`}
-          />
-        </PopoverTrigger>
-        <PopoverContent className='bg-white'>
-          <ul className='space-y-2 '>
-            {(role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
-              <li key={menu.href}>
-                <Link href={menu.href}>{menu.label}</Link>
-              </li>
-            ))}
-            <li>
-              <Link href='/profile'>Profile</Link>
-            </li>
-            <li>
-              <Link href='/login'>
-                <Button className='w-full'
-                  variant={'destructive'}
-                  onClick={logout}
+      <div className='flex gap-4'>
+        <div className='hidden lg:flex'>
+          {isAuthenticated ?
+            <div className='flex gap-2 items-center'>
+              <div className='flex items-center gap-2 text-sm'>
+                <div className='text-right'>
+                  <p className='font-bold text-lg'>Hello, {userData.nama}</p>
+                  <p className='font-medium text-base'>Rp {userData.saldoMpay}</p>
+                </div>
+                <Avatar
+                  className='cursor-pointer'
+                  onClick={() => {
+                    router.push('/profile')
+                  }}
                 >
-                  <LogOut className='w-4' />
+                  <AvatarImage src={userData.linkfoto ?? `https://github.com/shadcn.png`} />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </div>
+            </div>
+            :
+            <Button
+              className={`${hideMenus ? 'hidden' : ''}`}
+              onClick={() => router.push('/login')}
+            >Login</Button>
+          }
+        </div>
+        <Popover
+          onOpenChange={(open) => setIsOpen(open)}
+        >
+          <PopoverTrigger className=''>
+            <ChevronDown
+              className={`w-6 h-6 ${isOpen ? 'rotate-180' : ''} duration-200 ease-in-out ${hideMenus ? 'hidden' : ''}`}
+            />
+          </PopoverTrigger>
+          <PopoverContent className='bg-white w-fit rounded-xl'>
+            <ul className='space-y-2 '>
+              <div className='space-y-2 lg:hidden'>
+                {(role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
+                  <li key={menu.href}>
+                    <Link href={menu.href}>{menu.label}</Link>
+                  </li>
+                ))}
+              </div>
+              <li>
+                <Link href='/profile'>Profile</Link>
+              </li>
+              <Separator />
+              <li>
+                <a
+                  href='/'
+                  onClick={logout}
+                  className='text-red-500 cursor-pointer duration-300'
+                >
                   Logout
-                </Button>
-              </Link>
-            </li>
-          </ul>
-        </PopoverContent>
-      </Popover>
+                </a>
+              </li>
+            </ul>
+          </PopoverContent>
+        </Popover>
+      </div>
     </nav>
   )
 }

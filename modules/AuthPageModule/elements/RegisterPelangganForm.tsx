@@ -87,9 +87,9 @@ export const RegisterPelangganForm = () => {
     };
 
     return (
-        <div className="w-full min-h-[100vh] flex items-center justify-center bg-background py-40">
+        <div className="w-full min-h-[100vh] flex items-center justify-center bg-background py-40 px-5">
             <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center w-full max-w-2xl">
-                <h1 className="font-bold text-2xl">Daftar Sebagai Pelanggan</h1>
+                <h1 className="font-bold text-2xl text-center">Daftar Sebagai Pelanggan</h1>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
                         <FormField
@@ -177,7 +177,7 @@ export const RegisterPelangganForm = () => {
                             control={form.control}
                             name="alamat"
                             render={({ field }) => (
-                                <FormItem className="col-span-2">
+                                <FormItem className="col-span-1 md:col-span-2">
                                     <FormLabel>Alamat</FormLabel>
                                     <FormControl>
                                         <Input
@@ -229,7 +229,7 @@ export const RegisterPelangganForm = () => {
                         <Button
                             variant={'secondary'}
                             type="submit"
-                            className="col-span-1 sm:col-span-2"
+                            className="col-span-1 md:col-span-2"
                         >
                             Daftar
                         </Button>

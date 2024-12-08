@@ -169,21 +169,51 @@ export const VoucherSection = ({
             open={Boolean(transactionStatus)}
             onOpenChange={() => setTransactionStatus(null)}
           >
-            <DialogContent className="w-[682px] max-w-none overflow-y-auto max-h-[500px]">
+            <DialogContent className="max-w-fit p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-10">
               <DialogHeader>
                 <DialogTitle
-                  className={`text-center text-${
-                    transactionStatus === "sukses" ? "green" : "red"
-                  }-500 text-2xl font-bold`}
+                  className={`text-center text-2xl font-bold ${
+                    transactionStatus === "sukses"
+                      ? "text-[#1ab35f]"
+                      : "text-red-500"
+                  }`}
                 >
                   {transactionStatus === "sukses" ? "SUKSES" : "GAGAL"}
                 </DialogTitle>
               </DialogHeader>
-              <div className="text-center text-black text-xl font-medium">
+              <div className="self-stretch text-center text-black text-xl font-medium">
                 {transactionStatus === "sukses"
                   ? "Selamat! Anda berhasil membeli voucher!"
                   : "Saldo tidak cukup. Silakan top-up saldo Anda."}
               </div>
+              {transactionStatus === "sukses" && (
+                <div className="self-stretch flex gap-3">
+                  <div className="w-[200px] flex flex-col gap-2">
+                    <span className="text-[#1ab35f] text-base font-medium text-left">
+                      Kode
+                    </span>
+                    <div className="self-stretch px-4 py-5 bg-[#e8f7ef] rounded-xl text-black text-xl font-medium text-left">
+                      {selectedVoucher?.kode}
+                    </div>
+                  </div>
+                  <div className="w-[200px] flex flex-col gap-2">
+                    <span className="text-[#1ab35f] text-base font-medium text-left">
+                      Jumlah Hari Berlaku
+                    </span>
+                    <div className="self-stretch px-4 py-5 bg-[#e8f7ef] rounded-xl text-black text-xl font-medium text-left">
+                      {selectedVoucher?.jmlhariberlaku} Hari
+                    </div>
+                  </div>
+                  <div className="w-[200px] flex flex-col gap-2">
+                    <span className="text-[#1ab35f] text-base font-medium text-left">
+                      Potongan
+                    </span>
+                    <div className="self-stretch px-4 py-5 bg-[#e8f7ef] rounded-xl text-black text-xl font-medium text-left">
+                      Rp {selectedVoucher?.potongan}
+                    </div>
+                  </div>
+                </div>
+              )}
             </DialogContent>
           </Dialog>
         )}

@@ -114,8 +114,8 @@ export async function createTable() {
         CREATE TABLE TR_PEMESANAN_JASA (
             id UUID PRIMARY KEY NOT NULL UNIQUE,
             TglPemesanan DATE NOT NULL,
-            TglPekerjaan DATE NOT NULL,
-            WaktuPekerjaan TIMESTAMP NOT NULL,
+            TglPekerjaan DATE,
+            WaktuPekerjaan TIMESTAMP,
             TotalBiaya DECIMAL NOT NULL CHECK (TotalBiaya >= 0),
             idPelanggan UUID,
             idPekerja UUID,
@@ -395,10 +395,10 @@ export async function seedDatabase() {
         INSERT INTO STATUS_PESANAN (id, Nama) VALUES
         ('a1b2c3d4-e5f6-1234-5678-9abcdef01234', 'Menunggu Pembayaran'),
         ('b2c3d4e5-f6a1-2345-6789-abcdef013456', 'Mencari Pekerja Terdekat'),
-        ('c3d4e5f6-a1b2-3456-7890-bcdef0145678', 'Pekerja Dalam Perjalanan'),
-        ('d4e5f6a1-b2c3-4567-8901-cdef01567890', 'Pekerjaan Sedang Berlangsung'),
-        ('e5f6a1b2-c3d4-5678-9012-def016789012', 'Menunggu Konfirmasi Selesai'),
-        ('f6a1b2c3-d4e5-6789-0123-ef0178901234', 'Pembayaran Selesai'),
+        ('c3d4e5f6-a1b2-3456-7890-bcdef0145678', 'Menunggu Pekerja Berangkat'),
+        ('f6a1b2c3-d4e5-6789-0123-ef0178901234', 'Pekerja Tiba di Lokasi'),
+        ('d4e5f6a1-b2c3-4567-8901-cdef01567890', 'Pelayanan Jasa Sedang Dilakukan'),
+        ('e5f6a1b2-c3d4-5678-9012-def016789012', 'Pesanan Selesai'),
         ('a1b2c3d4-e5f6-7890-1234-f01890123456', 'Pesanan Dibatalkan');
 
         INSERT INTO TR_PEMESANAN_JASA (id, TglPemesanan, TglPekerjaan, WaktuPekerjaan, TotalBiaya, idPelanggan, idPekerja, idKategoriJasa, Sesi, idDiskon, idMetodeBayar) VALUES
@@ -453,17 +453,7 @@ export async function seedDatabase() {
         ('0e176705-2b66-4d5d-8fb6-50f636ed4ddf', 'd4e5f6a1-b2c3-4567-8901-cdef01567890', '2024-10-11 11:45:00'),
         ('0d1af6a3-124e-422b-9c51-25ec5c8810ad', 'e5f6a1b2-c3d4-5678-9012-def016789012', '2024-10-11 11:50:00'),
         ('4a5c7157-3252-445b-a5d7-043cb4f3b009', 'f6a1b2c3-d4e5-6789-0123-ef0178901234', '2024-10-11 11:55:00'),
-        ('a48af308-27bc-403d-88eb-ffa22158218d', 'a1b2c3d4-e5f6-7890-1234-f01890123456', '2024-10-11 12:00:00'),
-        ('1f3a2b30-1234-5678-8901-abcdefabcdef', 'f6a1b2c3-d4e5-6789-0123-ef0178901234', '2024-10-11 12:03:00'),
-        ('2a4b2b31-2234-5678-8902-bcdefbcdefbc', 'e5f6a1b2-c3d4-5678-9012-def016789012', '2024-10-11 12:05:00'),
-        ('3c5d2b32-3234-5678-8903-cdefccdefcde', 'd4e5f6a1-b2c3-4567-8901-cdef01567890', '2024-10-11 12:10:00'),
-        ('4d6e2b33-4234-5678-8904-ddefdddefdde', 'c3d4e5f6-a1b2-3456-7890-bcdef0145678', '2024-10-11 12:15:00'),
-        ('5e7f2b34-5234-5678-8905-eefeeedefeef', 'b2c3d4e5-f6a1-2345-6789-abcdef013456', '2024-10-11 12:20:00'),
-        ('37bcc07c-6b31-4586-a85f-fdf68454618b', 'a1b2c3d4-e5f6-7890-1234-f01890123456', '2024-10-11 12:25:00'),
-        ('5525a736-21c5-4fac-a240-d63b9fde1277', 'f6a1b2c3-d4e5-6789-0123-ef0178901234', '2024-10-11 12:30:00'),
-        ('fef1d530-473e-492b-8eab-dbe0e9689159', 'e5f6a1b2-c3d4-5678-9012-def016789012', '2024-10-11 12:35:00'),
-        ('4295991e-4f6c-4385-8b41-c77938db0440', 'd4e5f6a1-b2c3-4567-8901-cdef01567890', '2024-10-11 12:40:00'),
-        ('595c63df-0649-4d69-8d17-afcad49e73f4', 'c3d4e5f6-a1b2-3456-7890-bcdef0145678', '2024-10-11 12:45:00');
+        ('a48af308-27bc-403d-88eb-ffa22158218d', 'a1b2c3d4-e5f6-7890-1234-f01890123456', '2024-10-11 12:00:00');
 
         INSERT INTO TESTIMONI (IdTrPemesanan, Tgl, Teks, Rating) VALUES
         ('1f3a2b30-1234-5678-8901-abcdefabcdef', '2024-10-06', 'Layanan sangat memuaskan! Pekerja sangat profesional.', 5),
@@ -494,7 +484,13 @@ export async function seedTrigger() {
         CREATE OR REPLACE FUNCTION check_phone_number_exists() 
         RETURNS TRIGGER AS $$
         BEGIN
-            IF EXISTS (SELECT 1 FROM USERTABLE WHERE nohp = NEW.nohp) THEN
+            -- Check if the phone number exists in another record
+            IF EXISTS (
+                SELECT 1 
+                FROM USERTABLE 
+                WHERE nohp = NEW.nohp 
+                AND id != NEW.id
+            ) THEN
                 RAISE EXCEPTION 'Phone number already registered';
             END IF;
             RETURN NEW;
@@ -502,14 +498,14 @@ export async function seedTrigger() {
         $$ LANGUAGE plpgsql;
 
         CREATE TRIGGER trigger_check_phone_number
-        BEFORE INSERT ON USERTABLE
+        BEFORE INSERT OR UPDATE ON USERTABLE
         FOR EACH ROW EXECUTE FUNCTION check_phone_number_exists();
 
         -- Trigger to check if npwp already exists
         CREATE OR REPLACE FUNCTION check_npwp_exists() 
         RETURNS TRIGGER AS $$
         BEGIN
-            IF EXISTS (SELECT 1 FROM PEKERJA WHERE npwp = NEW.npwp) THEN
+            IF EXISTS (SELECT 1 FROM PEKERJA WHERE npwp = NEW.npwp AND id != NEW.id) THEN
                 RAISE EXCEPTION 'NPWP already registered';
             END IF;
             RETURN NEW;
@@ -517,7 +513,7 @@ export async function seedTrigger() {
         $$ LANGUAGE plpgsql;
 
         CREATE TRIGGER trigger_check_npwp
-        BEFORE INSERT ON PEKERJA
+        BEFORE INSERT OR UPDATE ON PEKERJA
         FOR EACH ROW EXECUTE FUNCTION check_npwp_exists();
 
         -- Trigger to check if bank account combination already exists
@@ -528,6 +524,7 @@ export async function seedTrigger() {
                 SELECT 1 FROM PEKERJA
                 WHERE namabank = NEW.namabank
                 AND nomorrekening = NEW.nomorrekening
+                AND id != NEW.id
             ) THEN
                 RAISE EXCEPTION 'Bank name and account number combination already registered for another worker';
             END IF;
@@ -536,7 +533,7 @@ export async function seedTrigger() {
         $$ LANGUAGE plpgsql;
 
         CREATE TRIGGER trigger_check_bank_account
-        BEFORE INSERT ON PEKERJA
+        BEFORE INSERT OR UPDATE ON PEKERJA
         FOR EACH ROW EXECUTE FUNCTION check_bank_account_combination();
     `);
 

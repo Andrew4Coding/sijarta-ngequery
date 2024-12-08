@@ -52,11 +52,12 @@ export async function POST(req: Request) {
   }
   
     // Kurangi saldo pengguna
-    user.saldompay = Number(user.saldompay) - voucher.harga;
-    await new User().update("id", userId, {
-      saldompay: user.saldompay
-    });    
-
+    if (paymentMethodName === "MPay"){
+      user.saldompay = Number(user.saldompay) - voucher.harga;
+      await new User().update("id", userId, {
+        saldompay: user.saldompay
+      });    
+    }
     // Simpan data pembelian voucher ke TR_PEMBELIAN_VOUCHER
 
     await new TrPembelianVoucher().create({

@@ -12,7 +12,7 @@ export const PekerjaanModule = async () => {
 
   const decoded = decode(token!);
   return (
-    <main className="min-h-screen flex flex-col justify-center px-6 md:px-20 py-32 z-10">
+    <main className="min-h-screen flex flex-col px-6 md:px-20 py-32 z-10">
       <div className="absolute top-0 w-full left-0 h-full z-[1]">
         <Image src="/images/PekerjaanBG.png" alt="Pekerjaan" fill className="" />
       </div>

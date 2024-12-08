@@ -50,11 +50,16 @@ export async function GET(req: Request) {
     "Mencari Pekerja Terdekat"
   );
 
-  const dibatalkanStatus = await new StatusPesanan().findBy("nama", "Pesanan Dibatalkan");
+  const dibatalkanStatus = await new StatusPesanan().findBy(
+    "nama",
+    "Pesanan Dibatalkan"
+  );
 
   const availableJobs = await Promise.all(
     (
-      await new TrPemesananJasa().findMany("idpekerja", null)
+      await new TrPemesananJasa().customQuery(
+        `SELECT * FROM TR_PEMESANAN_JASA WHERE idpekerja IS NULL`
+      )
     ).map(async (tr) => {
       const statusPesanan = await new TrPemesananStatus().findMany(
         "idtrpemesanan",
@@ -65,18 +70,20 @@ export async function GET(req: Request) {
         return;
       }
 
+      const subKategori = await new SubkategoriJasa().findBy(
+        "id",
+        tr.idkategorijasa
+      );
+
+      if (!subKategoriPekerja.find((s) => s.subKategori.includes(subKategori?.namasubkategori))) {
+        return;
+      }
+
       if (
         (statusPesanan[1].idstatus === status?.id ||
           statusPesanan[0].idstatus === status?.id) &&
-        (statusPesanan.length === 2 || statusPesanan.length === 1) &&
-        subKategoriPekerja.find((sub) =>
-          sub.subKategori.includes(tr.idkategorijasa)
-        )
+        (statusPesanan.length === 2 || statusPesanan.length === 1)
       ) {
-        const subKategori = await new SubkategoriJasa().findBy(
-          "id",
-          tr.idkategorijasa
-        );
 
         const pelanggan = await new User().findBy("id", tr.idpelanggan);
         return {
@@ -96,7 +103,7 @@ export async function GET(req: Request) {
       message: "Success",
       data: {
         subKategoriPekerja,
-        availableJobs,
+        availableJobs: availableJobs.filter((job) => job),
       },
     }),
     {
