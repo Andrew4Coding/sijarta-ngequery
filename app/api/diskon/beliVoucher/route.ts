@@ -6,7 +6,7 @@ import { v4 } from "uuid";
 export async function POST(req: Request) {
   try {
     const body = await req.json(); 
-    const { userId, voucherCode, paymentMethodId, jmlhariberlaku } = body;
+    const { userId, voucherCode, paymentMethodId, paymentMethodName } = body;
 
     // Validasi User
     const user = await new User().findBy("id", userId);
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     }
 
     // Periksa saldo cukup
-    if (Number(user.saldompay!) < voucher.harga) {
+    if (paymentMethodName === "MPay" && Number(user.saldompay!) < voucher.harga) {
       return new Response(
         JSON.stringify({ success: false, message: "Saldo tidak cukup" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
@@ -52,11 +52,12 @@ export async function POST(req: Request) {
   }
   
     // Kurangi saldo pengguna
-    user.saldompay = Number(user.saldompay) - voucher.harga;
-    await new User().update("id", userId, {
-      saldompay: user.saldompay
-    });    
-
+    if (paymentMethodName === "MPay"){
+      user.saldompay = Number(user.saldompay) - voucher.harga;
+      await new User().update("id", userId, {
+        saldompay: user.saldompay
+      });    
+    }
     // Simpan data pembelian voucher ke TR_PEMBELIAN_VOUCHER
 
     await new TrPembelianVoucher().create({
