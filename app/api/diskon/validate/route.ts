@@ -1,72 +1,71 @@
-import { NextResponse } from "next/server";
-import db from "@/database/db"; // Path diupdate sesuai struktur proyek
+import pool from "@/database/db";
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const code = searchParams.get("code");
-
-  if (!code) {
-    return new Response(
-      JSON.stringify({ message: "Kode diskon tidak ditemukan" }),
-      {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  }
-
   try {
-    // Query ke database
-    console.log("Validating discount code:", code);
-    const { rows } = await db.query(
-      `
-      SELECT Kode, Potongan, MinTrPemesanan
-      FROM DISKON
-      WHERE Kode = $1
-      `,
-      [code]
-    );
+    const url = new URL(req.url);
+    const discountCode = url.searchParams.get("code");
 
-    if (rows.length === 0) {
-      console.log("Discount code not found in database:", code);
+    // Validasi jika kode diskon tidak diberikan
+    if (!discountCode) {
       return new Response(
-        JSON.stringify({ message: "Kode diskon tidak valid" }),
-        {
-          status: 404,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        JSON.stringify({ message: "Kode diskon tidak diberikan" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    const diskon = rows[0];
+    // Query untuk validasi kode diskon dan tanggal akhir berlaku
+    const query = `
+      SELECT 
+        d.Kode, 
+        CAST(d.Potongan AS FLOAT) AS Potongan, 
+        CAST(d.MinTrPemesanan AS FLOAT) AS MinTrPemesanan, 
+        p.TglAkhirBerlaku
+      FROM DISKON d
+      JOIN PROMO p ON d.Kode = p.Kode
+      WHERE d.Kode = $1;
+    `;
+
+    // Jalankan query dengan parameter kode diskon
+    const result = await pool.query(query, [discountCode]);
+
+    // Jika hasil query kosong, kode diskon tidak ditemukan
+    if (result.rows.length === 0) {
+      return new Response(
+        JSON.stringify({ message: "Kode diskon tidak ditemukan" }),
+        { status: 404, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const { potongan, mintrpemesanan, tglakhirberlaku } = result.rows[0];
+
+    // Validasi jika tanggal akhir berlaku sudah kedaluwarsa
+    const today = new Date();
+    const expiryDate = new Date(tglakhirberlaku);
+    if (expiryDate < today) {
+      return new Response(
+        JSON.stringify({ message: "Kode diskon tidak valid atau sudah kedaluwarsa" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Kembalikan respons sukses jika kode diskon valid
     return new Response(
       JSON.stringify({
-        message: "Success",
+        message: "Kode diskon valid",
         data: {
-          kode: diskon.kode,
-          potongan: diskon.potongan,
-          minTrPemesanan: diskon.mintrpemesanan,
+          Potongan: potongan,
+          MinTrPemesanan: mintrpemesanan,
+          TglAkhirBerlaku: tglakhirberlaku, // Opsional, untuk debugging atau kebutuhan tambahan
         },
       }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
+    // Tangkap error dan log untuk debugging
     console.error("Database error:", error);
     return new Response(
-      JSON.stringify({ message: "Terjadi kesalahan pada server" }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      JSON.stringify({ message: "Internal Server Error" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }

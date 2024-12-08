@@ -352,16 +352,16 @@ export async function seedDatabase() {
         ('DISKON010', 75, 300, 1300.00);
 
         INSERT INTO PROMO (Kode, TglAkhirBerlaku) VALUES
-        ('DISKON011', '2024-11-30'),
-        ('DISKON012', '2024-10-31'),
-        ('DISKON013', '2024-09-30'),
-        ('DISKON014', '2024-08-31'),
-        ('DISKON015', '2024-07-31'),
-        ('DISKON016', '2024-06-30'),
-        ('DISKON017', '2024-05-31'),
-        ('DISKON018', '2024-04-30'),
-        ('DISKON019', '2024-03-31'),
-        ('DISKON020', '2024-12-31');
+        ('DISKON011', '2024-12-08'),
+        ('DISKON012', '2024-12-09'),
+        ('DISKON013', '2025-09-30'),
+        ('DISKON014', '2025-08-31'),
+        ('DISKON015', '2025-07-31'),
+        ('DISKON016', '2025-06-30'),
+        ('DISKON017', '2025-05-31'),
+        ('DISKON018', '2025-04-30'),
+        ('DISKON019', '2025-03-31'),
+        ('DISKON020', '2025-12-31');
 
         -- Anindya
         INSERT INTO METODE_BAYAR (id, Nama) VALUES
@@ -395,10 +395,10 @@ export async function seedDatabase() {
         INSERT INTO STATUS_PESANAN (id, Nama) VALUES
         ('a1b2c3d4-e5f6-1234-5678-9abcdef01234', 'Menunggu Pembayaran'),
         ('b2c3d4e5-f6a1-2345-6789-abcdef013456', 'Mencari Pekerja Terdekat'),
-        ('c3d4e5f6-a1b2-3456-7890-bcdef0145678', 'Menunggu Pekerja Berangkat'),
-        ('bzqdssa2-a112-3436-7890-bcded2145678', 'Pekerja Tiba di Lokasi'),
-        ('d4e5f6a1-b2c3-4567-8901-cdef01567890', 'Pelayanan Jasa Sedang Dilakukan'),
-        ('e5f6a1b2-c3d4-5678-9012-def016789012', 'Pesanan Selesai'),
+        ('c3d4e5f6-a1b2-3456-7890-bcdef0145678', 'Pekerja Dalam Perjalanan'),
+        ('d4e5f6a1-b2c3-4567-8901-cdef01567890', 'Pekerjaan Sedang Berlangsung'),
+        ('e5f6a1b2-c3d4-5678-9012-def016789012', 'Menunggu Konfirmasi Selesai'),
+        ('f6a1b2c3-d4e5-6789-0123-ef0178901234', 'Pembayaran Selesai'),
         ('a1b2c3d4-e5f6-7890-1234-f01890123456', 'Pesanan Dibatalkan');
 
         INSERT INTO TR_PEMESANAN_JASA (id, TglPemesanan, TglPekerjaan, WaktuPekerjaan, TotalBiaya, idPelanggan, idPekerja, idKategoriJasa, Sesi, idDiskon, idMetodeBayar) VALUES

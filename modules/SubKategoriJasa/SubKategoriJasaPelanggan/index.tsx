@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -22,6 +22,7 @@ import {
 import Image from "next/image";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { dateConverter } from "../../EditProfileModule";
 
 interface Worker {
   id: string;
@@ -48,6 +49,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
     namasubkategori: string;
     deskripsi: string;
     namakategori: string;
+    subkategoriid?: string;
   } | null>(null);
   const [sessions, setSessions] = useState<{ sesi: number; harga: number }[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<{ id: string; nama: string }[]>([]);
@@ -67,54 +69,40 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
 
   useEffect(() => {
     const fetchSubcategoryData = async () => {
-        try {
-            const formattedSubCategory = subCategory.replace(/-/g, " ");
-            const response = await fetch(`/api/subkategori?name=${encodeURIComponent(formattedSubCategory)}`);
-            if (!response.ok) throw new Error("Failed to fetch subcategory data");
+      try {
+        const formattedSubCategory = subCategory.replace(/-/g, " ");
+        const response = await fetch(`/api/subkategori?name=${encodeURIComponent(formattedSubCategory)}`);
+        if (!response.ok) throw new Error("Failed to fetch subcategory data");
 
-            const result = await response.json();
-            setSubcategoryInfo(result.data.subcategory);
-            setSessions(result.data.sessions);
+        const result = await response.json();
+        setSubcategoryInfo(result.data.subcategory);
+        setSessions(result.data.sessions);
 
-            // Gunakan ID subkategori untuk pekerja
-            if (result.data.subcategory.subkategoriid) {
-                fetchWorkers(result.data.subcategory.subkategoriid);
-            }
-        } catch (error) {
-            console.error("Error fetching subcategory data:", error);
-        } finally {
-            setLoading(false);
+        if (result.data.subcategory.subkategoriid) {
+          await fetchWorkers(result.data.subcategory.subkategoriid);
         }
+      } catch (error) {
+        console.error("Error fetching subcategory data:", JSON.stringify(error, null, 2));
+        toast.error("Gagal memuat subkategori.");
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchSubcategoryData();
   }, [subCategory]);
 
   const fetchWorkers = async (subkategoriId: string) => {
-      try {
-          const workersResponse = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
-          if (!workersResponse.ok) throw new Error("Failed to fetch workers");
-          const workersResult = await workersResponse.json();
-          setWorkers(workersResult.data);
-      } catch (error) {
-          console.error("Error fetching workers:", error);
-          toast.error("Gagal memuat daftar pekerja.");
-      }
-  };
-
-  async function fetchWorkersAndTestimonials(subkategoriId: string) {
     try {
-        const response = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
-        if (!response.ok) {
-            throw new Error(`Error response from /api/pekerja: ${await response.text()}`);
-        }
-        const data = await response.json();
-        return data;
+      const workersResponse = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
+      if (!workersResponse.ok) throw new Error("Failed to fetch workers");
+      const workersResult = await workersResponse.json();
+      setWorkers(workersResult.data);
     } catch (error) {
-        console.error("Error fetching pekerja data:", error instanceof Error ? error.message : error);
-        throw error;
+      console.error("Error fetching workers:", error);
+      toast.error("Gagal memuat daftar pekerja.");
     }
-  }  
+  };
 
   useEffect(() => {
     const fetchPaymentMethods = async () => {
@@ -149,23 +137,34 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
         const response = await fetch(`/api/diskon/validate?code=${encodeURIComponent(discountCode)}`);
         const result = await response.json();
   
-        if (!response.ok) throw new Error(result.message || "Kode diskon tidak valid");
+        // Jika status bukan 200, tampilkan error dari server
+        if (!response.ok) {
+          throw new Error(result.message || "Kode diskon tidak valid.");
+        }
   
-        const { potongan, minTrPemesanan } = result.data;
+        const { Potongan, MinTrPemesanan } = result.data;
   
-        if (selectedSession.harga < minTrPemesanan) {
-          toast.error(`Minimal transaksi Rp ${minTrPemesanan.toLocaleString("id-ID")} untuk diskon.`);
-          setNewOrder((prev) => ({ ...prev, total: selectedSession.harga }));
+        if (!Potongan || !MinTrPemesanan) {
+          toast.error("Data diskon tidak lengkap. Hubungi administrator.");
           return;
         }
   
-        const discountValue = selectedSession.harga * (potongan / 100);
+        if (selectedSession.harga < MinTrPemesanan) {
+          toast.error(`Total harga harus minimal Rp ${MinTrPemesanan.toLocaleString("id-ID")}`);
+          return;
+        }
+  
+        const discountValue = selectedSession.harga * (Potongan / 100);
         const totalPrice = Math.max(0, selectedSession.harga - discountValue);
   
-        setNewOrder((prev) => ({ ...prev, total: totalPrice }));
-        toast.success("Kode diskon berhasil diterapkan!");
+        setNewOrder((prev) => ({
+          ...prev,
+          total: totalPrice,
+        }));
+  
+        toast.success(`Kode diskon berhasil diterapkan! Diskon: ${Potongan}%`);
       } catch (error: any) {
-        console.error("Error validating discount code:", error);
+        console.error("Error validating discount code:", error.message);
         toast.error(error.message || "Kode diskon tidak valid.");
         setNewOrder((prev) => ({ ...prev, total: selectedSession.harga }));
       }
@@ -177,7 +176,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
     if (event.key === "Enter") {
       validateDiscountCode(newOrder.discountCode);
     }
-  };  
+  };
 
   const handleSubmitOrder = () => {
     if (!selectedSession) {
@@ -194,28 +193,12 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
     router.push("/pemesanan-jasa");
   };
 
-  useEffect(() => {
-    const fetchWorkers = async () => {
-      try {
-        const response = await fetch("/api/pekerja");
-        if (!response.ok) throw new Error("Failed to fetch workers");
-        const data = await response.json();
-        setWorkers(data.data);
-      } catch (error) {
-        console.error("Error fetching workers:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWorkers();
-  }, []);
-
   if (loading) return <p>Loading...</p>;
   if (!subcategoryInfo) return <p>Subcategory not found</p>;
 
   return (
     <main className="bg-[#f8f8f8] min-h-screen pt-[132px] pb-[32px] px-6">
+      {/* Subcategory Information */}
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mb-10">
         <div className="flex">
           <div className="flex-1 h-[46px] bg-[#1ab35f] text-center text-white text-xl font-bold rounded-tl-[20px] rounded-bl-[20px] flex items-center justify-center">
@@ -227,10 +210,15 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
         </div>
         <p className="text-black text-base font-medium mt-5">{subcategoryInfo.deskripsi}</p>
       </div>
+
+      {/* Pilihan Sesi Layanan */}
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7">
         <h2 className="text-[#1ab35f] text-[28px] font-bold">Pilihan Sesi Layanan</h2>
         {sessions.map((session, index) => (
-          <div key={index} className="flex justify-between items-center bg-[#e8f7ef] rounded-xl p-5 mb-4">
+          <div
+            key={index}
+            className="flex justify-between items-center bg-[#e8f7ef] rounded-xl p-5 mb-4"
+          >
             <div>
               <h3 className="text-black text-xl font-bold">Sesi {session.sesi}</h3>
               <p className="text-black text-xl font-medium">
@@ -246,18 +234,22 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                   Pesan
                 </Button>
               </DialogTrigger>
-              <DialogContent className="w-[682px] h-[720px] p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col justify-start items-start gap-7">
+              <DialogContent className="w-[682px] h-auto p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-7">
                 <DialogHeader className="w-full flex flex-col items-center">
                   <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">
                     Pesan Jasa
                   </DialogTitle>
                 </DialogHeader>
+
+                {/* Tanggal Pemesanan */}
                 <div className="w-full flex flex-col gap-3">
                   <label className="text-black text-xl font-medium">Tanggal Pemesanan:</label>
                   <div className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] flex items-center">
                     <span className="text-[#b2b2b2] text-xl font-medium">{newOrder.date}</span>
                   </div>
                 </div>
+
+                {/* Kode Diskon */}
                 <div className="w-full flex flex-col gap-3">
                   <label className="text-black text-xl font-medium">Diskon:</label>
                   <input
@@ -265,18 +257,25 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                     placeholder="Kode Diskon"
                     value={newOrder.discountCode}
                     onChange={(e) => setNewOrder((prev) => ({ ...prev, discountCode: e.target.value }))}
-                    onKeyDown={handleDiscountChangeOnEnter}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") validateDiscountCode(newOrder.discountCode);
+                    }}
                     className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] bg-transparent text-black text-xl font-medium focus:outline-none focus:ring-2 focus:ring-[#d9d9d9] placeholder:text-[#b2b2b2]"
                   />
                 </div>
+
+                {/* Total Pembayaran */}
                 <div className="w-full flex flex-col gap-3">
                   <label className="text-black text-xl font-medium">Total Pembayaran:</label>
                   <div className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] flex items-center">
-                    <span className="text-[#b2b2b2] text-xl font-medium">
-                      Rp {newOrder.total.toLocaleString("id-ID")}
-                    </span>
+                  <span className="text-[#b2b2b2] text-xl font-medium">
+                    Rp {(newOrder.total || 0).toLocaleString("id-ID")}
+                  </span>
+
                   </div>
                 </div>
+
+                {/* Metode Pembayaran */}
                 <div className="w-full flex flex-col gap-3">
                   <label className="text-black text-xl font-medium">Metode Pembayaran:</label>
                   <Select onValueChange={(value) => setNewOrder({ ...newOrder, paymentMethod: value })}>
@@ -295,6 +294,8 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                     </SelectContent>
                   </Select>
                 </div>
+
+                {/* Button Pesan */}
                 <Button
                   className="w-full px-5 py-3 bg-[#1ab35f] text-white text-2xl rounded-xl"
                   onClick={handleSubmitOrder}
@@ -303,13 +304,14 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                 </Button>
               </DialogContent>
             </Dialog>
+
           </div>
         ))}
       </div>
-      
+
       {/* Workers Section */}
-      <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7">
-        <h2 className="text-[#1ab35f] text-[28px] font-bold">Pekerja</h2>
+      <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mt-8">
+        <h2 className="text-[#1ab35f] text-[28px] font-bold mb-6">Pekerja</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           {workers.map((worker) => (
             <Dialog key={worker.id}>
@@ -317,7 +319,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                 <div className="p-4 bg-[#e8f7ef] rounded-xl text-center hover:bg-[#d7f0e3] transition cursor-pointer border border-[#d9d9d9]">
                   <div className="w-[84px] h-[84px] bg-white rounded-xl border border-[#d9d9d9] mb-3 mx-auto overflow-hidden">
                     <Image
-                      src={worker.linkfoto}
+                      src={worker.linkfoto || "/default-profile.png"}
                       alt={`Foto ${worker.nama}`}
                       width={84}
                       height={84}
@@ -355,7 +357,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                       <p>{worker.rating} / 5</p>
                       <p>{worker.jumlahpesananaselesai}</p>
                       <p>{worker.nohp}</p>
-                      <p>{worker.tgllahir}</p>
+                      <p>{dateConverter(new Date(worker.tgllahir))}</p>
                       <p>{worker.alamat}</p>
                     </div>
                   </div>
@@ -369,25 +371,6 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
             </Dialog>
           ))}
         </div>
-      </div>
-
-
-      {/* Testimonials Section */}
-      <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mt-8">
-        <h2 className="text-[#1ab35f] text-[28px] font-bold">Testimoni</h2>
-        {testimonials.map((testimonial, index) => (
-          <div key={index} className="bg-[#e8f7ef] rounded-xl p-5 mb-4">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-black text-xl font-bold">{testimonial.customerName}</p>
-              <div className="flex gap-3">
-                <div className="px-4 py-2 bg-white rounded-full border border-[#d9d9d9]">{testimonial.workerName}</div>
-                <div className="px-4 py-2 bg-white rounded-full border border-[#d9d9d9]">{testimonial.rating}/5</div>
-              </div>
-            </div>
-            <p className="text-black text-base font-medium">{testimonial.review}</p>
-            <p className="text-[#1ab35f] text-sm">{testimonial.date}</p>
-          </div>
-        ))}
       </div>
     </main>
   );

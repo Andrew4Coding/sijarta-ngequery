@@ -4,8 +4,6 @@ export async function GET(req: Request) {
     const url = new URL(req.url);
     const subCategoryName = url.searchParams.get("name");
 
-    console.log("subCategoryName:", subCategoryName);
-
     if (!subCategoryName) {
         return new Response(
             JSON.stringify({ message: "Subcategory name is required" }),
@@ -36,7 +34,6 @@ export async function GET(req: Request) {
         `;
 
         const subcategoryData = await customSQL(subcategoryQuery, [subCategoryName]);
-        console.log("subcategoryData:", subcategoryData);
 
         if (!subcategoryData.length || !subcategoryData[0].subkategoriid) {
             return new Response(
@@ -46,7 +43,6 @@ export async function GET(req: Request) {
         }
 
         const sessionsData = await customSQL(sessionsQuery, [subCategoryName]);
-        console.log("sessionsData:", sessionsData);
 
         return new Response(
             JSON.stringify({
