@@ -3,7 +3,7 @@ import { UserType } from '../types';
 
 export class User extends BaseModel<UserType> {
     constructor() {
-        super('"USER"');
+        super('USERTABLE');
     }
 
     async findByNoHP(noHp: string) {
