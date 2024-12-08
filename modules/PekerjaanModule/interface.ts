@@ -2,7 +2,7 @@ export interface PekerjaanCardProps {
   id: string;
   assignner: string;
   subCategory: string;
-  todoDate: Date;
+  sesi: string;
   createdAt: Date;
   price: number;
 }
@@ -16,4 +16,10 @@ export type status =
 
 export interface StatusPekerjaanProps extends PekerjaanCardProps {
   status: status;
+}
+
+export interface subKategoriInterface {
+  id: string;
+  namaKategori: string;
+  subKategori: string[];
 }

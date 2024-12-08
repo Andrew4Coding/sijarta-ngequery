@@ -12,7 +12,7 @@ export const Transaksi = ({ saldo, userId }: { saldo: string, userId: string }) 
   const [value, setValue] = useState("");
   return (
     <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-2 font-medium text-sm w-full text-center">
+      <div className="grid grid-cols-2 font-medium text-base w-full text-center">
         <div className="p-5 border border-[#D9D9D9] rounded-l-[12px]">{userData.nama}</div>
         <div className="p-5 border border-l-0 border-[#D9D9D9] rounded-r-[12px] bg-green-50">Saldo: <span className="font-bold">{saldo}</span></div>
       </div>
