@@ -3,6 +3,7 @@ import pool from "@/database/db";
 
 export async function GET(req: Request) {
   try {
+    // Query untuk mendapatkan data pekerja
     const query = `
       SELECT 
         p.ID AS id,
@@ -16,17 +17,33 @@ export async function GET(req: Request) {
       FROM PEKERJA p
       JOIN "USER" u ON p.ID = u.ID;
     `;
-    const pekerja = await pool.query(query);
 
+    // Eksekusi query
+    const { rows } = await pool.query(query);
+
+    // Jika data kosong, kirim respons yang sesuai
+    if (!rows.length) {
+      return new Response(
+        JSON.stringify({
+          message: "No data available",
+          data: [],
+        }),
+        { status: 404, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Respons sukses
     return new Response(
       JSON.stringify({
         message: "Success",
-        data: pekerja.rows,
+        data: rows,
       }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error: any) {
     console.error("Error fetching pekerja data:", error.message);
+
+    // Respons error
     return new Response(
       JSON.stringify({
         message: "Error fetching data",

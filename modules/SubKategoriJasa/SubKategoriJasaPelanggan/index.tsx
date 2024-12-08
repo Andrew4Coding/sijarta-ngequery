@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -20,7 +21,6 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import { toast } from "sonner";
-import debounce from "lodash.debounce";
 import { useRouter } from "next/navigation";
 
 interface Worker {
@@ -138,31 +138,29 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
   };
 
   const validateDiscountCode = useCallback(
-    debounce(async (discountCode: string) => {
+    async (discountCode: string) => {
       if (!selectedSession) {
         toast.error("Pilih sesi layanan terlebih dahulu.");
         return;
       }
-
+  
       try {
         const response = await fetch(`/api/diskon/validate?code=${encodeURIComponent(discountCode)}`);
         const result = await response.json();
-
+  
         if (!response.ok) throw new Error(result.message || "Kode diskon tidak valid");
-
+  
         const { potongan, minTrPemesanan } = result.data;
-
+  
         if (selectedSession.harga < minTrPemesanan) {
-          toast.error(
-            `Minimal transaksi Rp ${minTrPemesanan.toLocaleString("id-ID")} untuk diskon.`
-          );
+          toast.error(`Minimal transaksi Rp ${minTrPemesanan.toLocaleString("id-ID")} untuk diskon.`);
           setNewOrder((prev) => ({ ...prev, total: selectedSession.harga }));
           return;
         }
-
+  
         const discountValue = selectedSession.harga * (potongan / 100);
         const totalPrice = Math.max(0, selectedSession.harga - discountValue);
-
+  
         setNewOrder((prev) => ({ ...prev, total: totalPrice }));
         toast.success("Kode diskon berhasil diterapkan!");
       } catch (error: any) {
@@ -170,15 +168,15 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
         toast.error(error.message || "Kode diskon tidak valid.");
         setNewOrder((prev) => ({ ...prev, total: selectedSession.harga }));
       }
-    }, 500),
+    },
     [selectedSession]
-  );
+  );  
 
   const handleDiscountChangeOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       validateDiscountCode(newOrder.discountCode);
     }
-  };
+  };  
 
   const handleSubmitOrder = () => {
     if (!selectedSession) {
@@ -342,58 +340,65 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
         <h2 className="text-[#1ab35f] text-[28px] font-bold">Pekerja</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           {workers.map((worker) => (
-            <div
-              key={worker.id}
-              className="p-4 bg-[#e8f7ef] rounded-xl text-center hover:bg-[#d7f0e3] transition cursor-pointer border border-[#d9d9d9]"
-              onClick={() => handleWorkerClick(worker)}
-            >
-              <div className="w-[84px] h-[84px] bg-white rounded-xl border border-[#d9d9d9] mb-3 mx-auto overflow-hidden">
-                <Image
-                  src={worker.linkfoto}
-                  alt={`Foto ${worker.nama}`}
-                  width={84}
-                  height={84}
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              <p className="text-black text-xl font-medium">{worker.nama}</p>
-            </div>
+            <Dialog key={worker.id}>
+              <DialogTrigger asChild>
+                <div className="p-4 bg-[#e8f7ef] rounded-xl text-center hover:bg-[#d7f0e3] transition cursor-pointer border border-[#d9d9d9]">
+                  <div className="w-[84px] h-[84px] bg-white rounded-xl border border-[#d9d9d9] mb-3 mx-auto overflow-hidden">
+                    <Image
+                      src={worker.linkfoto}
+                      alt={`Foto ${worker.nama}`}
+                      width={84}
+                      height={84}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <p className="text-black text-xl font-medium">{worker.nama}</p>
+                </div>
+              </DialogTrigger>
+              <DialogContent className="w-[682px] p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-8">
+                <DialogHeader className="w-full text-center">
+                  <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">Profil Pekerja</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col items-center">
+                  <div className="w-[120px] h-[120px] rounded-full overflow-hidden bg-[#f5f5f5] flex items-center justify-center mb-6">
+                    <Image
+                      src={worker.linkfoto || "/default-profile.png"}
+                      alt={`Foto ${worker.nama}`}
+                      className="w-full h-full object-cover"
+                      width={120}
+                      height={120}
+                    />
+                  </div>
+                  <div className="w-full flex justify-between items-start">
+                    <div className="flex flex-col gap-7 text-black text-xl font-bold">
+                      <p>Nama</p>
+                      <p>Rating</p>
+                      <p>Jumlah Pesanan Selesai</p>
+                      <p>No HP</p>
+                      <p>Tanggal Lahir</p>
+                      <p>Alamat</p>
+                    </div>
+                    <div className="flex flex-col gap-7 text-black text-xl font-normal">
+                      <p>{worker.nama}</p>
+                      <p>{worker.rating} / 5</p>
+                      <p>{worker.jumlahpesananaselesai}</p>
+                      <p>{worker.nohp}</p>
+                      <p>{worker.tgllahir}</p>
+                      <p>{worker.alamat}</p>
+                    </div>
+                  </div>
+                </div>
+                <DialogClose asChild>
+                  <Button className="w-full px-5 py-3 bg-[#1ab35f] text-white text-2xl rounded-xl">
+                    Tutup
+                  </Button>
+                </DialogClose>
+              </DialogContent>
+            </Dialog>
           ))}
         </div>
-
-        {selectedWorker && (
-          <Dialog open={Boolean(selectedWorker)} onOpenChange={() => setSelectedWorker(null)}>
-            <DialogContent className="w-[682px] p-8 bg-white rounded-[20px] border border-[#d9d9d9]">
-              <DialogHeader>
-                <DialogTitle className="text-[#1ab35f] text-2xl font-bold">Profil Pekerja</DialogTitle>
-              </DialogHeader>
-              <div className="p-4 bg-[#e8f7ef] rounded-xl text-center">
-                <div className="w-[84px] h-[84px] bg-white rounded-xl border border-[#d9d9d9] mb-3 mx-auto overflow-hidden">
-                  <Image
-                    src={selectedWorker.linkfoto || "/default-profile.png"}
-                    alt={`Foto ${selectedWorker.nama}`}
-                    width={84}
-                    height={84}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <p className="text-black text-xl font-medium">{selectedWorker.nama}</p>
-                <p className="text-black">No. HP: {selectedWorker.nohp}</p>
-                <p className="text-black">Tanggal Lahir: {selectedWorker.tgllahir}</p>
-                <p className="text-black">Alamat: {selectedWorker.alamat}</p>
-                <p className="text-black">Rating: {selectedWorker.rating} / 5</p>
-                <p className="text-black">Pesanan Selesai: {selectedWorker.jumlahpesananaselesai}</p>
-              </div>
-              <Button
-                onClick={() => setSelectedWorker(null)}
-                className="mt-5 w-full bg-[#1ab35f] text-white text-lg py-2 rounded-lg"
-              >
-                Tutup
-              </Button>
-            </DialogContent>
-          </Dialog>
-        )}
       </div>
+
 
       {/* Testimonials Section */}
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mt-8">
