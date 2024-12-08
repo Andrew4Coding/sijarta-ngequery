@@ -1,8 +1,33 @@
 import pool from "./db";
 
+export async function resetDatabase() {
+    await pool.query(`
+        DROP TABLE IF EXISTS TR_PEMBELIAN_VOUCHER;
+        DROP TABLE IF EXISTS PROMO;
+        DROP TABLE IF EXISTS VOUCHER;
+        DROP TABLE IF EXISTS TESTIMONI;
+        DROP TABLE IF EXISTS TR_PEMESANAN_STATUS;
+        DROP TABLE IF EXISTS STATUS_PESANAN;
+        DROP TABLE IF EXISTS TR_PEMESANAN_JASA;
+        DROP TABLE IF EXISTS METODE_BAYAR;
+        DROP TABLE IF EXISTS DISKON;
+        DROP TABLE IF EXISTS SESI_LAYANAN;
+        DROP TABLE IF EXISTS SUBKATEGORI_JASA;
+        DROP TABLE IF EXISTS PEKERJA_KATEGORI_JASA;
+        DROP TABLE IF EXISTS KATEGORI_JASA;
+        DROP TABLE IF EXISTS TR_MPAY;
+        DROP TABLE IF EXISTS KATEGORI_TR_MPAY;
+        DROP TABLE IF EXISTS PEKERJA;
+        DROP TABLE IF EXISTS PELANGGAN;
+        DROP TABLE IF EXISTS USERTABLE;
+    `);
+
+    console.log('Reset database done!');
+}
+
 export async function createTable() {
     await pool.query(`
-        CREATE TABLE "USER" (
+        CREATE TABLE USERTABLE (
             ID UUID PRIMARY KEY,
             NAMA VARCHAR(255),
             JENISKELAMIN VARCHAR(1) CHECK(JENISKELAMIN IN ('L', 'P')),
@@ -17,7 +42,7 @@ export async function createTable() {
         CREATE TABLE PELANGGAN (
             ID UUID UNIQUE PRIMARY KEY,
             LEVEL VARCHAR(10),
-            FOREIGN KEY (ID) REFERENCES "USER"(ID)
+            FOREIGN KEY (ID) REFERENCES USERTABLE(ID)
         );
 
         CREATE TABLE PEKERJA (
@@ -28,7 +53,7 @@ export async function createTable() {
             LINKFOTO VARCHAR(255),
             RATING FLOAT,
             JUMLAHPESANANASELESAI INT,
-            FOREIGN KEY (ID) REFERENCES "USER"(ID)
+            FOREIGN KEY (ID) REFERENCES USERTABLE(ID)
         );
 
         CREATE TABLE KATEGORI_TR_MPAY (
@@ -42,7 +67,7 @@ export async function createTable() {
             TGL DATE,
             NOMINAL DECIMAL,
             KATEGORIID UUID,
-            FOREIGN KEY (USERID) REFERENCES "USER"(ID),
+            FOREIGN KEY (USERID) REFERENCES USERTABLE(ID),
             FOREIGN KEY (KATEGORIID) REFERENCES KATEGORI_TR_MPAY(ID)
         );
 
@@ -163,7 +188,7 @@ export async function seedDatabase() {
     await pool.query(`
         -- INSERT DATA DUMMY
         -- AILEEN
-        INSERT INTO "USER" (ID, NAMA, JENISKELAMIN, NOHP, PWD, TGLLAHIR, ALAMAT, SALDOMPAY) VALUES
+        INSERT INTO USERTABLE (ID, NAMA, JENISKELAMIN, NOHP, PWD, TGLLAHIR, ALAMAT, SALDOMPAY) VALUES
         ('1c3e0100-1234-5678-8901-abcdefabcdef', 'Ali Rahman', 'L', '081234567890', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1990-05-14', 'Jl. Merdeka No. 1', 100000.00),
         ('2f5e0101-2234-5678-8902-bcdefbcdefbc', 'Budi Santoso', 'L', '081234567891', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1985-09-23', 'Jl. Angkasa No. 2', 250000.00),
         ('3a7e0102-3234-5678-8903-cdefccdefcde', 'Citra Sari', 'P', '081234567892', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1992-11-03', 'Jl. Mawar No. 3', 50000.00),
@@ -463,36 +488,66 @@ export async function seedDatabase() {
     console.log('Seeding database done!');
 }
 
-export async function resetDatabase() {
+export async function seedTrigger() {
     await pool.query(`
-        DROP TABLE IF EXISTS TR_PEMBELIAN_VOUCHER;
-        DROP TABLE IF EXISTS PROMO;
-        DROP TABLE IF EXISTS VOUCHER;
-        DROP TABLE IF EXISTS TESTIMONI;
-        DROP TABLE IF EXISTS TR_PEMESANAN_STATUS;
-        DROP TABLE IF EXISTS STATUS_PESANAN;
-        DROP TABLE IF EXISTS TR_PEMESANAN_JASA;
-        DROP TABLE IF EXISTS METODE_BAYAR;
-        DROP TABLE IF EXISTS DISKON;
-        DROP TABLE IF EXISTS SESI_LAYANAN;
-        DROP TABLE IF EXISTS SUBKATEGORI_JASA;
-        DROP TABLE IF EXISTS PEKERJA_KATEGORI_JASA;
-        DROP TABLE IF EXISTS KATEGORI_JASA;
-        DROP TABLE IF EXISTS TR_MPAY;
-        DROP TABLE IF EXISTS KATEGORI_TR_MPAY;
-        DROP TABLE IF EXISTS PEKERJA;
-        DROP TABLE IF EXISTS PELANGGAN;
-        DROP TABLE IF EXISTS "USER";
+        -- Trigger to check if phone number already exists
+        CREATE OR REPLACE FUNCTION check_phone_number_exists() 
+        RETURNS TRIGGER AS $$
+        BEGIN
+            IF EXISTS (SELECT 1 FROM USERTABLE WHERE nohp = NEW.nohp) THEN
+                RAISE EXCEPTION 'Phone number already registered';
+            END IF;
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        CREATE TRIGGER trigger_check_phone_number
+        BEFORE INSERT ON USERTABLE
+        FOR EACH ROW EXECUTE FUNCTION check_phone_number_exists();
+
+        -- Trigger to check if npwp already exists
+        CREATE OR REPLACE FUNCTION check_npwp_exists() 
+        RETURNS TRIGGER AS $$
+        BEGIN
+            IF EXISTS (SELECT 1 FROM PEKERJA WHERE npwp = NEW.npwp) THEN
+                RAISE EXCEPTION 'NPWP already registered';
+            END IF;
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        CREATE TRIGGER trigger_check_npwp
+        BEFORE INSERT ON PEKERJA
+        FOR EACH ROW EXECUTE FUNCTION check_npwp_exists();
+
+        -- Trigger to check if bank account combination already exists
+        CREATE OR REPLACE FUNCTION check_bank_account_combination() 
+        RETURNS TRIGGER AS $$
+        BEGIN
+            IF EXISTS (
+                SELECT 1 FROM PEKERJA
+                WHERE namabank = NEW.namabank
+                AND nomorrekening = NEW.nomorrekening
+            ) THEN
+                RAISE EXCEPTION 'Bank name and account number combination already registered for another worker';
+            END IF;
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        CREATE TRIGGER trigger_check_bank_account
+        BEFORE INSERT ON PEKERJA
+        FOR EACH ROW EXECUTE FUNCTION check_bank_account_combination();
     `);
 
-    console.log('Reset database done!');
+    console.log('Seeding trigger done!');
 }
-
 
 async function seedDatabaseRun() {
     await resetDatabase();
     await createTable();
     await seedDatabase();
+    await seedTrigger();
 }
 
 
