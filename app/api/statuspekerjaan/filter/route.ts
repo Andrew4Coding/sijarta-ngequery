@@ -39,13 +39,13 @@ export async function GET(req: Request) {
       (
         await new TrPemesananJasa().findMany("idpekerja", id)
       ).map(async (tr) => {
-        const pemesananStatus = await new TrPemesananStatus().findMany(
+        const pemesananStatus = await new TrPemesananStatus().findBy(
           "idtrpemesanan",
           tr.id
         );
 
         if (
-          pemesananStatus[pemesananStatus.length - 1].idstatus !==
+          pemesananStatus?.idstatus !==
           statusPesanan.id
         ) {
           return;
@@ -85,14 +85,14 @@ export async function GET(req: Request) {
       (
         await new TrPemesananJasa().findMany("idpekerja", id)
       ).map(async (tr) => {
-        const pemesananStatus = await new TrPemesananStatus().findMany(
+        const pemesananStatus = await new TrPemesananStatus().findBy(
           "idtrpemesanan",
           tr.id
         );
 
         const statusPesanan = await new StatusPesanan().findBy(
           "id",
-          pemesananStatus[pemesananStatus.length - 1].idstatus
+          pemesananStatus?.idstatus
         );
 
         const subKategori = await new SubkategoriJasa().findBy(
@@ -145,13 +145,13 @@ export async function GET(req: Request) {
       (
         await new TrPemesananJasa().findMany("idpekerja", id)
       ).map(async (tr) => {
-        const pemesananStatus = await new TrPemesananStatus().findMany(
+        const pemesananStatus = await new TrPemesananStatus().findBy(
           "idtrpemesanan",
           tr.id
         );
 
         if (
-          pemesananStatus[pemesananStatus.length - 1].idstatus !==
+          pemesananStatus?.idstatus !==
           statusPesanan.id
         ) {
           return;
