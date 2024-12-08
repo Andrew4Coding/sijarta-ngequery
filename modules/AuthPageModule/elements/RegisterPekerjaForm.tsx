@@ -80,9 +80,9 @@ export const RegisterPekerjaForm = () => {
     };
 
     return (
-        <div className="w-full min-h-[100vh] flex items-center justify-center bg-background py-32 ">
+        <div className="w-full min-h-[100vh] flex items-center justify-center bg-background py-32 px-5">
             <div className="bg-white shadow-xl p-10 rounded-xl flex flex-col items-center w-full max-w-4xl mx-4">
-                <h1 className="font-bold text-2xl">Daftar Sebagai Pekerja</h1>
+                <h1 className="font-bold text-2xl text-center">Daftar Sebagai Pekerja</h1>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
@@ -308,7 +308,7 @@ export const RegisterPekerjaForm = () => {
                         <Button
                             variant={'secondary'}
                             type="submit"
-                            className="col-span-2"
+                            className="col-span-1 md:col-span-2"
                         >
                             Daftar
                         </Button>
