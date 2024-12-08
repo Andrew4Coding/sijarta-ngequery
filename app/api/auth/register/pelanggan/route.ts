@@ -17,8 +17,6 @@ export async function POST(req: Request) {
             tgllahir
         }: UserType = body;
 
-        console.log(body)
-
         if (
             !id ||
             !alamat ||
@@ -38,7 +36,7 @@ export async function POST(req: Request) {
                 { status: 400 }
             )
         }
-        
+
         const userModel = new User();
         const existingUser = await userModel.findByNoHP(nohp);
 
