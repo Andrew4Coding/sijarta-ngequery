@@ -54,7 +54,7 @@ export const DiskonModule = () => {
       fetchPromo();
       hasFetchedUserData.current = true;
     }
-  }, [userData]);
+  }, [userData.id]);
 
   return (
     <div className="w-full max-w-[1281px] mx-auto py-16 flex flex-col items-center gap-12 mt-20">

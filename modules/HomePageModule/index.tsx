@@ -43,14 +43,14 @@ export const HomePageModule = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const result = await response.json();
-    
+
             const groupedCategories = groupByCategory(result.data);
             setCategories(groupedCategories);
             setFilteredCategories(groupedCategories); // Initialize filtered categories
         } catch (error) {
             console.error('Error fetching categories:', error);
         }
-    };    
+    };
 
     const groupByCategory = (data: any[]): Category[] => {
         const grouped: { [key: string]: Category } = {};
@@ -79,57 +79,55 @@ export const HomePageModule = () => {
     };
 
     return (
-        <main className="flex flex-col items-center bg-background min-h-screen px-10 py-40 w-full">
+        <main className="flex flex-col items-center bg-background min-h-screen px-10 md:px-32 py-40 w-full">
             <div className="text-center text-6xl font-['Newake'] tracking-[3px] mb-12">
                 <span className="text-black">Selamat Datang di </span>
                 <span className="text-[#1ab35f]">SIJARTA</span>
             </div>
 
             {/* Search and Filter Section */}
-            <div className="h-[66px] justify-start items-center gap-3 inline-flex mb-12 w-full max-w-[1280px]">
-                <div className="h-[66px] w-[300px] flex items-center bg-white rounded-[50px] border border-[#d9d9d9] px-8">
-                    <Select
-                        onValueChange={(val) => {
-                            if (val === 'all') {
-                                setSelectedCategory('');
-                                updateFilteredCategories('', searchTerm);
-                                return;
-                            }
-                            setSelectedCategory(val);
-                            updateFilteredCategories(val, searchTerm);
-                        }}
+            <div className="h-[66px] justify-center items-center gap-3 inline-flex mb-12 w-full max-w-[1280px]">
+                <Select
+                    onValueChange={(val) => {
+                        if (val === 'all') {
+                            setSelectedCategory('');
+                            updateFilteredCategories('', searchTerm);
+                            return;
+                        }
+                        setSelectedCategory(val);
+                        updateFilteredCategories(val, searchTerm);
+                    }}
+                >
+                    <SelectTrigger
+                        className='max-w-[200px]'
                     >
-                        <SelectTrigger className="w-full text-black text-2xl font-['Urbanist'] bg-transparent border-none shadow-none focus:outline-none focus:ring-0 focus:ring-offset-0 rounded-[50px]">
-                            <SelectValue placeholder="Pilih Kategori" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectItem value="all">Semua Kategori</SelectItem>
-                                <SelectLabel>Kategori</SelectLabel>
-                                {categories.map((category, index) => (
-                                    <SelectItem key={index} value={category.name}>
-                                        {category.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
+                        <SelectValue placeholder="Pilih Kategori" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectItem value="all">Semua Kategori</SelectItem>
+                            <SelectLabel>Kategori</SelectLabel>
+                            {categories.map((category, index) => (
+                                <SelectItem key={index} value={category.name}>
+                                    {category.name}
+                                </SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
 
-                <div className="h-[66px] px-8 bg-white rounded-[50px] border border-[#d9d9d9] flex items-center flex-1 box-border">
-                    <Input
-                        type="text"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        placeholder="Nama Subkategori"
-                        label="Cari Subkategori"
-                        className="h-[66px] px-8 bg-white rounded-[50px] border border-[#d9d9d9] flex-1 text-black text-2xl font-['Urbanist'] focus:outline-none placeholder:text-[#acacac] bg-transparent"
-                    />
-                </div>
+                <Input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Nama Subkategori"
+                    label="Cari Subkategori"
+                    className='w-full min-w-[400px]'
+                />
             </div>
 
             {/* Categories and Subcategories */}
-            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1280px]">
+            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8">
                 {filteredCategories.map((category, index) => (
                     <div key={index} className="flex flex-col">
                         <div className="px-5 py-4 bg-[#1ab35f] text-white rounded-xl text-xl font-bold text-center">
@@ -142,13 +140,12 @@ export const HomePageModule = () => {
                                     href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pelanggan'}/${subcategory.split(' ').join('-')}`}
                                 >
                                     <li
-                                        className={`px-5 py-4 text-center text-[#1ab35f] text-lg font-bold cursor-pointer ${
-                                            subIndex === 0
+                                        className={`px-5 py-4 text-center text-[#1ab35f] text-base font-semibold cursor-pointer ${subIndex === 0
                                                 ? 'rounded-tl-xl rounded-tr-xl'
                                                 : subIndex === category.subcategories.length - 1
-                                                ? 'rounded-bl-xl rounded-br-xl'
-                                                : ''
-                                        }`}
+                                                    ? 'rounded-bl-xl rounded-br-xl'
+                                                    : ''
+                                            }`}
                                         style={{
                                             borderBottom: subIndex === category.subcategories.length - 1 ? 'none' : '1px solid #d9d9d9',
                                         }}
