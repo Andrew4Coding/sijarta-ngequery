@@ -52,7 +52,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
   const [sessions, setSessions] = useState<{ sesi: number; harga: number }[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<{ id: string; nama: string }[]>([]);
   const [workers, setWorkers] = useState<Worker[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [testimonials] = useState<Testimonial[]>([]);
   const [newOrder, setNewOrder] = useState({
     date: new Date().toLocaleDateString(),
     discountCode: "",
@@ -63,57 +63,58 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
   const [selectedSession, setSelectedSession] = useState<{ sesi: number; harga: number } | null>(
     null
   );
-  const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSubcategoryData = async () => {
-      try {
-        const formattedSubCategory = subCategory.replace(/-/g, " ");
-        const response = await fetch(`/api/subkategori?name=${encodeURIComponent(formattedSubCategory)}`);
-        if (!response.ok) throw new Error("Failed to fetch subcategory data");
+        try {
+            const formattedSubCategory = subCategory.replace(/-/g, " ");
+            const response = await fetch(`/api/subkategori?name=${encodeURIComponent(formattedSubCategory)}`);
+            if (!response.ok) throw new Error("Failed to fetch subcategory data");
 
-        const result = await response.json();
-        setSubcategoryInfo(result.data.subcategory);
-        setSessions(result.data.sessions);
-      } catch (error) {
-        console.error("Error fetching subcategory data:", error);
-      } finally {
-        setLoading(false);
-      }
+            const result = await response.json();
+            setSubcategoryInfo(result.data.subcategory);
+            setSessions(result.data.sessions);
+
+            // Gunakan ID subkategori untuk pekerja
+            if (result.data.subcategory.subkategoriid) {
+                fetchWorkers(result.data.subcategory.subkategoriid);
+            }
+        } catch (error) {
+            console.error("Error fetching subcategory data:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     fetchSubcategoryData();
   }, [subCategory]);
 
-  useEffect(() => {
-    const fetchWorkersAndTestimonials = async () => {
+  const fetchWorkers = async (subkategoriId: string) => {
       try {
-        const workersResponse = await fetch("/api/pekerja");
-        if (!workersResponse.ok) throw new Error("Failed to fetch workers");
-        const workersResult = await workersResponse.json();
-  
-        // Tambahkan awalan `/` jika linkfoto tidak dimulai dengan `http` atau `/`
-        const processedWorkers = workersResult.data.map((worker: Worker) => ({
-          ...worker,
-          linkfoto: worker.linkfoto.startsWith('http') || worker.linkfoto.startsWith('/')
-            ? worker.linkfoto
-            : `/${worker.linkfoto}`, // Tambahkan awalan `/` jika linkfoto tidak valid
-        }));
-        setWorkers(processedWorkers);
-  
-        const testimonialsResponse = await fetch("/api/testimoni");
-        if (!testimonialsResponse.ok) throw new Error("Failed to fetch testimonials");
-        const testimonialsResult = await testimonialsResponse.json();
-        setTestimonials(testimonialsResult.data);
+          const workersResponse = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
+          if (!workersResponse.ok) throw new Error("Failed to fetch workers");
+          const workersResult = await workersResponse.json();
+          setWorkers(workersResult.data);
       } catch (error) {
-        console.error("Error fetching workers or testimonials:", error);
+          console.error("Error fetching workers:", error);
+          toast.error("Gagal memuat daftar pekerja.");
       }
-    };
-  
-    fetchWorkersAndTestimonials();
-  }, []);  
-  
+  };
+
+  async function fetchWorkersAndTestimonials(subkategoriId: string) {
+    try {
+        const response = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
+        if (!response.ok) {
+            throw new Error(`Error response from /api/pekerja: ${await response.text()}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching pekerja data:", error instanceof Error ? error.message : error);
+        throw error;
+    }
+  }  
 
   useEffect(() => {
     const fetchPaymentMethods = async () => {
@@ -202,35 +203,6 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
         setWorkers(data.data);
       } catch (error) {
         console.error("Error fetching workers:", error);
-        toast.error("Gagal memuat data pekerja.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWorkers();
-  }, []);
-
-  const handleWorkerClick = (worker: Worker) => {
-    setSelectedWorker(worker); // Set pekerja yang dipilih untuk ditampilkan di modal
-  };  
-
-  useEffect(() => {
-    const fetchWorkers = async () => {
-      try {
-        const response = await fetch("/api/pekerja");
-        if (!response.ok) throw new Error("Failed to fetch pekerja");
-        const data = await response.json();
-
-        const validWorkers = data.data.map((worker: Worker) => ({
-          ...worker,
-          linkfoto: worker.linkfoto.startsWith("http") ? worker.linkfoto : "/default-profile.png",
-        }));
-
-        setWorkers(validWorkers);
-      } catch (error) {
-        console.error("Error fetching pekerja:", error);
-        toast.error("Gagal memuat data pekerja.");
       } finally {
         setLoading(false);
       }
