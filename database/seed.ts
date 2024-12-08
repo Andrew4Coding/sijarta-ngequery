@@ -164,23 +164,25 @@ export async function seedDatabase() {
         -- INSERT DATA DUMMY
         -- AILEEN
         INSERT INTO "USER" (ID, NAMA, JENISKELAMIN, NOHP, PWD, TGLLAHIR, ALAMAT, SALDOMPAY) VALUES
-        ('1c3e0100-1234-5678-8901-abcdefabcdef', 'Ali Rahman', 'L', '081234567890', 'hashedpassword1', '1990-05-14', 'Jl. Merdeka No. 1', 100000.00),
-        ('2f5e0101-2234-5678-8902-bcdefbcdefbc', 'Budi Santoso', 'L', '081234567891', 'hashedpassword2', '1985-09-23', 'Jl. Angkasa No. 2', 250000.00),
-        ('3a7e0102-3234-5678-8903-cdefccdefcde', 'Citra Sari', 'P', '081234567892', 'hashedpassword3', '1992-11-03', 'Jl. Mawar No. 3', 50000.00),
-        ('4d8e0103-4234-5678-8904-ddefdddefdde', 'Dewi Lestari', 'P', '081234567893', 'hashedpassword4', '1989-07-21', 'Jl. Melati No. 4', 150000.00),
-        ('5b9e0104-5234-5678-8905-eefeeedefeef', 'Eko Wijaya', 'L', '081234567894', 'hashedpassword5', '1993-04-10', 'Jl. Cemara No. 5', 200000.00),
-        ('6fae0105-6234-5678-8906-ffeeffefefef', 'Fitri Hasanah', 'P', '081234567895', 'hashedpassword6', '1991-02-16', 'Jl. Kenanga No. 6', 75000.00),
-        ('7ebe0106-7234-5678-8907-001100112223', 'Gilang Saputra', 'L', '081234567896', 'hashedpassword7', '1988-08-18', 'Jl. Teratai No. 7', 125000.00),
-        ('8ace0107-8234-5678-8908-113322114455', 'Hendra Wijaya', 'L', '081234567897', 'hashedpassword8', '1987-12-30', 'Jl. Bunga No. 8', 175000.00),
-        ('9bde0108-9234-5678-8909-225544226677', 'Indah Puspita', 'P', '081234567898', 'hashedpassword9', '1994-03-19', 'Jl. Anggrek No. 9', 125000.00),
-        ('acd10109-1234-5678-8910-337766338899', 'Joko Subandi', 'L', '081234567899', 'hashedpassword10', '1995-06-28', 'Jl. Kamboja No. 10', 100000.00);
+        ('1c3e0100-1234-5678-8901-abcdefabcdef', 'Ali Rahman', 'L', '081234567890', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1990-05-14', 'Jl. Merdeka No. 1', 100000.00),
+        ('2f5e0101-2234-5678-8902-bcdefbcdefbc', 'Budi Santoso', 'L', '081234567891', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1985-09-23', 'Jl. Angkasa No. 2', 250000.00),
+        ('3a7e0102-3234-5678-8903-cdefccdefcde', 'Citra Sari', 'P', '081234567892', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1992-11-03', 'Jl. Mawar No. 3', 50000.00),
+        ('4d8e0103-4234-5678-8904-ddefdddefdde', 'Dewi Lestari', 'P', '081234567893', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1989-07-21', 'Jl. Melati No. 4', 150000.00),
+        ('5b9e0104-5234-5678-8905-eefeeedefeef', 'Eko Wijaya', 'L', '081234567894', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1993-04-10', 'Jl. Cemara No. 5', 200000.00),
+        ('6fae0105-6234-5678-8906-ffeeffefefef', 'Fitri Hasanah', 'P', '081234567895', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1991-02-16', 'Jl. Kenanga No. 6', 75000.00),
+        ('7ebe0106-7234-5678-8907-001100112223', 'Gilang Saputra', 'L', '081234567896', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1988-08-18', 'Jl. Teratai No. 7', 125000.00),
+        ('8ace0107-8234-5678-8908-113322114455', 'Hendra Wijaya', 'L', '081234567897', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1987-12-30', 'Jl. Bunga No. 8', 175000.00),
+        ('9bde0108-9234-5678-8909-225544226677', 'Indah Puspita', 'P', '081234567898', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1994-03-19', 'Jl. Anggrek No. 9', 125000.00),
+        ('acd10109-1234-5678-8910-337766338899', 'Joko Subandi', 'L', '081234567899', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1995-06-28', 'Jl. Kamboja No. 10', 100000.00),
+        ('acd10109-1234-5678-8910-337766338898', 'Andrew Devito Aryo', 'L', '08123456789', '$2a$10$9PlxjrHZxRPjUPwJ3yoq1O4CYCrUMc2JYi6QDppLNFUhWDsbsWVUe', '1995-06-28', 'Jl. Kamboja No. 10', 100000.00);
 
         INSERT INTO PELANGGAN (ID, LEVEL) VALUES
         ('1c3e0100-1234-5678-8901-abcdefabcdef', 'Silver'),
         ('2f5e0101-2234-5678-8902-bcdefbcdefbc', 'Gold'),
         ('3a7e0102-3234-5678-8903-cdefccdefcde', 'Bronze'),
         ('4d8e0103-4234-5678-8904-ddefdddefdde', 'Silver'),
-        ('5b9e0104-5234-5678-8905-eefeeedefeef', 'Gold');
+        ('5b9e0104-5234-5678-8905-eefeeedefeef', 'Gold'),
+        ('acd10109-1234-5678-8910-337766338898', 'Gold');
 
         INSERT INTO PEKERJA (ID, NAMABANK, NOMORREKENING, NPWP, LINKFOTO, RATING, JUMLAHPESANANASELESAI) VALUES
         ('6fae0105-6234-5678-8906-ffeeffefefef', 'Bank BCA', '1234567890', '1234567890123456', 'linkfoto1.jpg', 4.5, 150),
