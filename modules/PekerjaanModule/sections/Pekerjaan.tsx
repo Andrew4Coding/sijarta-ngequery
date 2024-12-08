@@ -31,7 +31,7 @@ export const Pekerjaan = ({ userId }: { userId: string }) => {
 
   const fetchPekerjaanBySubCategory = async (subCategory: string) => {
     const response = await fetch(
-      `/api/pekerjaan?id=${userId}&subCategory=${subCategory}`
+      `/api/pekerjaan/filter?id=${userId}&subCategory=${subCategory}`
     );
     if (response.ok) {
       const responseData = await response.json();
