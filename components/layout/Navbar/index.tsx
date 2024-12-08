@@ -37,7 +37,7 @@ export const Navbar = () => {
   const pathname = usePathname()
 
   const { userData, isAuthenticated, role } = useUserData();
-  
+
   const hideMenus: boolean = pathname === '/login' || pathname === '/register'
 
   const { toast } = useToast();
@@ -53,6 +53,9 @@ export const Navbar = () => {
         description: "User logout successfully",
         variant: 'success'
       })
+
+      setIsOpen(false)
+
       
       setTimeout(() => {
         router.push('/login')
@@ -62,7 +65,7 @@ export const Navbar = () => {
   }
 
   return (
-    <nav className={`fixed top-0 w-full bg-white shadow-sm px-10 lg:px-32 py-8 flex justify-between items-center z-50  ${hideMenus ? "hidden" : ""}`}>
+    <nav className={`fixed top-0 w-full bg-white shadow-sm px-10 lg:px-32 py-8 flex justify-between items-center z-50`}>
       <h1 className='font-extrabold text-4xl font-newake text-green-500'>SIJARTA</h1>
       <div className='hidden lg:flex gap-12'>
         {isAuthenticated && (role === 'pelanggan' ? pelangganMenus : pekerjaMenus).map(menu => (
@@ -91,6 +94,7 @@ export const Navbar = () => {
             </div>
             :
             <Button
+              className={`${hideMenus ? 'hidden' : ''}`}
               onClick={() => router.push('/login')}
             >Login</Button>
           }
@@ -100,7 +104,7 @@ export const Navbar = () => {
         >
           <PopoverTrigger className=''>
             <ChevronDown
-              className={`w-6 h-6 ${isOpen ? 'rotate-180' : ''} duration-200 ease-in-out`}
+              className={`w-6 h-6 ${isOpen ? 'rotate-180' : ''} duration-200 ease-in-out ${hideMenus ? 'hidden' : ''}`}
             />
           </PopoverTrigger>
           <PopoverContent className='bg-white w-fit rounded-xl'>
@@ -117,12 +121,13 @@ export const Navbar = () => {
               </li>
               <Separator />
               <li>
-                <span
+                <a
+                  href='/'
                   onClick={logout}
-                  className='text-red-500'
+                  className='text-red-500 cursor-pointer duration-300'
                 >
                   Logout
-                </span>
+                </a>
               </li>
             </ul>
           </PopoverContent>
