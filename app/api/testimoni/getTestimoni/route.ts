@@ -1,23 +1,29 @@
+import { Pelanggan } from "@/database/models/pelanggan";
+import { SubkategoriJasa } from "@/database/models/subKategoriJasa";
 import { Testimoni } from "@/database/models/testimoni";
+import { TrPemesananJasa } from "@/database/models/trPemesananJasa";
+import { User } from "@/database/models/user";
 
 export async function GET(req: Request) {
   try {
     const query = new URL(req.url).searchParams;
     const id = query.get("subKategoriId");
-    const testimonies = await new Testimoni().customQuery(
-      `
-      SELECT 
-        t.*
-      FROM 
-        TESTIMONI t
-      INNER JOIN 
-        TR_PEMESANAN_JASA tpj ON t.idtrpemesanan = tpj.id
-      WHERE 
-        tpj.idkategorijasa = $1
-      `,
-      [id]
-    );
-    
+    const trPemesananJasa = await new TrPemesananJasa().findMany("idkategorijasa", id);
+    const subcategoryModel = new SubkategoriJasa()
+    const testimonyModel = new Testimoni();
+    const pelangganModel = new User()
+    const testimonies = await Promise.all(
+      trPemesananJasa.map(async(jasa) =>
+      {
+        const testimonies = await testimonyModel.findBy("idtrpemesanan", jasa.id); 
+        const pelanggan = await pelangganModel.findBy("id", jasa.idpelanggan)
+        const pekerja = await pelangganModel.findBy("id", jasa.idpekerja)
+        const subcategory = await subcategoryModel.findBy("id", jasa.idkategorijasa)
+
+        const data = { ...testimonies, namaPengguna: pelanggan?.nama, workerName: pekerja?.nama, subcategory: subcategory?.namasubkategori}
+        return data;
+      })
+    )
 
     if (testimonies.length === 0) {
       return new Response(

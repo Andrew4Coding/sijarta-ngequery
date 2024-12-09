@@ -21,7 +21,7 @@ export type Worker = {
 export type Testimonial = {
     workerName: string;
     rating: number;
-    customerName: string;
-    review: string;
-    date: string;
+    namaPengguna: string;
+    teks: string;
+    tgl: string;
 };

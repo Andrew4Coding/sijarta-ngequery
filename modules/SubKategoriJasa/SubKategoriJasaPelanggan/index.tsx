@@ -580,16 +580,16 @@ export default function SubKategoriJasaPelanggan({
             >
               <div className="flex items-center mb-2">
                 <p className="text-black text-lg font-semibold">
-                  {testimonial.customerName}
+                  {testimonial.namaPengguna}
                 </p>
                 <span className="text-[#1ab35f] text-sm ml-2">
-                  {testimonial.rating.toFixed(1)} ⭐
+                  {testimonial.rating}
                 </span>
               </div>
-              <p className="text-black text-sm mb-2">"{testimonial.review}"</p>
+              <p className="text-black text-sm mb-2">"{testimonial.teks}"</p>
               <p className="text-gray-500 text-xs">
                 Dipekerjakan oleh {testimonial.workerName} pada{" "}
-                {new Date(testimonial.date).toLocaleDateString("id-ID")}
+                {new Date(testimonial.tgl).toLocaleDateString("id-ID")}
               </p>
             </div>
           ))

@@ -80,6 +80,22 @@ const PemesananJasaModule = () => {
     return Object.values(grouped);
   };
 
+  // const fetchTestimony = async (idTrPemesanan: string) => {
+  //   try {
+  //     const response = await fetch(
+  //       `/api/testimoni/getTestimoniByIdTrPemesanan?idTrPemesanan=${idTrPemesanan}`
+  //     ); // Sesuaikan endpoint
+  //     if (!response.ok) throw new Error("Failed to fetch testimonials");
+
+  //     const result = await response.json();
+  //     console.log("ASDASDASD", result)
+  //     return result
+  //   } catch (error) {
+  //     console.error("Error fetching testimonials:", error);
+  //     toast.error("Gagal memuat testimoni.");
+  //   }
+  // };
+
   const fetchOrders = async (userId: string) => {
     try {
       const response = await fetch(
@@ -89,6 +105,18 @@ const PemesananJasaModule = () => {
       const result = await response.json();
 
       console.log("result", result);
+
+      // const ordersWithTestimonials = await Promise.all(
+      //   result.data.map(async (order: any) => {
+      //     const testimonials = await fetchTestimony(order.id);
+      //     return {
+      //       ...order,
+      //       testimonials, 
+      //     };
+      //   })
+      // );
+
+      // console.log("ASDASD", ordersWithTestimonials);
 
       if (response.ok) {
         setOrders(result.data);
@@ -149,6 +177,7 @@ const PemesananJasaModule = () => {
           tgl: new Date(),
           teks: data.comment,
           rating: data.rating,
+          namaPengguna: userData.nama,
         }),
       });
 
@@ -286,7 +315,10 @@ const PemesananJasaModule = () => {
                     ) : order.status === "Pesanan Selesai" ? (
                       <Dialog>
                         <DialogTrigger>
-                          <Button className="bg-white text-[#1ab35f] border border-[#b8e7cd] px-5 py-2 rounded-xl">
+                          <Button
+                            onClick={() => handleCreateTestimony(order.id)} // Triggering order ID selection
+                            className="bg-white text-[#1ab35f] border border-[#b8e7cd] px-5 py-2 rounded-xl"
+                          >
                             Buat Testimoni
                           </Button>
                         </DialogTrigger>
@@ -296,7 +328,7 @@ const PemesananJasaModule = () => {
                             Berikan ulasan Anda untuk pesanan ini.
                           </DialogDescription>
                           <form
-                            onSubmit={form.handleSubmit(onSubmit)}
+                            onSubmit={form.handleSubmit(onSubmit)} // Handles form submission when the button is clicked
                             className="space-y-4"
                           >
                             <div>
@@ -308,10 +340,14 @@ const PemesananJasaModule = () => {
                               </label>
                               <textarea
                                 id="comment"
-                                {...form.register("comment")}
-                                className="mt-1 block w-full px-3 py-2 border rounded-xl"
+                                {...form.register("comment")} // Register form input for comment
+                                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#1ab35f] focus:border-[#1ab35f] sm:text-sm"
                               />
+                              <p className="text-sm text-red-500">
+                                {form.formState.errors.comment?.message}
+                              </p>
                             </div>
+
                             <div>
                               <label
                                 htmlFor="rating"
@@ -319,25 +355,26 @@ const PemesananJasaModule = () => {
                               >
                                 Rating
                               </label>
-                              <Select {...form.register("rating")}>
-                                <SelectTrigger className="mt-1 block w-full px-3 py-2 border rounded-xl">
-                                  <SelectValue placeholder="Pilih Rating" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectGroup>
-                                    {[...Array(10)].map((_, i) => (
-                                      <SelectItem key={i} value={`${i + 1}`}>
-                                        {i + 1}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectGroup>
-                                </SelectContent>
-                              </Select>
+                              <select
+                                id="rating"
+                                {...form.register("rating")} // Register form input for rating
+                                className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-[#1ab35f] focus:border-[#1ab35f] sm:text-sm"
+                              >
+                                {Array.from({ length: 5 }, (_, index) => (
+                                  <option key={index + 1} value={index + 1}>
+                                    {index + 1}
+                                  </option>
+                                ))}
+                              </select>
+                              <p className="text-sm text-red-500">
+                                {form.formState.errors.rating?.message}
+                              </p>
                             </div>
+
                             <DialogFooter>
                               <Button
                                 type="submit"
-                                className="bg-[#1ab35f] text-white"
+                                className="bg-[#1ab35f] text-white px-5 py-2 rounded-xl"
                               >
                                 Kirim Testimoni
                               </Button>
