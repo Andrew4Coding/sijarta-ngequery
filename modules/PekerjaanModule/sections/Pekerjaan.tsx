@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { KategoriCombobox } from "../elements/KategoriCombobox";
 import { SubKategoriCombobox } from "../elements/SubKategoriCombobox";
 import { PekerjaanCardProps, subKategoriInterface } from "../interface";
+import { toast } from "sonner";
 
 export const Pekerjaan = ({ userId }: { userId: string }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState("");
   const [subValue, setSubValue] = useState("");
   const [filteredPekerjaan, setfilteredPekerjaan] = useState<
@@ -22,7 +24,6 @@ export const Pekerjaan = ({ userId }: { userId: string }) => {
       const data: PekerjaanCardProps[] = responseData.data.availableJobs;
       setfilteredPekerjaan(data);
       setSubCategories(responseData.data.subKategoriPekerja);
-      console.log(responseData);
     } else {
       const error = await response.json();
       console.log(error);
@@ -31,7 +32,7 @@ export const Pekerjaan = ({ userId }: { userId: string }) => {
 
   const fetchPekerjaanBySubCategory = async (subCategory: string) => {
     const response = await fetch(
-      `/api/pekerjaan?id=${userId}&subCategory=${subCategory}`
+      `/api/pekerjaan/filter?id=${userId}&subCategory=${subCategory}`
     );
     if (response.ok) {
       const responseData = await response.json();
@@ -42,6 +43,34 @@ export const Pekerjaan = ({ userId }: { userId: string }) => {
       console.log(error);
     }
   };
+
+  const acceptPekerjaan = async (trPemesananJasaId: string) => {
+    setIsLoading(true);
+    const response = await fetch("/api/pekerjaan/apply", {
+      method: "POST",
+      body: JSON.stringify({
+        userId,
+        role: "Pekerja",
+        trPemesananJasaId,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const result = await response.json();
+    toast.promise(
+      response.ok
+        ? Promise.resolve(result.message)
+        : Promise.reject(result.error),
+      {
+        loading: "Loading...",
+        success: "Berhasil mengambil pekerjaan",
+        error: result.error,
+      }
+    );
+    fetchAllPekerjaan();
+    setIsLoading(false);
+  }
 
   useEffect(() => {
     const filterData = async () => {
@@ -120,6 +149,8 @@ export const Pekerjaan = ({ userId }: { userId: string }) => {
                 <Button
                   variant={"secondary"}
                   className="md:text-[20px] max-md:w-full"
+                  onClick={() => acceptPekerjaan(card.id)}
+                  disabled={isLoading}
                 >
                   Kerjakan Pesanan
                 </Button>
