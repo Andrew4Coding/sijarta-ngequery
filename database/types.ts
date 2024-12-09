@@ -101,8 +101,8 @@ export interface TrPembelianVoucherType {
 export interface TrPemesananJasaType {
     id: string;
     tglpemesanan: Date;
-    tglpekerjaan: Date;
-    waktupekerjaan: Date;
+    tglpekerjaan?: Date;
+    waktupekerjaan?: Date;
     totalbiaya: number;
     idpelanggan?: string;
     idpekerja?: string;

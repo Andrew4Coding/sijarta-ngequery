@@ -49,7 +49,7 @@ export const RegisterPekerjaForm = () => {
                     namabank: data.namaBank,
                     nomorrekening: data.noRekening,
                     npwp: data.npwp,
-                    linkfoto: await uploadFoto(data.filefoto)
+                    linkfoto: await uploadFoto(data.filefoto ?? null) ?? "https://sijarta-ngequery.s3.ap-southeast-2.amazonaws.com/profpic_placeholder.png"
                 })
             });
             const result = await response.json();

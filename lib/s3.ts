@@ -19,29 +19,34 @@ const s3Config = {
 }
 
 const uploadFile = async (data: File | null) => {
-    if (data) {
-        const formData = new FormData();
-        formData.append('file', data);
-
-        const response = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData
-        });
-
-        const result: {
-            message: string,
-            data: {
-                url: string
-            },
-            error: string
-        } = await response.json();
-
-        if (response.ok) {
-            return result.data.url;
+    try {
+        if (data) {
+            const formData = new FormData();
+            formData.append('file', data);
+    
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+    
+            const result: {
+                message: string,
+                data: {
+                    url: string
+                },
+                error: string
+            } = await response.json();
+    
+            if (response.ok) {
+                return result.data.url;
+            } else {
+                return null;
+            }
         } else {
             return null;
         }
-    } else {
+    }
+    catch (e) {
         return null;
     }
 }

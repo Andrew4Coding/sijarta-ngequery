@@ -1,11 +1,18 @@
-'use client';
-
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { Testimonial } from '../type';
+"use client";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useUserData } from "@/hooks/useUserData";
+import { Testimonial } from "../type";
 
 interface Session {
   sesi: number;
@@ -30,68 +37,89 @@ interface SubCategoryInfo {
 }
 
 const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
-  const [subcategoryInfo, setSubcategoryInfo] = useState<SubCategoryInfo | null>(null);
+  const [subcategoryInfo, setSubcategoryInfo] =
+    useState<SubCategoryInfo | null>(null);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [isJoined, setIsJoined] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const { userData } = useUserData();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
+  const fetchSubcategoryData = async () => {
+    try {
+      const formattedSubCategory = subCategory.replace(/-/g, " ");
+      const response = await fetch(
+        `/api/subkategori?name=${encodeURIComponent(formattedSubCategory)}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch subcategory data");
+
+      const result = await response.json();
+      setSubcategoryInfo(result.data.subcategory);
+      setSessions(result.data.sessions);
+
+      if (result.data.subcategory.subkategoriid) {
+        await fetchWorkers(result.data.subcategory.subkategoriid);
+      }
+    } catch (error) {
+      console.error("Error fetching subcategory data:", error);
+      toast.error("Gagal memuat subkategori.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchTestimonials = async () => {
+    try {
+      const response = await fetch("/api/testimoni"); // Sesuaikan endpoint
+      if (!response.ok) throw new Error("Failed to fetch testimonials");
+
+      const result = await response.json();
+      setTestimonials(result.data); // Asumsikan `data` berisi array testimoni
+    } catch (error) {
+      console.error("Error fetching testimonials:", error);
+      toast.error("Gagal memuat testimoni.");
+    }
+  };
+
   useEffect(() => {
-    const fetchSubcategoryData = async () => {
-      try {
-        const formattedSubCategory = subCategory.replace(/-/g, ' ');
-        const response = await fetch(`/api/subkategori?name=${encodeURIComponent(formattedSubCategory)}`);
-        if (!response.ok) throw new Error('Failed to fetch subcategory data');
-
-        const result = await response.json();
-        setSubcategoryInfo(result.data.subcategory);
-        setSessions(result.data.sessions);
-
-        if (result.data.subcategory.subkategoriid) {
-          await fetchWorkers(result.data.subcategory.subkategoriid);
-        }
-      } catch (error) {
-        console.error('Error fetching subcategory data:', error);
-        toast.error('Gagal memuat subkategori.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchTestimonials = async () => {
-      try {
-        const response = await fetch("/api/testimoni"); // Sesuaikan endpoint
-        if (!response.ok) throw new Error("Failed to fetch testimonials");
-
-        const result = await response.json();
-        setTestimonials(result.data); // Asumsikan `data` berisi array testimoni
-      } catch (error) {
-        console.error("Error fetching testimonials:", error);
-        toast.error("Gagal memuat testimoni.");
-      }
-    };
-
     fetchSubcategoryData();
     fetchTestimonials();
   }, [subCategory]);
 
   const fetchWorkers = async (subkategoriId: string) => {
     try {
-      const response = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
-      if (!response.ok) throw new Error('Failed to fetch workers');
+      const response = await fetch(
+        `/api/pekerja?subkategoriId=${subkategoriId}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch workers");
 
       const result = await response.json();
       setWorkers(result.data);
     } catch (error) {
-      console.error('Error fetching workers:', error);
-      toast.error('Gagal memuat daftar pekerja.');
+      console.error("Error fetching workers:", error);
+      toast.error("Gagal memuat daftar pekerja.");
     }
   };
 
-  const handleJoin = () => {
-    setIsJoined(true);
-    toast.success('Anda berhasil bergabung sebagai pekerja!');
+  const handleJoin = async (subCategory: string) => {
+    setIsLoading(true);
+    const response = await fetch(
+      `/api/subkategori/pekerja?pekerjaId=${userData.id}&kategoriJasa=${subCategory}`,
+      {
+        method: "POST",
+      }
+    );
+
+    if (!response.ok) {
+      const result = await response.json();
+      toast.error(result.message);
+      return;
+    }
+    fetchSubcategoryData();
+    toast.success("Anda berhasil bergabung sebagai pekerja!");
+    setIsLoading(false);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -132,8 +160,13 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
             </div>
           </div>
         ))}
-        {!isJoined && (
-          <Button onClick={handleJoin} variant={"secondary"} className="w-full">
+        {!workers.find((worker) => worker.id === userData.id) && (
+          <Button
+            disabled={isLoading}
+            onClick={() => handleJoin(subcategoryInfo.namakategori)}
+            variant={"secondary"}
+            className="w-full"
+          >
             Bergabung
           </Button>
         )}
@@ -190,6 +223,9 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
                       <p>{worker.rating} / 5</p>
                       <p>{worker.jumlahpesananaselesai}</p>
                       <p>{worker.nohp}</p>
+                      <p>
+                        {new Date(worker.tgllahir).toLocaleDateString("id-ID")}
+                      </p>
                       <p>
                         {new Date(worker.tgllahir).toLocaleDateString("id-ID")}
                       </p>
