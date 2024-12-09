@@ -16,7 +16,15 @@ import { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { statuses } from './const';
-import { Order } from './type';
+
+type Order = {
+    id: string;
+    subcategory: string;
+    session: string;
+    price: number;
+    workerName?: string;
+    status: string;
+};
 
 type Category = {
     name: string;
@@ -66,13 +74,10 @@ const PemesananJasaModule = () => {
     const fetchOrders = async (userId: string) => {
         try {
             const response = await fetch(
-                `/api/orders?userId=${userId}&subcategory=${subcategoryFilter}&status=${statusFilter}`
+                `/api/orders?userId=${userId}`
             );
 
             const result = await response.json();
-
-            console.log("result", result);
-            
 
             if (response.ok) {
                 setOrders(result.data);
@@ -111,7 +116,7 @@ const PemesananJasaModule = () => {
             (statusFilter === "" || order.status === statusFilter)
         );
     });
-    
+
     return (
         <div className="p-6 bg-gray-100 min-h-screen pt-40 px-10 md:px-32">
             <h2 className="text-center text-[#1ab35f] text-6xl font-normal font-['Newake'] tracking-[3px]">Pesanan Saya</h2>

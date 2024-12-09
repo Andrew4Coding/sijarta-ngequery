@@ -60,7 +60,6 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
     discountCode: "",
     total: 0,
     paymentMethod: "",
-    status: "Menunggu Pembayaran",
   });
 
   const form = useForm<z.infer<typeof BeliJasaSchema>>({
@@ -209,14 +208,19 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
 
   const onSubmit = async () => {
     const { date, discountCode, total, paymentMethod } = form.getValues();
-
+  
+    // Tentukan status berdasarkan metode pembayaran
+    const status =
+      paymentMethod === "f47ac10b-58cc-4372-a567-0e02b2c3d479" // Ganti ID ini dengan ID metode pembayaran "Mpay"
+        ? "Menunggu Pembayaran"
+        : "Mencari Pekerja Terdekat";
+  
     try {
       const response = await fetch("/api/pemesanan-jasa", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify({
           tglPemesanan: date,
           totalBiaya: total,
@@ -225,25 +229,22 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
           idMetodeBayar: paymentMethod,
           sesi: selectedSession?.sesi,
           idSubKategori: subcategoryInfo?.subkategoriid,
+          status, // Tambahkan status ke body request
         }),
       });
-
-
+  
       if (!response.ok) throw new Error("Failed to create order");
-
+  
       toast.success("Pesanan berhasil diproses!");
-
+  
       setTimeout(() => {
         router.push("/pemesanan-jasa");
-      }
-      , 2000);
-    }
-    catch (error) {
-      console.log(error);
-      
+      }, 2000);
+    } catch (error) {
+      console.error(error);
       toast.error("Gagal membuat pesanan.");
     }
-  };
+  };  
 
   if (loading) return <p>Loading...</p>;
   if (!subcategoryInfo) return <p>Subcategory not found</p>;
