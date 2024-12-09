@@ -40,6 +40,7 @@ export async function GET(req: Request) {
     JSON.stringify({
       message: "Success",
       data: {
+        noHp: user.nohp,
         saldo: user.saldompay,
         trHistory,
       },

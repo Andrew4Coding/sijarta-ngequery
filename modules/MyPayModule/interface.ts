@@ -13,6 +13,7 @@ export interface PaymentHistoryInterface {
 }
 
 export interface ResponseInterface {
+  noHp: string;
   saldo: string;
   trHistory: PaymentHistoryInterface[];
 }
