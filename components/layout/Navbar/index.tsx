@@ -79,10 +79,6 @@ export const Navbar = () => {
     }
   }
 
-  if (userDataState === undefined || !userDataState.id && !hideMenus) {
-    return null;
-  }
-
   return (
     <motion.nav
       initial={{ y: -120 }}
@@ -105,7 +101,7 @@ export const Navbar = () => {
             <p className='font-bold text-base'>Hello, {userData.nama}</p>
             <p className='font-medium text-sm'>
             {
-            Number(userDataState.saldompay).toLocaleString("id-ID", {
+            Number(userDataState ? userDataState.saldompay : 0).toLocaleString("id-ID", {
               style: "currency",
               currency: "IDR",
             })
@@ -118,7 +114,7 @@ export const Navbar = () => {
             }}
           >
             <AvatarImage src={userData.linkfoto ?? `/images/profpic_placeholder.png`} />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>SN</AvatarFallback>
           </Avatar>
           </div>
         </div>
