@@ -20,38 +20,31 @@ export async function GET(req: Request) {
     );
   }
 
-  const statusPekerjaan = await Promise.all(
-    (
-      await new TrPemesananJasa().findMany("idpekerja", id)
-    ).map(async (tr) => {
-      const pemesananStatus = await new TrPemesananStatus().findMany(
-        "idtrpemesanan",
-        tr.id
-      );
-
-      const statusPesanan = await new StatusPesanan().findBy(
-        "id",
-        pemesananStatus[pemesananStatus.length - 1].idstatus
-      );
-
-      const subKategori = await new SubkategoriJasa().findBy(
-        "id",
-        tr.idkategorijasa
-      );
-
-      const pelanggan = await new User().findBy("id", tr.idpelanggan);
-
-      return {
-        id: tr.id,
-        createdAt: tr.tglpemesanan,
-        sesi: tr.sesi,
-        todoDate: tr.waktupekerjaan,
-        subCategory: subKategori?.namasubkategori,
-        status: statusPesanan?.nama,
-        price: tr.totalbiaya,
-        assignner: pelanggan?.nama,
-      };
-    })
+  const statusPekerjaan = await new TrPemesananJasa().customQuery(
+    `
+    SELECT 
+      tr.id,
+      tr.tglpemesanan AS "createdAt",
+      tr.sesi,
+      tr.waktupekerjaan AS "todoDate",
+      sj.namasubkategori AS "subCategory",
+      sp.nama AS "status",
+      tr.totalbiaya AS "price",
+      u.nama AS "assignner"
+    FROM 
+      TR_PEMESANAN_JASA tr
+    INNER JOIN 
+      TR_PEMESANAN_STATUS ts ON tr.id = ts.idtrpemesanan
+    INNER JOIN 
+      STATUS_PESANAN sp ON ts.idstatus = sp.id
+    INNER JOIN 
+      SUBKATEGORI_JASA sj ON tr.idkategorijasa = sj.id
+    INNER JOIN 
+      USERTABLE u ON tr.idpelanggan = u.id
+    WHERE 
+      tr.idpekerja = $1
+    `,
+    [id]
   );
 
   return new Response(
