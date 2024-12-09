@@ -108,7 +108,10 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
           </div>
         ))}
         {!isJoined && (
-          <Button onClick={handleJoin} className="w-full mt-4 px-5 py-3 bg-[#1ab35f] text-white text-2xl rounded-xl">
+          <Button onClick={handleJoin}
+            variant={'secondary'}
+            className='w-full'
+          >
             Bergabung
           </Button>
         )}
