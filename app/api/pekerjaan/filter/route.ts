@@ -28,10 +28,10 @@ export async function GET(req: Request) {
   
     const availableJobs = await new TrPemesananJasa().customQuery(`
       SELECT
-        tr.id AS order_id,
-        tr.tglpemesanan AS created_at,
+        tr.id,
+        tr.tglpemesanan AS "createdAt",
         tr.sesi,
-        subkategori.namasubkategori AS sub_category,
+        subkategori.namasubkategori AS "subCategory",
         tr.totalbiaya AS price,
         pelanggan.nama AS assignner
     FROM
