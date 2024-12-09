@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { ChevronDown, LogOut } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -15,6 +15,7 @@ import { useToast } from '@/hooks/use-toast'
 import { useUserData } from '@/hooks/useUserData'
 import { usePathname, useRouter } from 'next/navigation'
 import { Separator } from '@/components/ui/separator'
+import { UserType } from '@/database/types'
 
 const pelangganMenus = [
   { href: '/', label: 'Home' },
@@ -32,6 +33,7 @@ const pekerjaMenus = [
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const { toast } = useToast();
 
   const router = useRouter()
   const pathname = usePathname()
@@ -40,7 +42,21 @@ export const Navbar = () => {
 
   const hideMenus: boolean = pathname === '/login' || pathname === '/register'
 
-  const { toast } = useToast();
+
+  // Fetch User Saldo
+  const [userDataState, setUserDataState] = useState<UserType>({} as UserType);
+  async function fetchUserProfile() {
+    const response = await fetch(`/api/auth/profile?id=${userData.id}&role=${role}`);
+    const data = await response.json();
+
+    setUserDataState(data.data);
+  }
+
+  useEffect(() => {
+    if (userData.id && !hideMenus) {
+      fetchUserProfile()
+    }
+  }, [userData.id])
 
   async function logout() {
     setIsOpen(false)
@@ -79,7 +95,7 @@ export const Navbar = () => {
               <div className='flex items-center gap-2 text-sm'>
                 <div className='text-right'>
                   <p className='font-bold text-base'>Hello, {userData.nama}</p>
-                  <p className='font-medium text-sm'>Rp {userData.saldoMpay}</p>
+                  <p className='font-medium text-sm'>Rp {userDataState.saldompay ?? "Loading ..."}</p>
                 </div>
                 <Avatar
                   className='cursor-pointer'
