@@ -36,8 +36,8 @@ export const LoginPage = () => {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 body: JSON.stringify({
-                    noHp: data.nomorTelepon,
-                    password: data.password,
+                    noHp: data.nomorTelepon.trim(),
+                    password: data.password.trim(),
                 })
             });
             const result = await response.json();
