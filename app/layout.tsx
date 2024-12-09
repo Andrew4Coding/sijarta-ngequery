@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { Suspense } from "react";
+import Head from "next/head";
 
 export const metadata: Metadata = {
   title: "Sijarta",
@@ -31,6 +32,9 @@ export default async function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning suppressContentEditableWarning lang="en">
+      <Head>
+        <link rel="icon" href="/icon.ico" />
+      </Head>
       <body
         className={`${jakartaSans.variable} ${newake.variable} antialiased font-jakarta`}
       >
