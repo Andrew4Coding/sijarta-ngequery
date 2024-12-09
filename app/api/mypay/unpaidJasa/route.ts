@@ -50,18 +50,17 @@ export async function GET(req: Request) {
     (
       await new TrPemesananJasa().findMany("idpelanggan", id)
     ).map(async (tr) => {
-      const statusPesanan = await new TrPemesananStatus().findMany(
+      const statusPesanan = await new TrPemesananStatus().findBy(
         "idtrpemesanan",
         tr.id
       );
 
-      if (statusPesanan.find((s) => s.idstatus === dibatalkanStatus?.id)) {
+      if (statusPesanan?.idstatus === dibatalkanStatus?.id) {
         return;
       }
 
       if (
-        statusPesanan[0].idstatus === status?.id &&
-        statusPesanan.length === 1 &&
+        statusPesanan?.idstatus === status?.id &&
         tr.idmetodebayar === metodeBayar?.id
       ) {
         const subKategori = await new SubkategoriJasa().findBy(
@@ -71,10 +70,9 @@ export async function GET(req: Request) {
         return {
           id: tr.id,
           tanggalPemesanan: tr.tglpemesanan,
-          tanggalPekerjaan: tr.tglpekerjaan,
           subKategori: subKategori?.namasubkategori,
           nominal: tr.totalbiaya,
-          status: status.nama,
+          status: status?.nama,
         };
       }
     })

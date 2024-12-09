@@ -19,6 +19,7 @@ export const MyPayModule = ({
   userData: { id: string; role: string };
 }) => {
   const [saldo, setSaldo] = useState("0");
+  const [noHp, setNoHp] = useState("");
   const [historyTransaksi, setHistoryTransaksi] = useState<
     PaymentHistoryInterface[]
   >([]);
@@ -35,6 +36,7 @@ export const MyPayModule = ({
           currency: "IDR",
         })
       );
+      setNoHp(data.noHp);
       setHistoryTransaksi(data.trHistory);
     } else {
       const error = await response.json();
@@ -58,14 +60,17 @@ export const MyPayModule = ({
         MyPay
       </h1>
       <div className="grid z-10">
-        <h2 className="text-[24px] md:text-[32px] text-center font-bold text-white  bg-green-500 px-8 py-6 rounded-[50px] mt-8 mb-3">
-          {saldo}
-        </h2> 
+        <div className="flex gap-8">
+          <h2 className="text-[24px] md:text-[32px] text-center font-bold text-white  bg-green-500 px-8 py-6 rounded-[50px] mt-8 mb-3">
+            {noHp}
+          </h2>
+          <h2 className="text-[24px] md:text-[32px] text-center font-bold text-white  bg-green-500 px-8 py-6 rounded-[50px] mt-8 mb-3">
+            {saldo}
+          </h2>
+        </div>
         <Dialog>
           <DialogTrigger className="">
-            <Button>
-              Lakukan Transaksi
-            </Button>
+            <Button>Lakukan Transaksi</Button>
           </DialogTrigger>
           <DialogContent className="lg:min-w-[850px] rounded-[20px]">
             <DialogHeader>

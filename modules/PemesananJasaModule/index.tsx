@@ -32,10 +32,7 @@ const PemesananJasaModule = () => {
 
     useEffect(() => {
         fetchCategories();
-    }, []);
-
-    useEffect(() => {
-        if (isAuthenticated) {
+        if (userData.id) {
             fetchOrders(userData.id);
         }
     }, [subcategoryFilter, statusFilter, isAuthenticated]);
@@ -115,8 +112,6 @@ const PemesananJasaModule = () => {
         );
     });
     
-    const flatmapCategories = categories.flatMap((category) => category.subcategories);
-
     return (
         <div className="p-6 bg-gray-100 min-h-screen pt-40 px-10 md:px-32">
             <h2 className="text-center text-[#1ab35f] text-6xl font-normal font-['Newake'] tracking-[3px]">Pesanan Saya</h2>
@@ -135,7 +130,7 @@ const PemesananJasaModule = () => {
                             <SelectGroup>
                                 <SelectItem key={'all'} value="all">Semua Subkategori</SelectItem>
                                 <SelectLabel>Subkategori</SelectLabel>
-                                {flatmapCategories.map((subcategory, idx) => (
+                                {categories.flatMap((category) => category.subcategories).map((subcategory, idx) => (
                                     <SelectItem key={idx} value={subcategory}>{subcategory}</SelectItem>
                                 ))}
                             </SelectGroup>
@@ -180,7 +175,7 @@ const PemesananJasaModule = () => {
                                 <TableCell>{order.session}</TableCell>
                                 <TableCell>{order.price}</TableCell>
                                 <TableCell>{order.workerName || "Belum Ditentukan"}</TableCell>
-                                <TableCell>{order.status}</TableCell>
+                                <TableCell>{order.status || "-"}</TableCell>
                                 <TableCell>
                                     {order.status === "Menunggu Pembayaran" || order.status === "Mencari Pekerja Terdekat" ? (
                                         <Button
@@ -195,7 +190,7 @@ const PemesananJasaModule = () => {
                                         >
                                             Buat Testimoni
                                         </Button>
-                                    ) : null}
+                                    ) : "-"}
                                 </TableCell>
                             </TableRow>
                         ))}

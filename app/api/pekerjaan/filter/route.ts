@@ -7,7 +7,7 @@ import { User } from "@/database/models/user";
 export async function GET(req: Request) {
   const query = new URL(req.url).searchParams;
   const id = query.get("id");
-  const subKategoriId = query.get("subCategory");
+  const subKategoriQuery = query.get("subCategory");
 
   const user = await new User().findBy("id", id);
 
@@ -26,32 +26,36 @@ export async function GET(req: Request) {
     "Mencari Pekerja Terdekat"
   );
 
-  const dibatalkanStatus = await new StatusPesanan().findBy("nama", "Pesanan Dibatalkan");
+  const dibatalkanStatus = await new StatusPesanan().findBy(
+    "nama",
+    "Pesanan Dibatalkan"
+  );
 
   const availableJobs = await Promise.all(
     (
-      await new TrPemesananJasa().findMany("idpekerja", null)
+      await new TrPemesananJasa().customQuery(
+        `SELECT * FROM TR_PEMESANAN_JASA WHERE idpekerja IS NULL`
+      )
     ).map(async (tr) => {
-      const statusPesanan = await new TrPemesananStatus().findMany(
+      const statusPesanan = await new TrPemesananStatus().findBy(
         "idtrpemesanan",
         tr.id
       );
 
-      if (statusPesanan.find((s) => s.idstatus === dibatalkanStatus?.id)) {
+      if (statusPesanan?.idstatus === dibatalkanStatus?.id) {
         return;
       }
 
-      if (
-        (statusPesanan[1].idstatus === status?.id ||
-          statusPesanan[0].idstatus === status?.id) &&
-        (statusPesanan.length === 2 || statusPesanan.length === 1) &&
-        tr.idkategorijasa === subKategoriId
-      ) {
-        const subKategori = await new SubkategoriJasa().findBy(
-          "id",
-          tr.idkategorijasa
-        );
+      const subKategori = await new SubkategoriJasa().findBy(
+        "id",
+        tr.idkategorijasa
+      );
 
+      if (subKategoriQuery !== subKategori?.namasubkategori) {
+        return;
+      }
+
+      if (statusPesanan?.idstatus === status?.id) {
         const pelanggan = await new User().findBy("id", tr.idpelanggan);
         return {
           id: tr.id,
@@ -69,7 +73,7 @@ export async function GET(req: Request) {
     JSON.stringify({
       message: "Success",
       data: {
-        availableJobs,
+        availableJobs: availableJobs.filter((job) => job),
       },
     }),
     {

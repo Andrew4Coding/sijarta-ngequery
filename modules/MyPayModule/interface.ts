@@ -9,10 +9,11 @@ export interface PaymentHistoryInterface {
   nominal: number;
   tanggal: Date;
   kategoriid: string;
-  kategori: PaymentType | "Terima Transfer" | "Pembayaran Voucher";
+  kategori: PaymentType | "Terima Transfer" | "Pembayaran Voucher" | "Menerima Honor Transaksi Jasa" | "Pengembalian Dana";
 }
 
 export interface ResponseInterface {
+  noHp: string;
   saldo: string;
   trHistory: PaymentHistoryInterface[];
 }
@@ -28,7 +29,6 @@ export interface UnPaidPesananInterface {
   id: string;
   nominal: string;
   tanggalPemesanan: Date;
-  tanggalPekerjaan: Date;
   subKategori: string;
   status: string;
 }

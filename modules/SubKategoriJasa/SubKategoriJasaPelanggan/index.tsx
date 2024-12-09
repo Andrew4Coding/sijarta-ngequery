@@ -9,6 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -18,10 +20,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUserData } from "@/hooks/useUserData";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 import { dateConverter } from "../../EditProfileModule";
 
 interface Worker {
@@ -35,16 +41,40 @@ interface Worker {
   linkfoto: string;
 }
 
-interface Testimonial {
-  customerName: string;
-  workerName: string;
-  rating: number;
-  review: string;
-  date: string;
+interface Discount {
+  kode: string;
+  potongan: number;
+  mintrpemesanan: number;
 }
 
+const BeliJasaSchema = z.object({
+  date: z.string(),
+  discountCode: z.string(),
+  total: z.number(),
+  paymentMethod: z.string(),
+});
+
 export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory: string }) {
+  const [newOrder, setNewOrder] = useState({
+    date: new Date().toLocaleDateString(),
+    discountCode: "",
+    total: 0,
+    paymentMethod: "",
+    status: "Menunggu Pembayaran",
+  });
+
+  const form = useForm<z.infer<typeof BeliJasaSchema>>({
+    resolver: zodResolver(BeliJasaSchema),
+    values: {
+      date: new Date().toLocaleDateString(),
+      discountCode: newOrder.discountCode,
+      total: newOrder.total,
+      paymentMethod: newOrder.paymentMethod,
+    }
+  });
+
   const router = useRouter();
+  
   const [subcategoryInfo, setSubcategoryInfo] = useState<{
     namasubkategori: string;
     deskripsi: string;
@@ -54,19 +84,29 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
   const [sessions, setSessions] = useState<{ sesi: number; harga: number }[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<{ id: string; nama: string }[]>([]);
   const [workers, setWorkers] = useState<Worker[]>([]);
-  const [newOrder, setNewOrder] = useState({
-    date: new Date().toLocaleDateString(),
-    discountCode: "",
-    total: 0,
-    paymentMethod: "",
-    status: "Menunggu Pembayaran",
-  });
+  const [discounts, setDiscounts] = useState<Discount[]>([]);
+
   const [selectedSession, setSelectedSession] = useState<{ sesi: number; harga: number } | null>(
     null
   );
   const [loading, setLoading] = useState(true);
 
+  const { userData } = useUserData();
+
   useEffect(() => {
+    const fetchWorkers = async (subkategoriId: string) => {
+      try {
+        const workersResponse = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
+
+        if (!workersResponse.ok) throw new Error("Failed to fetch workers");
+        const workersResult = await workersResponse.json();
+        setWorkers(workersResult.data);
+      } catch (error) {
+        console.error("Error fetching workers:", error);
+        toast.error("Gagal memuat daftar pekerja.");
+      }
+    };
+
     const fetchSubcategoryData = async () => {
       try {
         const formattedSubCategory = subCategory.replace(/-/g, " ");
@@ -88,29 +128,13 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
       }
     };
 
-    fetchSubcategoryData();
-  }, [subCategory]);
-
-  const fetchWorkers = async (subkategoriId: string) => {
-    try {
-      const workersResponse = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
-
-      if (!workersResponse.ok) throw new Error("Failed to fetch workers");
-      const workersResult = await workersResponse.json();
-      setWorkers(workersResult.data);
-    } catch (error) {
-      console.error("Error fetching workers:", error);
-      toast.error("Gagal memuat daftar pekerja.");
-    }
-  };
-
-  useEffect(() => {
     const fetchPaymentMethods = async () => {
       try {
         const response = await fetch("/api/metodeBayar");
         if (!response.ok) throw new Error("Failed to fetch payment methods");
 
         const result = await response.json();
+
         setPaymentMethods(result.data);
       } catch (error) {
         console.error("Error fetching payment methods:", error);
@@ -118,73 +142,107 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
       }
     };
 
+    
+    const fetchDiscounts = async () => {
+      try {
+        const response = await fetch(`/api/diskon?id=${userData.id}`);
+
+        if (!response.ok) throw new Error("Failed to fetch discounts");
+
+        const result = await response.json();
+
+        console.log(result.data);
+
+        setDiscounts(result.data);
+      } catch (error) {
+        console.error("Error fetching discounts:", error);
+        toast.error("Gagal memuat diskon.");
+      }
+    };
+
+    fetchSubcategoryData();
     fetchPaymentMethods();
-  }, []);
+
+    if (userData.id) {
+      fetchDiscounts();
+    }
+
+  }, [userData.id]);
 
   const handlePesanClick = (session: { sesi: number; harga: number }) => {
     setSelectedSession(session);
     setNewOrder((prevOrder) => ({ ...prevOrder, total: session.harga }));
   };
 
-  const validateDiscountCode = useCallback(
-    async (discountCode: string) => {
-      if (!selectedSession) {
-        toast.error("Pilih sesi layanan terlebih dahulu.");
-        return;
-      }
-  
-      try {
-        const response = await fetch(`/api/diskon/validate?code=${encodeURIComponent(discountCode)}`);
-        const result = await response.json();
-  
-        // Jika status bukan 200, tampilkan error dari server
-        if (!response.ok) {
-          throw new Error(result.message || "Kode diskon tidak valid.");
-        }
-  
-        const { Potongan, MinTrPemesanan } = result.data;
-  
-        if (!Potongan || !MinTrPemesanan) {
-          toast.error("Data diskon tidak lengkap. Hubungi administrator.");
-          return;
-        }
-  
-        if (selectedSession.harga < MinTrPemesanan) {
-          toast.error(`Total harga harus minimal Rp ${MinTrPemesanan.toLocaleString("id-ID")}`);
-          return;
-        }
-  
-        const discountValue = selectedSession.harga * (Potongan / 100);
-        const totalPrice = Math.max(0, selectedSession.harga - discountValue);
-  
-        setNewOrder((prev) => ({
-          ...prev,
-          total: totalPrice,
-        }));
-  
-        toast.success(`Kode diskon berhasil diterapkan! Diskon: ${Potongan}%`);
-      } catch (error: any) {
-        console.error("Error validating discount code:", error.message);
-        toast.error(error.message || "Kode diskon tidak valid.");
-        setNewOrder((prev) => ({ ...prev, total: selectedSession.harga }));
-      }
-    },
-    [selectedSession]
-  );  
-
-  const handleSubmitOrder = () => {
+  const validateDiscountCode = (discountCode: string) => {
     if (!selectedSession) {
       toast.error("Pilih sesi layanan terlebih dahulu.");
       return;
     }
 
-    if (!newOrder.paymentMethod) {
-      toast.error("Pilih metode pembayaran terlebih dahulu.");
+    const selectedDiscount = discounts.find((discount) => discount.kode === discountCode);
+
+    if (!selectedDiscount) {
+      toast.error("Kode diskon tidak valid.");
+      setNewOrder((prev) => ({ ...prev, total: selectedSession.harga }));
       return;
     }
 
-    toast.success("Pesanan berhasil diproses!");
-    router.push("/pemesanan-jasa");
+    const { potongan: Potongan, mintrpemesanan: MinTrPemesanan } = selectedDiscount;
+
+    if (selectedSession.harga < MinTrPemesanan) {
+      toast.error(`Total harga harus minimal Rp ${MinTrPemesanan.toLocaleString("id-ID")}`);
+      return;
+    }
+
+    const discountValue = selectedSession.harga * (Potongan / 100);
+    const totalPrice = Math.max(0, selectedSession.harga - discountValue);
+
+    setNewOrder((prev) => ({
+      ...prev,
+      discountCode,
+      total: totalPrice,
+    }));
+
+    toast.success(`Kode diskon berhasil diterapkan! Diskon: ${Potongan}%`);
+  }
+
+  const onSubmit = async () => {
+    const { date, discountCode, total, paymentMethod } = form.getValues();
+
+    try {
+      const response = await fetch("/api/pemesanan-jasa", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          tglPemesanan: date,
+          totalBiaya: total,
+          idPelanggan: userData.id,
+          idDiskon: discountCode,
+          idMetodeBayar: paymentMethod,
+          sesi: selectedSession?.sesi,
+          idSubKategori: subcategoryInfo?.subkategoriid,
+        }),
+      });
+
+
+      if (!response.ok) throw new Error("Failed to create order");
+
+      toast.success("Pesanan berhasil diproses!");
+
+      setTimeout(() => {
+        router.push("/pemesanan-jasa");
+      }
+      , 2000);
+    }
+    catch (error) {
+      console.log(error);
+      
+      toast.error("Gagal membuat pesanan.");
+    }
   };
 
   if (loading) return <p>Loading...</p>;
@@ -228,77 +286,139 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                   Pesan
                 </Button>
               </DialogTrigger>
-              <DialogContent className="w-[682px] h-auto p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-7">
+              <DialogContent className="w-[682px] h-auto p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-7 max-w-[80%]">
                 <DialogHeader className="w-full flex flex-col items-center">
                   <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">
                     Pesan Jasa
                   </DialogTitle>
                 </DialogHeader>
 
-                {/* Tanggal Pemesanan */}
-                <div className="w-full flex flex-col gap-3">
-                  <label className="text-black text-xl font-medium">Tanggal Pemesanan:</label>
-                  <div className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] flex items-center">
-                    <span className="text-[#b2b2b2] text-xl font-medium">{newOrder.date}</span>
-                  </div>
-                </div>
-
-                {/* Kode Diskon */}
-                <div className="w-full flex flex-col gap-3">
-                  <label className="text-black text-xl font-medium">Diskon:</label>
-                  <input
-                    type="text"
-                    placeholder="Kode Diskon"
-                    value={newOrder.discountCode}
-                    onChange={(e) => setNewOrder((prev) => ({ ...prev, discountCode: e.target.value }))}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") validateDiscountCode(newOrder.discountCode);
-                    }}
-                    className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] bg-transparent text-black text-xl font-medium focus:outline-none focus:ring-2 focus:ring-[#d9d9d9] placeholder:text-[#b2b2b2]"
-                  />
-                </div>
-
-                {/* Total Pembayaran */}
-                <div className="w-full flex flex-col gap-3">
-                  <label className="text-black text-xl font-medium">Total Pembayaran:</label>
-                  <div className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] flex items-center">
-                  <span className="text-[#b2b2b2] text-xl font-medium">
-                    Rp {(newOrder.total || 0).toLocaleString("id-ID")}
-                  </span>
-
-                  </div>
-                </div>
-
-                {/* Metode Pembayaran */}
-                <div className="w-full flex flex-col gap-3">
-                  <label className="text-black text-xl font-medium">Metode Pembayaran:</label>
-                  <Select onValueChange={(value) => setNewOrder({ ...newOrder, paymentMethod: value })}>
-                    <SelectTrigger className="w-full px-4 py-5 rounded-xl border border-[#d9d9d9] flex justify-between items-center">
-                      <SelectValue placeholder="Pilih Metode" className="text-black text-xl font-medium" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Metode Pembayaran</SelectLabel>
-                        {paymentMethods.map((method) => (
-                          <SelectItem key={method.id} value={method.nama}>
-                            {method.nama}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Button Pesan */}
-                <Button
-                  className="w-full px-5 py-3 bg-[#1ab35f] text-white text-2xl rounded-xl"
-                  onClick={handleSubmitOrder}
-                >
-                  Pesan Jasa
-                </Button>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 flex flex-col gap-4">
+                    <FormField
+                      control={form.control}
+                      name="date"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Tanggal Pemesanan</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled
+                              label="date"
+                              className='w-full'
+                              placeholder="Tanggal Pemesanan" {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="discountCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Diskon</FormLabel>
+                          <FormControl>
+                            <Select
+                              value={field.value}
+                              onValueChange={(val) => {
+                                field.onChange(val);
+                                validateDiscountCode(val);
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Pilih Kode Diskon ..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectLabel>Kode Diskon</SelectLabel>
+                                    {discounts.filter((discount) => discount.mintrpemesanan <= session.harga / 1000).length > 0 ? (
+                                    discounts.filter((discount) => discount.mintrpemesanan <= session.harga / 1000).
+                                      map((discount) => (
+                                      <SelectItem key={discount.kode} value={discount.kode}>
+                                        {discount.kode}
+                                      </SelectItem>
+                                    ))
+                                    ) : (
+                                    <SelectItem disabled value="empty">
+                                      Tidak ada diskon yang tersedia untuk sesi ini
+                                    </SelectItem>
+                                    )}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="total"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Total Pembayaran</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled
+                              defaultValue={session?.harga??0}
+                              label="total"
+                              className='w-full'
+                              placeholder="Total Pembayaran" {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} 
+                    />
+                    <FormField
+                      control={form.control}
+                      name="paymentMethod"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Metode Pembayaran</FormLabel>
+                          <FormControl>
+                            <Select
+                              value={field.value}
+                              onValueChange={(val) => {
+                                field.onChange(val);
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Pilih Metode Pembayaran ..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectLabel>Metode Pembayaran</SelectLabel>
+                                  {paymentMethods.map((method) => (
+                                    <SelectItem key={method.id} value={method.id}>
+                                      {method.nama}
+                                    </SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      className="w-full"
+                      variant={'secondary'}
+                      type="submit"
+                      onClick={() => {
+                        console.log(form.getValues());
+                        
+                      }}
+                    >
+                      Pesan Jasa
+                    </Button>
+                  </form>
+                </Form>
               </DialogContent>
             </Dialog>
-
           </div>
         ))}
       </div>

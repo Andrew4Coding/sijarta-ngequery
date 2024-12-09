@@ -10,7 +10,6 @@ export type ReturnType = {
         id: string;
         nama: string;
         linkfoto: string;
-        saldoMpay: number;
     };
     isAuthenticated: boolean;
     isLoading: boolean;
@@ -21,7 +20,6 @@ type sessionType = {
         id: string;
         nama: string;
         linkfoto: string;
-        saldoMpay: number;
     };
     exp: number;
     iat: number;
@@ -93,7 +91,6 @@ export const useUserData: () => ReturnType = () => {
                 id: '',
                 nama: '',
                 linkfoto: '',
-                saldoMpay: 0,
             },
             isAuthenticated: false,
             isLoading,
@@ -106,7 +103,6 @@ export const useUserData: () => ReturnType = () => {
             id: decodedToken.data.id,
             nama: decodedToken.data.nama,
             linkfoto: decodedToken.data.linkfoto,
-            saldoMpay: decodedToken.data.saldoMpay,
         },
         isAuthenticated: true,
         isLoading,

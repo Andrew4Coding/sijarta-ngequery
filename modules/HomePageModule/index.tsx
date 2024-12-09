@@ -86,7 +86,7 @@ export const HomePageModule = () => {
             </div>
 
             {/* Search and Filter Section */}
-            <div className="h-[66px] justify-center items-center gap-3 inline-flex mb-12 w-full max-w-[1280px]">
+            <div className="h-[66px] justify-center items-center gap-3 flex flex-col md:flex-row mb-12 w-full max-w-screen-xl">
                 <Select
                     onValueChange={(val) => {
                         if (val === 'all') {
@@ -99,7 +99,7 @@ export const HomePageModule = () => {
                     }}
                 >
                     <SelectTrigger
-                        className='max-w-[200px]'
+                        className='w-full md:max-w-[200px]'
                     >
                         <SelectValue placeholder="Pilih Kategori" />
                     </SelectTrigger>
@@ -122,41 +122,47 @@ export const HomePageModule = () => {
                     onChange={handleSearchChange}
                     placeholder="Nama Subkategori"
                     label="Cari Subkategori"
-                    className='w-full min-w-[400px]'
+                    className='w-full md:min-w-[400px]'
                 />
             </div>
 
             {/* Categories and Subcategories */}
             <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-                {filteredCategories.map((category, index) => (
-                    <div key={index} className="flex flex-col">
-                        <div className="px-5 py-4 bg-[#1ab35f] text-white rounded-xl text-xl font-bold text-center">
-                            {category.name}
-                        </div>
-                        <ul className="bg-white border border-[#d9d9d9] rounded-xl mt-4">
-                            {category.subcategories.map((subcategory, subIndex) => (
-                                <Link
-                                    key={subIndex}
-                                    href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pelanggan'}/${subcategory.split(' ').join('-')}`}
-                                >
-                                    <li
-                                        className={`px-5 py-4 text-center text-[#1ab35f] text-base font-semibold cursor-pointer ${subIndex === 0
+                {filteredCategories.length === 0 ? (
+                    <div className="text-center text-base font-medium text-gray-500 w-full col-span-3 mt-5">
+                        Tidak ada kategori
+                    </div>
+                ) : (
+                    filteredCategories.map((category, index) => (
+                        <div key={index} className="flex flex-col">
+                            <div className="px-5 py-4 bg-[#1ab35f] text-white rounded-xl text-xl font-bold text-center">
+                                {category.name}
+                            </div>
+                            <ul className="bg-white border border-[#d9d9d9] rounded-xl mt-4">
+                                {category.subcategories.map((subcategory, subIndex) => (
+                                    <Link
+                                        key={subIndex}
+                                        href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pelanggan'}/${subcategory.split(' ').join('-')}`}
+                                    >
+                                        <li
+                                            className={`px-5 py-4 text-center text-[#1ab35f] hover:text-green-900 duration-300 text-base font-semibold cursor-pointer ${subIndex === 0
                                                 ? 'rounded-tl-xl rounded-tr-xl'
                                                 : subIndex === category.subcategories.length - 1
                                                     ? 'rounded-bl-xl rounded-br-xl'
                                                     : ''
-                                            }`}
-                                        style={{
-                                            borderBottom: subIndex === category.subcategories.length - 1 ? 'none' : '1px solid #d9d9d9',
-                                        }}
-                                    >
-                                        {subcategory}
-                                    </li>
-                                </Link>
-                            ))}
-                        </ul>
-                    </div>
-                ))}
+                                                }`}
+                                            style={{
+                                                borderBottom: subIndex === category.subcategories.length - 1 ? 'none' : '1px solid #d9d9d9',
+                                            }}
+                                        >
+                                            {subcategory}
+                                        </li>
+                                    </Link>
+                                ))}
+                            </ul>
+                        </div>
+                    ))
+                )}
             </div>
         </main>
     );
