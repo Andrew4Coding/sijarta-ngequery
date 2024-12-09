@@ -1,12 +1,13 @@
 import { z } from "zod";
 
-export type Order = {
+export interface Order {
+    id: string;
     subcategory: string;
-    session: string;
-    price: string;
-    workerName: string;
+    session: number;
+    price: number;
+    workerName?: string;
     status: string;
-};
+}
 
 export const createTestimonySchema = z.object({
     rating: z.number().int().min(1).max(10).refine(value => value >= 1 && value <= 10, {

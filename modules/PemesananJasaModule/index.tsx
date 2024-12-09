@@ -1,103 +1,138 @@
 'use client';
 
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogTitle,
-    DialogTrigger
-} from "@/components/ui/dialog";
-import { useState } from 'react';
-
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { useUserData } from "@/hooks/useUserData";
+import { useEffect, useState } from 'react';
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Textarea } from '@/components/ui/textarea';
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { dummyOrders, statuses } from './const';
-import { createTestimonySchema, Order } from './type';
 import { toast } from "sonner";
-import { v4 } from "uuid";
+import { statuses } from './const';
+import { Order } from './type';
+
+type Category = {
+    name: string;
+    subcategories: string[];
+};
 
 const PemesananJasaModule = () => {
-    const [orders, setOrders] = useState<Order[]>(dummyOrders);
+    const { userData, isAuthenticated } = useUserData();
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [subcategoryFilter, setSubcategoryFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
-    const [openDialog, setOpenDialog] = useState(false);
-    const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
 
-    const handleCancelOrder = (index: number) => {
-        const updatedOrders = [...orders];
-        updatedOrders[index].status = "Pesanan Dibatalkan";
-        setOrders(updatedOrders);
+    useEffect(() => {
+        fetchCategories();
+        if (userData.id) {
+            fetchOrders(userData.id);
+        }
+    }, [subcategoryFilter, statusFilter, isAuthenticated]);
+
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch(`/api/homepage`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const result = await response.json();
+
+            const groupedCategories = groupByCategory(result.data);
+            setCategories(groupedCategories);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
     };
 
-    const filteredOrders = orders.filter(order => {
+    const groupByCategory = (data: any[]): Category[] => {
+        const grouped: { [key: string]: Category } = {};
+        data.forEach((item) => {
+            if (!grouped[item.namakategori]) {
+                grouped[item.namakategori] = { name: item.namakategori, subcategories: [] };
+            }
+            grouped[item.namakategori].subcategories.push(item.namasubkategori);
+        });
+        return Object.values(grouped);
+    };
+
+    const fetchOrders = async (userId: string) => {
+        try {
+            const response = await fetch(
+                `/api/orders?userId=${userId}&subcategory=${subcategoryFilter}&status=${statusFilter}`
+            );
+
+            const result = await response.json();
+
+            console.log("result", result);
+            
+
+            if (response.ok) {
+                setOrders(result.data);
+            } else {
+                toast.error("Gagal memuat pesanan.");
+            }
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+            toast.error("Terjadi kesalahan saat memuat pesanan.");
+        }
+    };
+
+    const cancelOrder = async (orderId: string) => {
+        try {
+            const response = await fetch("/api/orders/status", {
+                method: "POST",
+                body: JSON.stringify({ orderId }),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                toast.success(result.message);
+                fetchOrders(userData.id);
+            } else {
+                toast.error("Gagal membatalkan pesanan.");
+            }
+        } catch (error) {
+            console.error("Error canceling order:", error);
+            toast.error("Terjadi kesalahan saat membatalkan pesanan.");
+        }
+    };
+
+    const filteredOrders = orders.filter((order) => {
         return (
             (subcategoryFilter === "" || order.subcategory === subcategoryFilter) &&
             (statusFilter === "" || order.status === statusFilter)
         );
     });
-
-    const form = useForm<z.infer<typeof createTestimonySchema>>({
-        resolver: zodResolver(createTestimonySchema)
-    });
-
-    const onSubmit = async (data: z.infer<typeof createTestimonySchema>) => {
-      try {
-        const response = await fetch("/api/testimoni", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            idtrpemesanan: v4(), //todo
-            tgl: new Date(),
-            teks: data.comment,
-            rating: data.rating,
-          }),
-        });
-
-        const result = await response.json();
-
-        toast.promise(
-          response.ok
-            ? Promise.resolve(result.message)
-            : Promise.reject(result.error),
-          {
-            loading: "Loading...",
-            success: "Testimoni berhasil dikirim!",
-            error: result.error || "Terjadi kesalahan.",
-          }
-        );
-
-        console.log("Submitted Data:", data);
-      } catch (error) {
-        console.error("Error submitting testimony:", error);
-        toast.error("Terjadi kesalahan saat mengirim testimoni.");
-      }
-    };
     
     return (
         <div className="p-6 bg-gray-100 min-h-screen pt-40 px-10 md:px-32">
             <h2 className="text-center text-[#1ab35f] text-6xl font-normal font-['Newake'] tracking-[3px]">Pesanan Saya</h2>
 
-            {/* Gap between header and dropdown filters */}
+            {/* Filters */}
             <div className="mt-12 flex justify-center gap-6 mb-8">
                 <div className="w-80">
-                    <Select value={subcategoryFilter} onValueChange={setSubcategoryFilter}>
+                    <Select
+                        value={subcategoryFilter}
+                        onValueChange={(val) => setSubcategoryFilter(val === "all" ? "" : val)}
+                    >
                         <SelectTrigger className="px-4 py-3 bg-white border border-gray-300 rounded-xl">
                             <SelectValue placeholder="Pilih Subkategori" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
+                                <SelectItem key={'all'} value="all">Semua Subkategori</SelectItem>
                                 <SelectLabel>Subkategori</SelectLabel>
-                                <SelectItem value="Konsultasi Bisnis">Konsultasi Bisnis</SelectItem>
-                                <SelectItem value="Konsultasi Keuangan">Konsultasi Keuangan</SelectItem>
+                                {categories.flatMap((category) => category.subcategories).map((subcategory, idx) => (
+                                    <SelectItem key={idx} value={subcategory}>{subcategory}</SelectItem>
+                                ))}
                             </SelectGroup>
                         </SelectContent>
                     </Select>
@@ -110,6 +145,7 @@ const PemesananJasaModule = () => {
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>Status Pesanan</SelectLabel>
+                                <SelectItem value="all">Semua Status</SelectItem>
                                 {statuses.map((status, idx) => (
                                     <SelectItem key={idx} value={status}>{status}</SelectItem>
                                 ))}
@@ -134,94 +170,27 @@ const PemesananJasaModule = () => {
                     </TableHeader>
                     <TableBody>
                         {filteredOrders.map((order, index) => (
-                            <TableRow key={index}>
+                            <TableRow key={order.id || index}>
                                 <TableCell>{order.subcategory}</TableCell>
                                 <TableCell>{order.session}</TableCell>
                                 <TableCell>{order.price}</TableCell>
                                 <TableCell>{order.workerName || "Belum Ditentukan"}</TableCell>
-                                <TableCell>{order.status}</TableCell>
+                                <TableCell>{order.status || "-"}</TableCell>
                                 <TableCell>
                                     {order.status === "Menunggu Pembayaran" || order.status === "Mencari Pekerja Terdekat" ? (
                                         <Button
-                                            onClick={() => handleCancelOrder(index)}
+                                            onClick={() => cancelOrder(order.id)}
                                             className="bg-white text-[#f17474] border border-[#ffcdcd] px-5 py-2 rounded-xl"
                                         >
                                             Batalkan
                                         </Button>
                                     ) : order.status === "Pesanan Selesai" ? (
-                                        <Dialog>
-                                            <DialogTrigger>
-                                                <Button className="bg-white text-[#1ab35f] border border-[#b8e7cd] px-5 py-2 rounded-xl">
-                                                    Buat Testimoni
-                                                </Button>
-                                            </DialogTrigger>
-                                            <DialogContent>
-                                                <DialogTitle>Buat Testimoni</DialogTitle>
-                                                <DialogDescription>Berikan rating dan komentar Anda tentang layanan ini</DialogDescription>
-                                                <Form {...form}>
-                                                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                                                        {/* Rating Field */}
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="rating"
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>Rating</FormLabel>
-                                                                    <FormControl>
-                                                                        <Select
-                                                                            onValueChange={(value) => field.onChange(Number(value))}
-                                                                            value={field.value?.toString()}
-                                                                        >
-                                                                            <SelectTrigger className="p-2 border rounded-md w-full">
-                                                                                <SelectValue placeholder="Pilih Rating" />
-                                                                            </SelectTrigger>
-                                                                            <SelectContent>
-                                                                                <SelectGroup>
-                                                                                    <SelectLabel>Rating</SelectLabel>
-                                                                                    {[...Array(10)].map((_, idx) => (
-                                                                                        <SelectItem key={idx} value={(idx + 1).toString()}>{idx + 1}</SelectItem>
-                                                                                    ))}
-                                                                                </SelectGroup>
-                                                                            </SelectContent>
-                                                                        </Select>
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
-
-                            {/* Comment Field */}
-                            <FormField
-                              control={form.control}
-                              name="comment"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Komentar</FormLabel>
-                                  <FormControl>
-                                    <Textarea
-                                      rows={4}
-                                      placeholder="Tulis komentar Anda ..."
-                                      {...field}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
-                                                        <div className="flex justify-end gap-2">
-                                                            <DialogClose asChild>
-                                                                <Button className="bg-red-500 text-white px-5 py-2 rounded-xl">Batal</Button>
-                                                            </DialogClose>
-                                                            <Button type="submit" className="bg-green-500 text-white px-5 py-2 rounded-xl">
-                                                                Submit
-                                                            </Button>
-                                                        </div>
-                                                    </form>
-                                                </Form>
-                                            </DialogContent>
-                                        </Dialog>
-                                    ) : null}
+                                        <Button
+                                            className="bg-white text-[#1ab35f] border border-[#b8e7cd] px-5 py-2 rounded-xl"
+                                        >
+                                            Buat Testimoni
+                                        </Button>
+                                    ) : "-"}
                                 </TableCell>
                             </TableRow>
                         ))}

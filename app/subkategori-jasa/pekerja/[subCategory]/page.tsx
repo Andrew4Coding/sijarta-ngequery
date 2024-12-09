@@ -1,4 +1,4 @@
-import { SubKategoriJasaPekerja } from "@/modules/SubKategoriJasa/SubKategoriJasaPekerja";
+import SubKategoriJasaPekerja from "@/modules/SubKategoriJasa/SubKategoriJasaPekerja";
 
 async function page({ params }: {
   params: Promise<{ subCategory: string }>;

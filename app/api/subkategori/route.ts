@@ -1,12 +1,8 @@
-// app/api/subkategori/route.ts
 import { customSQL } from "@/database/model";
 
 export async function GET(req: Request) {
     const url = new URL(req.url);
     const subCategoryName = url.searchParams.get("name");
-
-    // Tambahkan log di sini
-    console.log("subCategoryName:", subCategoryName);
 
     if (!subCategoryName) {
         return new Response(
@@ -16,9 +12,9 @@ export async function GET(req: Request) {
     }
 
     try {
-        // Query untuk mendapatkan data subkategori berdasarkan nama
         const subcategoryQuery = `
             SELECT 
+                sj.id AS subkategoriid,
                 sj.namasubkategori, 
                 sj.deskripsi,
                 kj.namakategori
@@ -30,20 +26,23 @@ export async function GET(req: Request) {
         const sessionsQuery = `
             SELECT sesi, harga 
             FROM sesi_layanan 
-            WHERE subkategoriid IN (
-                SELECT id FROM subkategori_jasa WHERE namasubkategori = $1
+            WHERE subkategoriid = (
+                SELECT id 
+                FROM subkategori_jasa 
+                WHERE LOWER(namasubkategori) = LOWER($1)
             );
         `;
 
         const subcategoryData = await customSQL(subcategoryQuery, [subCategoryName]);
-        const sessionsData = await customSQL(sessionsQuery, [subCategoryName]);
 
-        if (subcategoryData.length === 0) {
+        if (!subcategoryData.length || !subcategoryData[0].subkategoriid) {
             return new Response(
-                JSON.stringify({ message: "Subcategory not found" }),
+                JSON.stringify({ message: "Subcategory not found or invalid ID" }),
                 { status: 404, headers: { "Content-Type": "application/json" } }
             );
         }
+
+        const sessionsData = await customSQL(sessionsQuery, [subCategoryName]);
 
         return new Response(
             JSON.stringify({
@@ -56,10 +55,16 @@ export async function GET(req: Request) {
             { status: 200, headers: { "Content-Type": "application/json" } }
         );
     } catch (error) {
-        console.error(error);
-        return new Response(
-            JSON.stringify({ message: "Internal Server Error" }),
-            { status: 500, headers: { "Content-Type": "application/json" } }
-        );
+        if (error instanceof Error) {
+            return new Response(
+                JSON.stringify({ message: "Internal Server Error", error: error.message }),
+                { status: 500, headers: { "Content-Type": "application/json" } }
+            );
+        } else {
+            return new Response(
+                JSON.stringify({ message: "Internal Server Error", error: "Unknown error occurred" }),
+                { status: 500, headers: { "Content-Type": "application/json" } }
+            );
+        }
     }
 }
