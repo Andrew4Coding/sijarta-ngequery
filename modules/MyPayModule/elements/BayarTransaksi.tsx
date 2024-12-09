@@ -103,17 +103,6 @@ export const BayarTransaksi = ({ userId }: { userId: string }) => {
                     )}
                   </p>
                   <p className="font-semibold">
-                    Tanggal Pekerjaan:{" "}
-                    {new Date(data.tanggalPekerjaan).toLocaleDateString(
-                      "id-ID",
-                      {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      }
-                    )}
-                  </p>
-                  <p className="font-semibold">
                     Status: <span className="text-red-500">{data.status}</span>
                   </p>
                 </div>
