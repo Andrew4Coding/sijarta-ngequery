@@ -37,7 +37,7 @@ export async function POST(req: Request) {
             return new Response(
                 JSON.stringify({
                     message: "Failed",
-                    error: "All fields are required",
+                    error: `All fields are required, missing fields are ${!id ? 'id, ' : ''}${!alamat ? 'alamat, ' : ''}${!jeniskelamin ? 'jeniskelamin, ' : ''}${!nama ? 'nama, ' : ''}${!nohp ? 'nohp, ' : ''}${!pwd ? 'pwd, ' : ''}${!saldompay ? 'saldompay, ' : ''}${!tgllahir ? 'tgllahir, ' : ''}${!namabank ? 'namabank, ' : ''}${!nomorrekening ? 'nomorrekening, ' : ''}${!npwp ? 'npwp, ' : ''}${!linkfoto ? 'linkfoto, ' : ''}`,
                 }),
                 { status: 400 }
             )
