@@ -79,7 +79,7 @@ export const Navbar = () => {
     }
   }
 
-  if (!userDataState.id && !hideMenus || userDataState === undefined) {
+  if (userDataState === undefined || !userDataState.id && !hideMenus) {
     return null;
   }
 
