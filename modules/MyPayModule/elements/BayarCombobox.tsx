@@ -37,7 +37,7 @@ export const BayarCombobox = ({
           className="w-full justify-between mx-auto"
         >
           {value
-            ? data.find((item) => item.id === value)?.subKategori
+            ? data.find((item) => item.id === value)?.subkategori
             : "Pilih Kategori Transaksi"}
           <ChevronDown className={cn(open ? "rotate-180" : "", "transition-transform")} />
         </Button>
@@ -57,11 +57,11 @@ export const BayarCombobox = ({
                     setOpen(false);
                   }}
                 >
-                  {item.subKategori}
+                  {item.subkategori}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === item.subKategori ? "opacity-100" : "opacity-0"
+                      value === item.subkategori ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

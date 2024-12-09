@@ -28,7 +28,7 @@ export interface BayarTransaksiInterface {
 export interface UnPaidPesananInterface {
   id: string;
   nominal: string;
-  tanggalPemesanan: Date;
-  subKategori: string;
+  tanggalpemesanan: Date;
+  subkategori: string;
   status: string;
 }

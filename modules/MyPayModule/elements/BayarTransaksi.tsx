@@ -89,11 +89,11 @@ export const BayarTransaksi = ({ userId }: { userId: string }) => {
                     </span>
                   </p>
                   <p className="font-semibold">
-                    Sub Kategori: {data.subKategori}
+                    Sub Kategori: {data.subkategori}
                   </p>
                   <p className="font-semibold">
                     Tanggal Pemesanan:{" "}
-                    {new Date(data.tanggalPemesanan).toLocaleDateString(
+                    {new Date(data.tanggalpemesanan).toLocaleDateString(
                       "id-ID",
                       {
                         day: "2-digit",

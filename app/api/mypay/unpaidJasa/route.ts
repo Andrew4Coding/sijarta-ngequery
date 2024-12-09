@@ -46,36 +46,11 @@ export async function GET(req: Request) {
 
   const metodeBayar = await new MetodeBayar().findBy("nama", "MPay");
 
-  const unpaidPesanan = await Promise.all(
-    (
-      await new TrPemesananJasa().findMany("idpelanggan", id)
-    ).map(async (tr) => {
-      const statusPesanan = await new TrPemesananStatus().findBy(
-        "idtrpemesanan",
-        tr.id
-      );
-
-      if (statusPesanan?.idstatus === dibatalkanStatus?.id) {
-        return;
-      }
-
-      if (
-        statusPesanan?.idstatus === status?.id &&
-        tr.idmetodebayar === metodeBayar?.id
-      ) {
-        const subKategori = await new SubkategoriJasa().findBy(
-          "id",
-          tr.idkategorijasa
-        );
-        return {
-          id: tr.id,
-          tanggalPemesanan: tr.tglpemesanan,
-          subKategori: subKategori?.namasubkategori,
-          nominal: tr.totalbiaya,
-          status: status?.nama,
-        };
-      }
-    })
+  const unpaidPesanan = await new TrPemesananJasa().customQuery(
+    `SELECT TRJ.id, TRJ.tglpemesanan AS tanggalPemesanan, TRJ.totalbiaya AS nominal, SJ.namasubkategori AS subKategori, SP.nama AS status
+    FROM TR_PEMESANAN_JASA TRJ, TR_PEMESANAN_STATUS TPS, SUBKATEGORI_JASA SJ, STATUS_PESANAN SP
+    WHERE TRJ.idpelanggan = $1 AND TPS.idtrpemesanan = TRJ.id AND TPS.idstatus = $2 AND TRJ.idmetodebayar = $3 AND TRJ.idkategorijasa = SJ.id AND SP.nama = 'Menunggu Pembayaran'`,
+    [id, status?.id, metodeBayar?.id]
   );
 
   return new Response(
