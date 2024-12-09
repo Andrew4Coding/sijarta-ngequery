@@ -56,13 +56,11 @@ export async function GET(req: Request) {
         );
     } catch (error) {
         if (error instanceof Error) {
-            console.error("Error:", error.message);
             return new Response(
                 JSON.stringify({ message: "Internal Server Error", error: error.message }),
                 { status: 500, headers: { "Content-Type": "application/json" } }
             );
         } else {
-            console.error("Unknown Error:", error);
             return new Response(
                 JSON.stringify({ message: "Internal Server Error", error: "Unknown error occurred" }),
                 { status: 500, headers: { "Content-Type": "application/json" } }

@@ -23,7 +23,7 @@ export async function GET(req: Request) {
         p.JUMLAHPESANANASELESAI AS jumlahpesananaselesai,
         p.LINKFOTO AS linkfoto
       FROM PEKERJA p
-      JOIN "USER" u ON p.ID = u.ID
+      JOIN USERTABLE u ON p.ID = u.ID
       JOIN PEKERJA_KATEGORI_JASA pkj ON pkj.PekerjaId = p.ID
       WHERE pkj.KategoriJasaId = (
         SELECT KategoriJasaId FROM SUBKATEGORI_JASA WHERE id = $1
