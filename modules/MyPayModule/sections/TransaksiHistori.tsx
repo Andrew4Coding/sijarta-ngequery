@@ -8,7 +8,7 @@ export const TransaksiHistori = ({
   historyData: PaymentHistoryInterface[];
 }) => {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-8 pb-2 h-fit overflow-y-scroll pr-2 overflow-x-visible w-full">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-4 gap-y-4 md:gap-y-6 pb-2 h-fit overflow-y-scroll pr-2 overflow-x-visible w-full">
       {historyData.map((item, index) => {
         const date = new Date(item.tanggal).toLocaleDateString(
           "id-ID",
@@ -16,13 +16,6 @@ export const TransaksiHistori = ({
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
-          }
-        );
-        const hours = new Date(item.tanggal).toLocaleTimeString(
-          "en-US",
-          {
-            hour: "2-digit",
-            minute: "2-digit",
           }
         );
         return (
@@ -54,7 +47,6 @@ export const TransaksiHistori = ({
                     currency: "IDR",
                   })}
                 </p>
-                <p className="text-sm md:text-[20px] text-black">{hours}</p>
               </div>
               <p className="text-sm text-end md:text-[20px] font-medium text-black">
                 {item.kategori}
