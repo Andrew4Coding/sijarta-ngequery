@@ -145,13 +145,6 @@ export async function POST(req: Request) {
       }
     }
 
-    const user = await userModel.findBy("id", idPelanggan);
-    if (idMetodeBayar === metodeMpay?.id) {
-      await userModel.update("id", idPelanggan, {
-        saldompay: user?.saldompay ? user.saldompay - totalBiaya : 0,
-      });
-    }
-
     return new Response(
       JSON.stringify({
         success: true,

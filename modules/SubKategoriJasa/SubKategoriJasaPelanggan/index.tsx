@@ -251,7 +251,9 @@ export default function SubKategoriJasaPelanggan({
     toast.success(`Kode diskon berhasil diterapkan! Diskon: ${Potongan}%`);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
   const onSubmit = async () => {
+    setIsLoading(true);
     const { date, discountCode, total, paymentMethod } = form.getValues();
 
     if (!paymentMethod) {
@@ -292,6 +294,8 @@ export default function SubKategoriJasaPelanggan({
     } catch (error) {
       toast.error("Gagal membuat pesanan.");
     }
+
+    setIsLoading(false);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -556,7 +560,9 @@ export default function SubKategoriJasaPelanggan({
                   </div>
                 </div>
                 <DialogClose asChild>
-                  <Button variant={"secondary"}>Tutup</Button>
+                  <Button variant={"secondary"}
+                    disabled={isLoading}
+                  >Tutup</Button>
                 </DialogClose>
               </DialogContent>
             </Dialog>
