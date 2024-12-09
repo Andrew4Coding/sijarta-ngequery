@@ -101,7 +101,7 @@ export const Navbar = () => {
             <p className='font-bold text-base'>Hello, {userData.nama}</p>
             <p className='font-medium text-sm'>
             {
-            Number(userDataState ? userDataState.saldompay : 0).toLocaleString("id-ID", {
+              Number(userDataState ? Number(userDataState.saldompay) : 0).toLocaleString("id-ID", {
               style: "currency",
               currency: "IDR",
             })

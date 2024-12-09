@@ -3,7 +3,8 @@ import { MetodeBayar } from "@/database/models/metodeBayar";
 import { StatusPesanan } from "@/database/models/statusPesanan";
 import { TrPemesananJasa } from "@/database/models/trPemesananJasa";
 import { TrPemesananStatus } from "@/database/models/trPemesananStatus";
-import { DiskonType } from "@/database/types";
+import { User } from "@/database/models/user";
+import { DiskonType, MetodeBayarType } from "@/database/types";
 import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req: Request) {
@@ -68,30 +69,73 @@ export async function POST(req: Request) {
       idmetodebayar: idMetodeBayar,
     });
 
-    const metodeMpay = await new MetodeBayar().findBy("nama", "MPay");
-
-    const statusPesanan = await new StatusPesanan().findBy(
+    const metodeMpay: MetodeBayarType | null = await new MetodeBayar().findBy(
       "nama",
-      idMetodeBayar === metodeMpay
-        ? "Menunggu Pembayaran"
-        : "Mencari Pekerja Terdekat"
+      "MPay"
     );
 
-    if (!statusPesanan) {
+    if (!metodeMpay) {
       return new Response(
         JSON.stringify({
           success: false,
-          message: "Status pesanan tidak ditemukan.",
+          message: "Metode pembayaran tidak ditemukan.",
         }),
         { status: 500 }
       );
     }
 
-    await new TrPemesananStatus().create({
-      idtrpemesanan: idPemesanan,
-      idstatus: statusPesanan.id,
-      tglwaktu: new Date(),
-    });
+    if (metodeMpay?.id === idMetodeBayar) {
+      const statusPesanan = await new StatusPesanan().findBy(
+        "nama",
+        "Menunggu Pembayaran"
+      );
+
+      if (!statusPesanan) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "Status pesanan tidak ditemukan.",
+          }),
+          { status: 500 }
+        );
+      }
+
+      await new TrPemesananStatus().create({
+        idtrpemesanan: idPemesanan,
+        idstatus: statusPesanan.id,
+        tglwaktu: new Date(),
+      });
+    } else {
+      const statusPesanan = await new StatusPesanan().findBy(
+        "nama",
+        "Mencari Pekerja Terdekat"
+      );
+
+      if (!statusPesanan) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "Status pesanan tidak ditemukan.",
+          }),
+          { status: 500 }
+        );
+      }
+
+      await new TrPemesananStatus().create({
+        idtrpemesanan: idPemesanan,
+        idstatus: statusPesanan.id,
+        tglwaktu: new Date(),
+      });
+    }
+
+    // Reduce user mpay
+    const userModel = new User();
+    const user = await userModel.findBy("id", idPelanggan);
+    if (idMetodeBayar === metodeMpay?.id) {
+      await userModel.update("id", idPelanggan, {
+        saldompay: user?.saldompay ? user.saldompay - totalBiaya : 0,
+      });
+    }
 
     return new Response(
       JSON.stringify({
