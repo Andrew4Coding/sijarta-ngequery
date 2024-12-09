@@ -115,8 +115,7 @@ export abstract class BaseModel<T extends QueryParams> {
       const result = await pool.query(query, values);
       return result.rows;
     } catch (error) {
-      console.error("Custom query error:", error);
-      throw new Error("Failed to execute custom query");
+      throw new Error("Failed to execute custom query: " + (error as Error).message);
     }
   }
 }

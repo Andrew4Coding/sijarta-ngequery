@@ -1,86 +1,76 @@
 import { StatusPesanan } from "@/database/models/statusPesanan";
-import { SubkategoriJasa } from "@/database/models/subKategoriJasa";
 import { TrPemesananJasa } from "@/database/models/trPemesananJasa";
-import { TrPemesananStatus } from "@/database/models/trPemesananStatus";
 import { User } from "@/database/models/user";
 
 export async function GET(req: Request) {
-  const query = new URL(req.url).searchParams;
-  const id = query.get("id");
-  const subKategoriQuery = query.get("subCategory");
+  try {
 
-  const user = await new User().findBy("id", id);
-
-  if (!user) {
+    const query = new URL(req.url).searchParams;
+    const id = query.get("id");
+    const subKategoriQuery = query.get("subCategory");
+  
+    const user = await new User().findBy("id", id);
+  
+    if (!user) {
+      return new Response(
+        JSON.stringify({
+          message: "Failed",
+          error: "User not found",
+        }),
+        { status: 404 }
+      );
+    }
+  
+    const status = await new StatusPesanan().findBy(
+      "nama",
+      "Mencari Pekerja Terdekat"
+    );
+  
+    const availableJobs = await new TrPemesananJasa().customQuery(`
+      SELECT
+        tr.id AS order_id,
+        tr.tglpemesanan AS created_at,
+        tr.sesi,
+        subkategori.namasubkategori AS sub_category,
+        tr.totalbiaya AS price,
+        pelanggan.nama AS assignner
+    FROM
+        TR_PEMESANAN_JASA tr
+    JOIN
+        TR_PEMESANAN_STATUS ts ON tr.id = ts.idtrpemesanan
+    JOIN
+        SUBKATEGORI_JASA subkategori ON tr.idkategorijasa = subkategori.id
+    JOIN
+        USERTABLE pelanggan ON tr.idpelanggan = pelanggan.id
+    WHERE
+        tr.idpekerja IS NULL
+        AND ts.idstatus != (SELECT id FROM STATUS_PESANAN WHERE nama = 'Pesanan Dibatalkan') 
+        AND subkategori.namasubkategori = '${subKategoriQuery}' 
+        AND ts.idstatus = '${status?.id}'; 
+    `)
+    
+    return new Response(
+      JSON.stringify({
+        message: "Success",
+        data: {
+          availableJobs: availableJobs.filter((job) => job),
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+  catch (error) {
     return new Response(
       JSON.stringify({
         message: "Failed",
-        error: "User not found",
+        error: (error as Error).message,
       }),
-      { status: 404 }
+      { status: 500 }
     );
   }
-
-  const status = await new StatusPesanan().findBy(
-    "nama",
-    "Mencari Pekerja Terdekat"
-  );
-
-  const dibatalkanStatus = await new StatusPesanan().findBy(
-    "nama",
-    "Pesanan Dibatalkan"
-  );
-
-  const availableJobs = await Promise.all(
-    (
-      await new TrPemesananJasa().customQuery(
-        `SELECT * FROM TR_PEMESANAN_JASA WHERE idpekerja IS NULL`
-      )
-    ).map(async (tr) => {
-      const statusPesanan = await new TrPemesananStatus().findBy(
-        "idtrpemesanan",
-        tr.id
-      );
-
-      if (statusPesanan?.idstatus === dibatalkanStatus?.id) {
-        return;
-      }
-
-      const subKategori = await new SubkategoriJasa().findBy(
-        "id",
-        tr.idkategorijasa
-      );
-
-      if (subKategoriQuery !== subKategori?.namasubkategori) {
-        return;
-      }
-
-      if (statusPesanan?.idstatus === status?.id) {
-        const pelanggan = await new User().findBy("id", tr.idpelanggan);
-        return {
-          id: tr.id,
-          createdAt: tr.tglpemesanan,
-          sesi: tr.sesi,
-          subCategory: subKategori?.namasubkategori,
-          price: tr.totalbiaya,
-          assignner: pelanggan?.nama,
-        };
-      }
-    })
-  );
-
-  return new Response(
-    JSON.stringify({
-      message: "Success",
-      data: {
-        availableJobs: availableJobs.filter((job) => job),
-      },
-    }),
-    {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
 }
