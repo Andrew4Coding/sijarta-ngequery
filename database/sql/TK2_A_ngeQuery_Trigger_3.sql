@@ -24,3 +24,30 @@ CREATE OR REPLACE TRIGGER trigger_cek_pembatasan_voucher
 BEFORE
 INSERT ON TR_PEMESANAN_JASA
 FOR EACH ROW EXECUTE FUNCTION cek_pembatasan_voucher();
+
+
+CREATE OR REPLACE FUNCTION update_pekerja_rating() RETURNS TRIGGER AS $$
+BEGIN
+    -- Update the rating of the pekerja based on the average rating in TESTIMONI
+    UPDATE PEKERJA
+    SET RATING = (
+        SELECT AVG(Rating)
+        FROM TESTIMONI T
+        JOIN TR_PEMESANAN_JASA TPJ ON T.IdTrPemesanan = TPJ.Id
+        WHERE TPJ.idPekerja = PEKERJA.Id
+    )
+    WHERE Id = (
+        SELECT idPekerja
+        FROM TR_PEMESANAN_JASA
+        WHERE Id = NEW.IdTrPemesanan
+    );
+
+    -- Return the NEW record (inserted row)
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trg_update_pekerja_rating AFTER
+INSERT ON TESTIMONI
+FOR EACH ROW EXECUTE FUNCTION update_pekerja_rating();
