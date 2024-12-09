@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { dateConverter } from "../../EditProfileModule";
+import { Testimonial } from "../type";
 
 interface Worker {
   id: string;
@@ -92,6 +93,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
   const [loading, setLoading] = useState(true);
 
   const { userData } = useUserData();
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   useEffect(() => {
     const fetchWorkers = async (subkategoriId: string) => {
@@ -160,8 +162,22 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
       }
     };
 
+    const fetchTestimonials = async () => {
+      try {
+        const response = await fetch("/api/testimoni"); // Sesuaikan endpoint
+        if (!response.ok) throw new Error("Failed to fetch testimonials");
+
+        const result = await response.json();
+        setTestimonials(result.data); // Asumsikan `data` berisi array testimoni
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+        toast.error("Gagal memuat testimoni.");
+      }
+    };
+
     fetchSubcategoryData();
     fetchPaymentMethods();
+    fetchTestimonials();
 
     if (userData.id) {
       fetchDiscounts();
@@ -260,19 +276,25 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
             {subcategoryInfo.namasubkategori}
           </div>
         </div>
-        <p className="text-black text-base font-medium mt-5">{subcategoryInfo.deskripsi}</p>
+        <p className="text-black text-base font-medium mt-5">
+          {subcategoryInfo.deskripsi}
+        </p>
       </div>
 
       {/* Pilihan Sesi Layanan */}
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7">
-        <h2 className="text-[#1ab35f] text-[28px] font-bold">Pilihan Sesi Layanan</h2>
+        <h2 className="text-[#1ab35f] text-[28px] font-bold">
+          Pilihan Sesi Layanan
+        </h2>
         {sessions.map((session, index) => (
           <div
             key={index}
             className="flex justify-between items-center bg-[#e8f7ef] rounded-xl p-5 mb-4"
           >
             <div>
-              <h3 className="text-black text-xl font-bold">Sesi {session.sesi}</h3>
+              <h3 className="text-black text-xl font-bold">
+                Sesi {session.sesi}
+              </h3>
               <p className="text-black text-xl font-medium">
                 Rp {session.harga.toLocaleString("id-ID")}
               </p>
@@ -294,7 +316,10 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                 </DialogHeader>
 
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 flex flex-col gap-4">
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="w-full mt-5 flex flex-col gap-4"
+                  >
                     <FormField
                       control={form.control}
                       name="date"
@@ -305,8 +330,9 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                             <Input
                               disabled
                               label="date"
-                              className='w-full'
-                              placeholder="Tanggal Pemesanan" {...field}
+                              className="w-full"
+                              placeholder="Tanggal Pemesanan"
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
@@ -333,18 +359,31 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                               <SelectContent>
                                 <SelectGroup>
                                   <SelectLabel>Kode Diskon</SelectLabel>
-                                    {discounts.filter((discount) => discount.mintrpemesanan <= session.harga / 1000).length > 0 ? (
-                                    discounts.filter((discount) => discount.mintrpemesanan <= session.harga / 1000).
-                                      map((discount) => (
-                                      <SelectItem key={discount.kode} value={discount.kode}>
-                                        {discount.kode}
-                                      </SelectItem>
-                                    ))
-                                    ) : (
+                                  {discounts.filter(
+                                    (discount) =>
+                                      discount.mintrpemesanan <=
+                                      session.harga / 1000
+                                  ).length > 0 ? (
+                                    discounts
+                                      .filter(
+                                        (discount) =>
+                                          discount.mintrpemesanan <=
+                                          session.harga / 1000
+                                      )
+                                      .map((discount) => (
+                                        <SelectItem
+                                          key={discount.kode}
+                                          value={discount.kode}
+                                        >
+                                          {discount.kode}
+                                        </SelectItem>
+                                      ))
+                                  ) : (
                                     <SelectItem disabled value="empty">
-                                      Tidak ada diskon yang tersedia untuk sesi ini
+                                      Tidak ada diskon yang tersedia untuk sesi
+                                      ini
                                     </SelectItem>
-                                    )}
+                                  )}
                                 </SelectGroup>
                               </SelectContent>
                             </Select>
@@ -362,15 +401,16 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                           <FormControl>
                             <Input
                               disabled
-                              defaultValue={session?.harga??0}
+                              defaultValue={session?.harga ?? 0}
                               label="total"
-                              className='w-full'
-                              placeholder="Total Pembayaran" {...field}
+                              className="w-full"
+                              placeholder="Total Pembayaran"
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
-                      )} 
+                      )}
                     />
                     <FormField
                       control={form.control}
@@ -392,7 +432,10 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                                 <SelectGroup>
                                   <SelectLabel>Metode Pembayaran</SelectLabel>
                                   {paymentMethods.map((method) => (
-                                    <SelectItem key={method.id} value={method.id}>
+                                    <SelectItem
+                                      key={method.id}
+                                      value={method.id}
+                                    >
                                       {method.nama}
                                     </SelectItem>
                                   ))}
@@ -406,11 +449,10 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                     />
                     <Button
                       className="w-full"
-                      variant={'secondary'}
+                      variant={"secondary"}
                       type="submit"
                       onClick={() => {
                         console.log(form.getValues());
-                        
                       }}
                     >
                       Pesan Jasa
@@ -440,12 +482,16 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                       className="object-cover w-full h-full"
                     />
                   </div>
-                  <p className="text-black text-xl font-medium">{worker.nama}</p>
+                  <p className="text-black text-xl font-medium">
+                    {worker.nama}
+                  </p>
                 </div>
               </DialogTrigger>
               <DialogContent className="w-[682px] p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-8">
                 <DialogHeader className="w-full text-center">
-                  <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">Profil Pekerja</DialogTitle>
+                  <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">
+                    Profil Pekerja
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col items-center">
                   <div className="w-[120px] h-[120px] rounded-full overflow-hidden bg-[#f5f5f5] flex items-center justify-center mb-6">
@@ -477,16 +523,42 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                   </div>
                 </div>
                 <DialogClose asChild>
-                  <Button
-                    variant={'secondary'}
-                  >
-                    Tutup
-                  </Button>
+                  <Button variant={"secondary"}>Tutup</Button>
                 </DialogClose>
               </DialogContent>
             </Dialog>
           ))}
         </div>
+      </div>
+      {/* Bagian Testimoni */}
+      <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mt-10">
+        <h2 className="text-[#1ab35f] text-[28px] font-bold">Testimoni</h2>
+        {testimonials.length > 0 ? (
+          testimonials.map((testimonial, index) => (
+            <div
+              key={index}
+              className="border-b border-[#d9d9d9] pb-4 mb-4 last:border-none last:mb-0"
+            >
+              <div className="flex items-center mb-2">
+                <p className="text-black text-lg font-semibold">
+                  {testimonial.customerName}
+                </p>
+                <span className="text-[#1ab35f] text-sm ml-2">
+                  {testimonial.rating.toFixed(1)} ⭐
+                </span>
+              </div>
+              <p className="text-black text-sm mb-2">"{testimonial.review}"</p>
+              <p className="text-gray-500 text-xs">
+                Dipekerjakan oleh {testimonial.workerName} pada{" "}
+                {new Date(testimonial.date).toLocaleDateString("id-ID")}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">
+            Belum ada testimoni untuk kategori ini.
+          </p>
+        )}
       </div>
     </main>
   );

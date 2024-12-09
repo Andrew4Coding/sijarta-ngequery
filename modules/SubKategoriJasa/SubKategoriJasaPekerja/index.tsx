@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { Testimonial } from '../type';
 
 interface Session {
   sesi: number;
@@ -34,6 +35,7 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [isJoined, setIsJoined] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   useEffect(() => {
     const fetchSubcategoryData = async () => {
@@ -57,7 +59,21 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
       }
     };
 
+    const fetchTestimonials = async () => {
+      try {
+        const response = await fetch("/api/testimoni"); // Sesuaikan endpoint
+        if (!response.ok) throw new Error("Failed to fetch testimonials");
+
+        const result = await response.json();
+        setTestimonials(result.data); // Asumsikan `data` berisi array testimoni
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+        toast.error("Gagal memuat testimoni.");
+      }
+    };
+
     fetchSubcategoryData();
+    fetchTestimonials();
   }, [subCategory]);
 
   const fetchWorkers = async (subkategoriId: string) => {
@@ -92,26 +108,32 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
             {subcategoryInfo.namasubkategori}
           </div>
         </div>
-        <p className="text-black text-base font-medium mt-5">{subcategoryInfo.deskripsi}</p>
+        <p className="text-black text-base font-medium mt-5">
+          {subcategoryInfo.deskripsi}
+        </p>
       </div>
 
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7">
-        <h2 className="text-[#1ab35f] text-[28px] font-bold">Pilihan Sesi Layanan</h2>
+        <h2 className="text-[#1ab35f] text-[28px] font-bold">
+          Pilihan Sesi Layanan
+        </h2>
         {sessions.map((session, index) => (
-          <div key={index} className="flex justify-between items-center bg-[#e8f7ef] rounded-xl p-5 mb-4">
+          <div
+            key={index}
+            className="flex justify-between items-center bg-[#e8f7ef] rounded-xl p-5 mb-4"
+          >
             <div>
-              <h3 className="text-black text-xl font-bold">Sesi {session.sesi}</h3>
+              <h3 className="text-black text-xl font-bold">
+                Sesi {session.sesi}
+              </h3>
               <p className="text-black text-xl font-medium">
-                Rp {session.harga.toLocaleString('id-ID')}
+                Rp {session.harga.toLocaleString("id-ID")}
               </p>
             </div>
           </div>
         ))}
         {!isJoined && (
-          <Button onClick={handleJoin}
-            variant={'secondary'}
-            className='w-full'
-          >
+          <Button onClick={handleJoin} variant={"secondary"} className="w-full">
             Bergabung
           </Button>
         )}
@@ -126,24 +148,28 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
                 <div className="p-4 bg-[#e8f7ef] rounded-xl text-center hover:bg-[#d7f0e3] transition cursor-pointer border border-[#d9d9d9]">
                   <div className="w-[84px] h-[84px] bg-white rounded-xl border border-[#d9d9d9] mb-3 mx-auto overflow-hidden">
                     <Image
-                      src={worker.linkfoto || '/default-profile.png'}
+                      src={worker.linkfoto || "/default-profile.png"}
                       alt={`Foto ${worker.nama}`}
                       width={84}
                       height={84}
                       className="object-cover w-full h-full"
                     />
                   </div>
-                  <p className="text-black text-xl font-medium">{worker.nama}</p>
+                  <p className="text-black text-xl font-medium">
+                    {worker.nama}
+                  </p>
                 </div>
               </DialogTrigger>
               <DialogContent className="w-[682px] p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-8">
                 <DialogHeader>
-                  <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">Profil Pekerja</DialogTitle>
+                  <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">
+                    Profil Pekerja
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col items-center">
                   <div className="w-[120px] h-[120px] rounded-full overflow-hidden bg-[#f5f5f5] flex items-center justify-center mb-6">
                     <Image
-                      src={worker.linkfoto || '/default-profile.png'}
+                      src={worker.linkfoto || "/default-profile.png"}
                       alt={`Foto ${worker.nama}`}
                       className="w-full h-full object-cover"
                       width={120}
@@ -164,7 +190,9 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
                       <p>{worker.rating} / 5</p>
                       <p>{worker.jumlahpesananaselesai}</p>
                       <p>{worker.nohp}</p>
-                      <p>{new Date(worker.tgllahir).toLocaleDateString('id-ID')}</p>
+                      <p>
+                        {new Date(worker.tgllahir).toLocaleDateString("id-ID")}
+                      </p>
                       <p>{worker.alamat}</p>
                     </div>
                   </div>
@@ -178,6 +206,36 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
             </Dialog>
           ))}
         </div>
+      </div>
+      {/* Bagian Testimoni */}
+      <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mt-10">
+        <h2 className="text-[#1ab35f] text-[28px] font-bold">Testimoni</h2>
+        {testimonials.length > 0 ? (
+          testimonials.map((testimonial, index) => (
+            <div
+              key={index}
+              className="border-b border-[#d9d9d9] pb-4 mb-4 last:border-none last:mb-0"
+            >
+              <div className="flex items-center mb-2">
+                <p className="text-black text-lg font-semibold">
+                  {testimonial.customerName}
+                </p>
+                <span className="text-[#1ab35f] text-sm ml-2">
+                  {testimonial.rating.toFixed(1)} ⭐
+                </span>
+              </div>
+              <p className="text-black text-sm mb-2">"{testimonial.review}"</p>
+              <p className="text-gray-500 text-xs">
+                Dipekerjakan oleh {testimonial.workerName} pada{" "}
+                {new Date(testimonial.date).toLocaleDateString("id-ID")}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">
+            Belum ada testimoni untuk kategori ini.
+          </p>
+        )}
       </div>
     </main>
   );
