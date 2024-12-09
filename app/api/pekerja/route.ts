@@ -44,17 +44,9 @@ export async function GET(req: Request) {
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
-    if (error instanceof Error) {
-      console.error("Error fetching pekerja data:", error.message);
-      return new Response(
-        JSON.stringify({ message: "Internal Server Error", error: error.message }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    console.error("Unknown error fetching pekerja data:", error);
+    console.error("Error fetching pekerja data:", error);
     return new Response(
-      JSON.stringify({ message: "Internal Server Error", error: "Unknown error occurred" }),
+      JSON.stringify({ message: "Internal Server Error", error: error instanceof Error ? error.message : "Unknown error" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

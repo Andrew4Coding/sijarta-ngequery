@@ -35,7 +35,6 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
   const [isJoined, setIsJoined] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Fetch subcategory info
   useEffect(() => {
     const fetchSubcategoryData = async () => {
       try {
@@ -61,7 +60,6 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
     fetchSubcategoryData();
   }, [subCategory]);
 
-  // Fetch workers
   const fetchWorkers = async (subkategoriId: string) => {
     try {
       const response = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
@@ -85,7 +83,6 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
 
   return (
     <main className="bg-[#f8f8f8] min-h-screen pt-[132px] pb-[32px] px-6">
-      {/* Subcategory Information */}
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mb-10">
         <div className="flex">
           <div className="flex-1 h-[46px] bg-[#1ab35f] text-center text-white text-xl font-bold rounded-tl-[20px] rounded-bl-[20px] flex items-center justify-center">
@@ -98,7 +95,6 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
         <p className="text-black text-base font-medium mt-5">{subcategoryInfo.deskripsi}</p>
       </div>
 
-      {/* Pilihan Sesi Layanan */}
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7">
         <h2 className="text-[#1ab35f] text-[28px] font-bold">Pilihan Sesi Layanan</h2>
         {sessions.map((session, index) => (
@@ -118,7 +114,6 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
         )}
       </div>
 
-      {/* Workers Section */}
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mt-8">
         <h2 className="text-[#1ab35f] text-[28px] font-bold mb-6">Pekerja</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -139,7 +134,7 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
                 </div>
               </DialogTrigger>
               <DialogContent className="w-[682px] p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-8">
-                <DialogHeader className="w-full text-center">
+                <DialogHeader>
                   <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">Profil Pekerja</DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col items-center">
