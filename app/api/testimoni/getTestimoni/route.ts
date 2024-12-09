@@ -7,14 +7,15 @@ export async function GET(req: Request) {
     const id = query.get("subKategoriId");
     const trPemesananJasa = await new TrPemesananJasa().findMany("idkategorijasa", id);
     const testimonyModel = new Testimoni();
-    const testimonies = await Promise.all([
+    const testimonies = await Promise.all(
       trPemesananJasa.map(async(jasa) =>
       {
-        const testimonies = await testimonyModel.findMany("idtrpemesanan", jasa.id); 
+        const testimonies = await testimonyModel.findBy("idtrpemesanan", jasa.id); 
+        return testimonies;
       })
-    ])
+    )
 
-    if (!testimonies) {
+    if (testimonies.length === 0) {
       return new Response(
         JSON.stringify({ success: true, data: [], message: "Tidak ada testimoni tersedia" }),
         {
@@ -25,7 +26,7 @@ export async function GET(req: Request) {
     }
 
     return new Response(
-      JSON.stringify({ success: true, data: testimonies}),
+      JSON.stringify({ success: true, data: testimonies.filter((testimony) => testimony) }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

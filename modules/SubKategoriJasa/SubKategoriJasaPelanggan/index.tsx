@@ -111,6 +111,22 @@ export default function SubKategoriJasaPelanggan({
   const { userData } = useUserData();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
+  const fetchTestimonials = async (subCategorieId: string) => {
+    try {
+      const response = await fetch(
+        `/api/testimoni/getTestimoni?subKategoriId=${subCategorieId}`
+      ); // Sesuaikan endpoint
+      if (!response.ok) throw new Error("Failed to fetch testimonials");
+
+      const result = await response.json();
+      setTestimonials(result.data); // Asumsikan `data` berisi array testimoni
+    } catch (error) {
+      console.error("Error fetching testimonials:", error);
+      toast.error("Gagal memuat testimoni.");
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     const fetchWorkers = async (subkategoriId: string) => {
       try {
@@ -141,6 +157,8 @@ export default function SubKategoriJasaPelanggan({
 
         if (result.data.subcategory.subkategoriid) {
           await fetchWorkers(result.data.subcategory.subkategoriid);
+          await fetchTestimonials(result.data.subcategory.subkategoriid);
+          setLoading(false);
         }
       } catch (error) {
         console.error(
@@ -148,8 +166,6 @@ export default function SubKategoriJasaPelanggan({
           JSON.stringify(error, null, 2)
         );
         toast.error("Gagal memuat subkategori.");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -184,22 +200,8 @@ export default function SubKategoriJasaPelanggan({
       }
     };
 
-    const fetchTestimonials = async () => {
-      try {
-        const response = await fetch(`/api/testimoni/getTestimoni?subKategoriId=${subcategoryInfo?.subkategoriid}`); // Sesuaikan endpoint
-        if (!response.ok) throw new Error("Failed to fetch testimonials");
-
-        const result = await response.json();
-        setTestimonials(result.data); // Asumsikan `data` berisi array testimoni
-      } catch (error) {
-        console.error("Error fetching testimonials:", error);
-        toast.error("Gagal memuat testimoni.");
-      }
-    };
-
     fetchSubcategoryData();
     fetchPaymentMethods();
-    fetchTestimonials();
 
     if (userData.id) {
       fetchDiscounts();
