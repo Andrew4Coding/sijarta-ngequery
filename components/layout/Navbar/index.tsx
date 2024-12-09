@@ -78,8 +78,8 @@ export const Navbar = () => {
             <div className='flex gap-2 items-center'>
               <div className='flex items-center gap-2 text-sm'>
                 <div className='text-right'>
-                  <p className='font-bold text-lg'>Hello, {userData.nama}</p>
-                  <p className='font-medium text-base'>Rp {userData.saldoMpay}</p>
+                  <p className='font-bold text-base'>Hello, {userData.nama}</p>
+                  <p className='font-medium text-sm'>Rp {userData.saldoMpay}</p>
                 </div>
                 <Avatar
                   className='cursor-pointer'
@@ -87,7 +87,7 @@ export const Navbar = () => {
                     router.push('/profile')
                   }}
                 >
-                  <AvatarImage src={userData.linkfoto ?? `https://github.com/shadcn.png`} />
+                  <AvatarImage src={userData.linkfoto ?? `/images/profpic_placeholder.png`} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </div>
