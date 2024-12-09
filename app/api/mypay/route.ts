@@ -19,11 +19,22 @@ export async function GET(req: Request) {
   }
 
   const trHistory = await new TrMpay().customQuery(
-    `SELECT TRM.id, TRM.tgl AS tanggal, TRM.nominal, KTM.id AS kategoriid, KTM.nama AS kategori 
-    FROM TR_MPAY TRM, KATEGORI_TR_MPAY KTM WHERE TRM.userid = $1 and TRM.kategoriid = KTM.id
+    `SELECT 
+      TRM.id, 
+      TRM.tgl AS tanggal, 
+      TRM.nominal, 
+      KTM.id AS kategoriid, 
+      KTM.nama AS kategori 
+    FROM 
+      TR_MPAY TRM, 
+      KATEGORI_TR_MPAY KTM 
+    WHERE 
+      TRM.userid = $1 
+    and 
+      TRM.kategoriid = KTM.id
     ORDER BY TRM.tgl ASC`,
     [id]
-  ); 
+  );
 
   return new Response(
     JSON.stringify({

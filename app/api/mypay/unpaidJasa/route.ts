@@ -42,9 +42,24 @@ export async function GET(req: Request) {
   const metodeBayar = await new MetodeBayar().findBy("nama", "MPay");
 
   const unpaidPesanan = await new TrPemesananJasa().customQuery(
-    `SELECT TRJ.id, TRJ.tglpemesanan AS tanggalPemesanan, TRJ.totalbiaya AS nominal, SJ.namasubkategori AS subKategori, SP.nama AS status
-    FROM TR_PEMESANAN_JASA TRJ, TR_PEMESANAN_STATUS TPS, SUBKATEGORI_JASA SJ, STATUS_PESANAN SP
-    WHERE TRJ.idpelanggan = $1 AND TPS.idtrpemesanan = TRJ.id AND TPS.idstatus = $2 AND TRJ.idmetodebayar = $3 AND TRJ.idkategorijasa = SJ.id AND SP.nama = 'Menunggu Pembayaran'`,
+    `SELECT 
+      TRJ.id, 
+      TRJ.tglpemesanan AS tanggalPemesanan, 
+      TRJ.totalbiaya AS nominal, 
+      SJ.namasubkategori AS subKategori, 
+      SP.nama AS status
+    FROM 
+      TR_PEMESANAN_JASA TRJ, 
+      TR_PEMESANAN_STATUS TPS, 
+      SUBKATEGORI_JASA SJ, 
+      STATUS_PESANAN SP
+    WHERE 
+      TRJ.idpelanggan = $1 AND 
+      TPS.idtrpemesanan = TRJ.id AND 
+      TPS.idstatus = $2 AND 
+      TRJ.idmetodebayar = $3 AND 
+      TRJ.idkategorijasa = SJ.id AND 
+      SP.nama = 'Menunggu Pembayaran'`,
     [id, status?.id, metodeBayar?.id]
   );
 
