@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +9,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -49,12 +56,16 @@ interface Discount {
 
 const BeliJasaSchema = z.object({
   date: z.string(),
-  discountCode: z.string(),
-  total: z.number(),
+  discountCode: z.string().optional(),
+  total: z.string(),
   paymentMethod: z.string(),
 });
 
-export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory: string }) {
+export default function SubKategoriJasaPelanggan({
+  subCategory,
+}: {
+  subCategory: string;
+}) {
   const [newOrder, setNewOrder] = useState({
     date: new Date().toLocaleDateString(),
     discountCode: "",
@@ -68,27 +79,32 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
     values: {
       date: new Date().toLocaleDateString(),
       discountCode: newOrder.discountCode,
-      total: newOrder.total,
+      total: newOrder.total.toString(),
       paymentMethod: newOrder.paymentMethod,
-    }
+    },
   });
 
   const router = useRouter();
-  
+
   const [subcategoryInfo, setSubcategoryInfo] = useState<{
     namasubkategori: string;
     deskripsi: string;
     namakategori: string;
     subkategoriid?: string;
   } | null>(null);
-  const [sessions, setSessions] = useState<{ sesi: number; harga: number }[]>([]);
-  const [paymentMethods, setPaymentMethods] = useState<{ id: string; nama: string }[]>([]);
+  const [sessions, setSessions] = useState<{ sesi: number; harga: number }[]>(
+    []
+  );
+  const [paymentMethods, setPaymentMethods] = useState<
+    { id: string; nama: string }[]
+  >([]);
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [discounts, setDiscounts] = useState<Discount[]>([]);
 
-  const [selectedSession, setSelectedSession] = useState<{ sesi: number; harga: number } | null>(
-    null
-  );
+  const [selectedSession, setSelectedSession] = useState<{
+    sesi: number;
+    harga: number;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
   const { userData } = useUserData();
@@ -96,7 +112,9 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
   useEffect(() => {
     const fetchWorkers = async (subkategoriId: string) => {
       try {
-        const workersResponse = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
+        const workersResponse = await fetch(
+          `/api/pekerja?subkategoriId=${subkategoriId}`
+        );
 
         if (!workersResponse.ok) throw new Error("Failed to fetch workers");
         const workersResult = await workersResponse.json();
@@ -110,7 +128,9 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
     const fetchSubcategoryData = async () => {
       try {
         const formattedSubCategory = subCategory.replace(/-/g, " ");
-        const response = await fetch(`/api/subkategori?name=${encodeURIComponent(formattedSubCategory)}`);
+        const response = await fetch(
+          `/api/subkategori?name=${encodeURIComponent(formattedSubCategory)}`
+        );
         if (!response.ok) throw new Error("Failed to fetch subcategory data");
 
         const result = await response.json();
@@ -121,7 +141,10 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
           await fetchWorkers(result.data.subcategory.subkategoriid);
         }
       } catch (error) {
-        console.error("Error fetching subcategory data:", JSON.stringify(error, null, 2));
+        console.error(
+          "Error fetching subcategory data:",
+          JSON.stringify(error, null, 2)
+        );
         toast.error("Gagal memuat subkategori.");
       } finally {
         setLoading(false);
@@ -142,7 +165,6 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
       }
     };
 
-    
     const fetchDiscounts = async () => {
       try {
         const response = await fetch(`/api/diskon?id=${userData.id}`);
@@ -166,7 +188,6 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
     if (userData.id) {
       fetchDiscounts();
     }
-
   }, [userData.id]);
 
   const handlePesanClick = (session: { sesi: number; harga: number }) => {
@@ -180,7 +201,9 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
       return;
     }
 
-    const selectedDiscount = discounts.find((discount) => discount.kode === discountCode);
+    const selectedDiscount = discounts.find(
+      (discount) => discount.kode === discountCode
+    );
 
     if (!selectedDiscount) {
       toast.error("Kode diskon tidak valid.");
@@ -188,10 +211,13 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
       return;
     }
 
-    const { potongan: Potongan, mintrpemesanan: MinTrPemesanan } = selectedDiscount;
+    const { potongan: Potongan, mintrpemesanan: MinTrPemesanan } =
+      selectedDiscount;
 
     if (selectedSession.harga < MinTrPemesanan) {
-      toast.error(`Total harga harus minimal Rp ${MinTrPemesanan.toLocaleString("id-ID")}`);
+      toast.error(
+        `Total harga harus minimal Rp ${MinTrPemesanan.toLocaleString("id-ID")}`
+      );
       return;
     }
 
@@ -205,7 +231,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
     }));
 
     toast.success(`Kode diskon berhasil diterapkan! Diskon: ${Potongan}%`);
-  }
+  };
 
   const onSubmit = async () => {
     const { date, discountCode, total, paymentMethod } = form.getValues();
@@ -219,7 +245,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
 
         body: JSON.stringify({
           tglPemesanan: date,
-          totalBiaya: total,
+          totalBiaya: Number(total),
           idPelanggan: userData.id,
           idDiskon: discountCode,
           idMetodeBayar: paymentMethod,
@@ -228,19 +254,16 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
         }),
       });
 
-
       if (!response.ok) throw new Error("Failed to create order");
 
       toast.success("Pesanan berhasil diproses!");
 
       setTimeout(() => {
         router.push("/pemesanan-jasa");
-      }
-      , 2000);
-    }
-    catch (error) {
+      }, 2000);
+    } catch (error) {
       console.log(error);
-      
+
       toast.error("Gagal membuat pesanan.");
     }
   };
@@ -260,19 +283,25 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
             {subcategoryInfo.namasubkategori}
           </div>
         </div>
-        <p className="text-black text-base font-medium mt-5">{subcategoryInfo.deskripsi}</p>
+        <p className="text-black text-base font-medium mt-5">
+          {subcategoryInfo.deskripsi}
+        </p>
       </div>
 
       {/* Pilihan Sesi Layanan */}
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7">
-        <h2 className="text-[#1ab35f] text-[28px] font-bold">Pilihan Sesi Layanan</h2>
+        <h2 className="text-[#1ab35f] text-[28px] font-bold">
+          Pilihan Sesi Layanan
+        </h2>
         {sessions.map((session, index) => (
           <div
             key={index}
             className="flex justify-between items-center bg-[#e8f7ef] rounded-xl p-5 mb-4"
           >
             <div>
-              <h3 className="text-black text-xl font-bold">Sesi {session.sesi}</h3>
+              <h3 className="text-black text-xl font-bold">
+                Sesi {session.sesi}
+              </h3>
               <p className="text-black text-xl font-medium">
                 Rp {session.harga.toLocaleString("id-ID")}
               </p>
@@ -294,7 +323,10 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                 </DialogHeader>
 
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-5 flex flex-col gap-4">
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="w-full mt-5 flex flex-col gap-4"
+                  >
                     <FormField
                       control={form.control}
                       name="date"
@@ -305,8 +337,9 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                             <Input
                               disabled
                               label="date"
-                              className='w-full'
-                              placeholder="Tanggal Pemesanan" {...field}
+                              className="w-full"
+                              placeholder="Tanggal Pemesanan"
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
@@ -333,18 +366,31 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                               <SelectContent>
                                 <SelectGroup>
                                   <SelectLabel>Kode Diskon</SelectLabel>
-                                    {discounts.filter((discount) => discount.mintrpemesanan <= session.harga / 1000).length > 0 ? (
-                                    discounts.filter((discount) => discount.mintrpemesanan <= session.harga / 1000).
-                                      map((discount) => (
-                                      <SelectItem key={discount.kode} value={discount.kode}>
-                                        {discount.kode}
-                                      </SelectItem>
-                                    ))
-                                    ) : (
+                                  {discounts.filter(
+                                    (discount) =>
+                                      discount.mintrpemesanan <=
+                                      session.harga / 1000
+                                  ).length > 0 ? (
+                                    discounts
+                                      .filter(
+                                        (discount) =>
+                                          discount.mintrpemesanan <=
+                                          session.harga / 1000
+                                      )
+                                      .map((discount) => (
+                                        <SelectItem
+                                          key={discount.kode}
+                                          value={discount.kode}
+                                        >
+                                          {discount.kode}
+                                        </SelectItem>
+                                      ))
+                                  ) : (
                                     <SelectItem disabled value="empty">
-                                      Tidak ada diskon yang tersedia untuk sesi ini
+                                      Tidak ada diskon yang tersedia untuk sesi
+                                      ini
                                     </SelectItem>
-                                    )}
+                                  )}
                                 </SelectGroup>
                               </SelectContent>
                             </Select>
@@ -362,15 +408,16 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                           <FormControl>
                             <Input
                               disabled
-                              defaultValue={session?.harga??0}
+                              defaultValue={session?.harga ?? 0}
                               label="total"
-                              className='w-full'
-                              placeholder="Total Pembayaran" {...field}
+                              className="w-full"
+                              placeholder="Total Pembayaran"
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
-                      )} 
+                      )}
                     />
                     <FormField
                       control={form.control}
@@ -392,7 +439,10 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                                 <SelectGroup>
                                   <SelectLabel>Metode Pembayaran</SelectLabel>
                                   {paymentMethods.map((method) => (
-                                    <SelectItem key={method.id} value={method.id}>
+                                    <SelectItem
+                                      key={method.id}
+                                      value={method.id}
+                                    >
                                       {method.nama}
                                     </SelectItem>
                                   ))}
@@ -406,11 +456,10 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                     />
                     <Button
                       className="w-full"
-                      variant={'secondary'}
+                      variant={"secondary"}
                       type="submit"
                       onClick={() => {
                         console.log(form.getValues());
-                        
                       }}
                     >
                       Pesan Jasa
@@ -440,12 +489,16 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                       className="object-cover w-full h-full"
                     />
                   </div>
-                  <p className="text-black text-xl font-medium">{worker.nama}</p>
+                  <p className="text-black text-xl font-medium">
+                    {worker.nama}
+                  </p>
                 </div>
               </DialogTrigger>
               <DialogContent className="w-[682px] p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-8">
                 <DialogHeader className="w-full text-center">
-                  <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">Profil Pekerja</DialogTitle>
+                  <DialogTitle className="text-center text-[#1ab35f] text-2xl font-bold">
+                    Profil Pekerja
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col items-center">
                   <div className="w-[120px] h-[120px] rounded-full overflow-hidden bg-[#f5f5f5] flex items-center justify-center mb-6">
@@ -477,11 +530,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                   </div>
                 </div>
                 <DialogClose asChild>
-                  <Button
-                    variant={'secondary'}
-                  >
-                    Tutup
-                  </Button>
+                  <Button variant={"secondary"}>Tutup</Button>
                 </DialogClose>
               </DialogContent>
             </Dialog>
