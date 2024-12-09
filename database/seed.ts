@@ -1,7 +1,7 @@
 import pool from "./db";
 
 export async function resetDatabase() {
-  await pool.query(`
+    await pool.query(`
         DROP TABLE IF EXISTS TR_PEMBELIAN_VOUCHER;
         DROP TABLE IF EXISTS PROMO;
         DROP TABLE IF EXISTS VOUCHER;
@@ -22,11 +22,11 @@ export async function resetDatabase() {
         DROP TABLE IF EXISTS USERTABLE;
     `);
 
-  console.log("Reset database done!");
+    console.log('Reset database done!');
 }
 
 export async function createTable() {
-  await pool.query(`
+    await pool.query(`
         CREATE TABLE USERTABLE (
             ID UUID PRIMARY KEY,
             NAMA VARCHAR(255),
@@ -181,11 +181,11 @@ export async function createTable() {
         );
     `);
 
-  console.log("Table created successfully");
+    console.log("Table created successfully");
 }
 
 export async function seedDatabase() {
-  await pool.query(`
+    await pool.query(`
         -- INSERT DATA DUMMY
         -- AILEEN
         INSERT INTO USERTABLE (ID, NAMA, JENISKELAMIN, NOHP, PWD, TGLLAHIR, ALAMAT, SALDOMPAY) VALUES
@@ -223,7 +223,7 @@ export async function seedDatabase() {
         ('444e0113-4234-5678-8914-ddefdddefdde', 'Withdrawal'),
         ('555e0114-5234-5678-8915-eefeeedefeef', 'Pengembalian Dana'),
         ('666e0115-6234-5678-8916-ffefffefefef', 'Pembayaran Voucher'),
-        ('777e0116-7234-5678-8917-001100112223', 'Terima Transfer'),
+        ('777e0116-7234-5678-8917-001100112223', 'Terima Transfer');
         ('888e0117-8234-5678-8918-113322114455', 'Menerima Honor Transaksi Jasa');
 
         INSERT INTO TR_MPAY (ID, USERID, TGL, NOMINAL, KATEGORIID) VALUES
@@ -476,11 +476,11 @@ export async function seedDatabase() {
         ('14a32e52-dccf-4322-ba92-052d83dfab4c', '2024-10-22', 'Menyesal menggunakan layanan ini, tidak sesuai.', 1);    
     `);
 
-  console.log("Seeding database done!");
+    console.log('Seeding database done!');
 }
 
 export async function seedTrigger() {
-  await pool.query(`
+    await pool.query(`
         -- Trigger to check if phone number already exists
         CREATE OR REPLACE FUNCTION check_phone_number_exists() 
         RETURNS TRIGGER AS $$
@@ -580,14 +580,13 @@ export async function seedTrigger() {
         EXECUTE FUNCTION plus_saldo_on_selesai();
     `);
 
-  console.log("Seeding trigger done!");
+    console.log('Seeding trigger done!');
 }
 
 async function seedDatabaseRun() {
-  await resetDatabase();
-  await createTable();
-  await seedDatabase();
-  await seedTrigger();
+    await resetDatabase();
+    await createTable();
+    await seedDatabase();
+    await seedTrigger();
 }
 
-seedDatabaseRun();
