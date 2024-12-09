@@ -27,6 +27,8 @@ export async function resetDatabase() {
 
 export async function createTable() {
     await pool.query(`
+        CREATE EXTENSION pgcrypto;
+
         CREATE TABLE USERTABLE (
             ID UUID PRIMARY KEY,
             NAMA VARCHAR(255),
@@ -546,16 +548,15 @@ export async function seedTrigger() {
             pekerjaId UUID;
             kategoriId UUID;
             BEGIN
-            IF NEW.IdStatus = (SELECT id FROM STATUS_PESANAN WHERE nama = 'Pesanan selesai') 
+            IF NEW.IdStatus = (SELECT id FROM STATUS_PESANAN WHERE nama = 'Pesanan Selesai') 
             THEN
                 SELECT IdPekerja, TotalBiaya
                     INTO pekerjaId, nominal
                     FROM TR_PEMESANAN_JASA TJ
                     WHERE NEW.IdTrPemesanan = TJ.id;
                 UPDATE USERTABLE 
-                    SET saldo = saldo + nominal
+                    SET SALDOMPAY = SALDOMPAY + nominal
                     WHERE USERTABLE.Id = pekerjaId;
-                    RETURN NEW;
                 SELECT id
                     INTO kategoriId
                     FROM KATEGORI_TR_MPAY
@@ -563,7 +564,7 @@ export async function seedTrigger() {
                 INSERT INTO TR_MPAY (Id, UserId, Tgl, Nominal, KategoriId)
                 VALUES (
                     gen_random_uuid(),
-                    pekerja_id,
+                    pekerjaId,
                     CURRENT_DATE,
                     nominal,
                     kategoriId

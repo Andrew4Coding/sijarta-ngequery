@@ -9,7 +9,7 @@ export interface PaymentHistoryInterface {
   nominal: number;
   tanggal: Date;
   kategoriid: string;
-  kategori: PaymentType | "Terima Transfer" | "Pembayaran Voucher";
+  kategori: PaymentType | "Terima Transfer" | "Pembayaran Voucher" | "Menerima Honor Transaksi Jasa" | "Pengembalian Dana";
 }
 
 export interface ResponseInterface {
