@@ -1,4 +1,5 @@
 import pool from "@/database/db";
+import { StatusPesanan } from "@/database/models/statusPesanan";
 
 export async function POST(req: Request) {
     try {
@@ -11,14 +12,14 @@ export async function POST(req: Request) {
             );
         }
 
-        const cancelStatusId = "a1b2c3d4-e5f6-7890-1234-f01890123456"; // Status "Pesanan Dibatalkan"
+        const cancelStatusId = await new StatusPesanan().findBy("nama", "Pesanan Dibatalkan");
 
         const query = `
             INSERT INTO tr_pemesanan_status (idtrpemesanan, idstatus, tglwaktu)
             VALUES ($1, $2, NOW())
         `;
 
-        await pool.query(query, [orderId, cancelStatusId]);
+        await pool.query(query, [orderId, cancelStatusId?.id]);
 
         return new Response(
             JSON.stringify({ message: "Order canceled successfully" }),
