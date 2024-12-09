@@ -44,7 +44,7 @@ export const RegisterPelangganForm = () => {
                 jeniskelamin: data.jenisKelamin,
                 nohp: data.noHp,
                 pwd: data.password,
-                saldompay: 0,
+                saldompay: 10000,
                 tgllahir: new Date(data.tanggalLahir)
             }
 
