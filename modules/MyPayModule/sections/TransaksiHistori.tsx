@@ -48,7 +48,7 @@ export const TransaksiHistori = ({
                   })}
                 </p>
               </div>
-              <p className="text-sm text-end md:text-[20px] font-medium text-black">
+              <p className="text-sm text-end md:text-base font-medium text-black ">
                 {item.kategori}
               </p>
             </div>

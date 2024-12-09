@@ -60,7 +60,7 @@ export const MyPayModule = ({
         MyPay
       </h1>
       <div className="grid z-10">
-        <div className="flex gap-8">
+        <div className="flex max-md:flex-col md:gap-8">
           <h2 className="text-[24px] md:text-[32px] text-center font-bold text-white  bg-green-500 px-8 py-6 rounded-[50px] mt-8 mb-3">
             {noHp ? noHp : "Loading ..."}
           </h2>
