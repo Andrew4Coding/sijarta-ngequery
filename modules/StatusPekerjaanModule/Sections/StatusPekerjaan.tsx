@@ -161,7 +161,7 @@ export const StatusPekerjaan = ({ userId }: { userId: string }) => {
                     </p>
                   </div>
                   <h2 className="text-lg mx-auto text-[24px] md:text-[28px] font-bold text-green-500">
-                    {(500000).toLocaleString("id-ID", {
+                    {Number(card.price).toLocaleString("id-ID", {
                       style: "currency",
                       currency: "IDR",
                     })}
