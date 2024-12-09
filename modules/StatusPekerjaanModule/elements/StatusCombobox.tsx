@@ -32,7 +32,7 @@ export const StatusCombobox = ({
         <Button
           role="combobox"
           aria-expanded={open}
-          className="w-[250px] justify-between mx-auto"
+          className="w-full justify-between mx-auto"
         >
           {value
             ? statusPekerjaan.find((status) => status === value)
@@ -40,7 +40,7 @@ export const StatusCombobox = ({
           <ChevronDown className={cn(open ? "rotate-180" : "", "transition-transform")} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput placeholder="Cari status..." />
           <CommandList>

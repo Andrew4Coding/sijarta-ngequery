@@ -37,7 +37,7 @@ export const TransaksiHistori = ({
             <div
               className={cn(
                 "rounded-lg bg-transparent h-fit border border-[#FFCDCD] px-2 xl:px-10 py-6 shadow-sm flex justify-between items-center hover:scale-105 duration-300 xl:mx-4 2xl:mx-6",
-                { "border-green-100": item.kategori === "TopUp MyPay" || item.kategori === "Terima Transfer" }
+                { "border-green-100": item.kategori === "TopUp MyPay" || item.kategori === "Terima Transfer" || item.kategori === "Menerima Honor Transaksi Jasa" || item.kategori === "Pengembalian Dana" }
               )}
             >
               <div className="flex flex-col gap-2">
@@ -45,7 +45,7 @@ export const TransaksiHistori = ({
                   className={cn(
                     "text-sm md:text-xl font-semibold text-[#F27575]",
                     {
-                      "text-green-500": item.kategori === "TopUp MyPay" || item.kategori === "Terima Transfer",
+                      "text-green-500": item.kategori === "TopUp MyPay" || item.kategori === "Terima Transfer" || item.kategori === "Menerima Honor Transaksi Jasa" || item.kategori === "Pengembalian Dana",
                     }
                   )}
                 >
