@@ -35,21 +35,15 @@ export async function POST(req: Request) {
       ); 
     }
 
-    const isVoucherPurchased = async (userId: string, voucherCode: string) => {
-      const trPembelianVoucherModel = new TrPembelianVoucher();
-      const pembelian = await trPembelianVoucherModel.findBy("idpelanggan", userId);
-      if (!pembelian || !Array.isArray(pembelian)) {
-          return false; // Jika null atau bukan array, anggap belum membeli
-      }
-      return pembelian.some((p: any) => p.idvoucher === voucherCode);
-    };
-
-    if (await isVoucherPurchased(userId, voucherCode)) {
+    const trPembelianVoucherModel = new TrPembelianVoucher();
+    // Check if TrPembelianVoucher already exists
+    const pembelian = await trPembelianVoucherModel.findBy("idpelanggan", userId);
+    if (pembelian && Array.isArray(pembelian) && pembelian.some((p: any) => p.idvoucher === voucherCode)) {
       return new Response(
-          JSON.stringify({ success: false, message: "Voucher sudah dibeli" }),
-          { status: 400, headers: { "Content-Type": "application/json" } }
+        JSON.stringify({ success: false, message: "Voucher sudah dibeli" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
-  }
+    }
   
     // Kurangi saldo pengguna
     if (paymentMethodName === "MPay"){
