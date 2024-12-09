@@ -140,9 +140,8 @@ export async function POST(req: Request) {
       tgl: new Date(),
     });
 
-    await new TrPemesananStatus().create({
-      idtrpemesanan: pemesananJasaId,
-      idstatus: status?.id!,
+    await new TrPemesananStatus().update("idtrpemesanan", pemesananJasaId, {
+      idstatus: status?.id,
       tglwaktu: new Date(),
     });
 

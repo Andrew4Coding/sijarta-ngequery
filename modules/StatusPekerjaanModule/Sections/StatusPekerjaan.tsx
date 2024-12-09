@@ -2,36 +2,93 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { StatusCombobox } from "../elements/StatusCombobox";
-import { Clock, Pen, SearchIcon } from "lucide-react";
-import { statusPekerjaanCards } from "../const";
+import { SearchIcon } from "lucide-react";
 import { StatusPekerjaanProps } from "../interface";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-export const StatusPekerjaan = () => {
+export const StatusPekerjaan = ({ userId }: { userId: string }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState("");
   const [search, setSearch] = useState("");
   const [filteredPekerjaan, setfilteredPekerjaan] = useState<
     StatusPekerjaanProps[]
   >([]);
 
-  useEffect(() => {
-    const filterData = async () => {
-      if (value === "" && search === "") {
-        setfilteredPekerjaan(statusPekerjaanCards);
-        return;
+  const fetchAllPekerjaan = async () => {
+    const response = await fetch(`/api/statuspekerjaan?id=${userId}`);
+    if (response.ok) {
+      const responseData = await response.json();
+      const data: StatusPekerjaanProps[] = responseData.data;
+      setfilteredPekerjaan(data);
+    } else {
+      const error = await response.json();
+      console.log(error);
+    }
+  };
+
+  const fetchPekerjaanBySearchAndStatus = async (
+    search: string | null,
+    status: string | null
+  ) => {
+    const response = await fetch(
+      `/api/statuspekerjaan/filter?id=${userId}&namaKategori=${search}&status=${status}`
+    );
+    if (response.ok) {
+      const responseData = await response.json();
+      const data: StatusPekerjaanProps[] = responseData.data;
+      setfilteredPekerjaan(data);
+    } else {
+      const error = await response.json();
+      console.log(error);
+    }
+  };
+
+  const updateStatus = async (trPemesananJasaId: string, status: string) => {
+    setIsLoading(true);
+    const response = await fetch(`/api/statuspekerjaan/update`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        trPemesananJasaId,
+        status,
+      }),
+    });
+    const result = await response.json();
+    toast.promise(
+      response.ok
+        ? Promise.resolve(result.message)
+        : Promise.reject(result.error),
+      {
+        loading: "Loading...",
+        success: "Berhasil mengubah status pekerjaan",
+        error: result.error,
       }
-      const filteredData = statusPekerjaanCards.filter(
-        (card) =>
-          (value === "" || card.status === value) &&
-          (search === "" ||
-            card.subCategory.toLowerCase().includes(search.toLowerCase()))
-      );
-      setfilteredPekerjaan(filteredData);
-    };
+    );
+    filterData();
+    setIsLoading(false);
+  };
+
+  const filterData = async () => {
+    if (value === "" && search === "") {
+      fetchAllPekerjaan();
+      return;
+    }
+    fetchPekerjaanBySearchAndStatus(search, value);
+  };
+
+  useEffect(() => {
     filterData();
   }, [value, search]);
+
+  useEffect(() => {
+    fetchAllPekerjaan();
+  }, []);
+
   return (
     <section className="flex flex-col gap-12 z-10">
       <div className="mx-auto flex md:flex-row flex-col gap-3">
@@ -72,13 +129,13 @@ export const StatusPekerjaan = () => {
                 <h2
                   className={cn(
                     "text-center text-[16px] md:text-[20px] font-semibold py-3 md:py-4 border border-[#D9D9D9] rounded-[12px]",
-                    card.status === "Selesai" && "text-green-500",
+                    card.status === "Pesanan Selesai" && "text-green-500",
                     card.status === "Dibatalkan" && "text-[#F27575]",
-                    card.status === "Melakukan Pelayanan Jasa" &&
+                    card.status === "Pelayanan Jasa Sedang Dilakukan" &&
                       "text-[#F2AD75]",
                     card.status === "Menunggu Pekerja Berangkat" &&
                       "text-[#AF75F2]",
-                    card.status === "Tiba Di Lokasi" && "text-[#759EF2]"
+                    card.status === "Pekerja Tiba di Lokasi" && "text-[#759EF2]"
                   )}
                 >
                   {card.status}
@@ -89,6 +146,13 @@ export const StatusPekerjaan = () => {
                       {card.assignner}
                     </h2>
                     <p className="text-[16px] md:text-[20px] text-[#B2B2B2]">
+                      {card.sesi} Sesi{", "}
+                      {new Date(card.todoDate).toLocaleTimeString("id-ID", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                      {", "}
                       {new Date(card.todoDate).toLocaleDateString("id-ID", {
                         day: "2-digit",
                         month: "2-digit",
@@ -102,9 +166,17 @@ export const StatusPekerjaan = () => {
                       currency: "IDR",
                     })}
                   </h2>
-                  <Button variant={"secondary"} className="md:text-[20px] md:ml-auto max-h-[60px]">
-                    Update Status
-                  </Button>
+                  {(card.status !== "Pesanan Selesai" &&
+                    card.status !== "Dibatalkan") && (
+                      <Button
+                        onClick={() => updateStatus(card.id, card.status)}
+                        disabled={isLoading}
+                        variant={"secondary"}
+                        className="md:text-[20px] md:ml-auto max-h-[60px]"
+                      >
+                        Update Status
+                      </Button>
+                    )}
                 </div>
               </div>
             </div>

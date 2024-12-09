@@ -61,12 +61,12 @@ export async function GET(req: Request) {
         `SELECT * FROM TR_PEMESANAN_JASA WHERE idpekerja IS NULL`
       )
     ).map(async (tr) => {
-      const statusPesanan = await new TrPemesananStatus().findMany(
+      const statusPesanan = await new TrPemesananStatus().findBy(
         "idtrpemesanan",
         tr.id
       );
 
-      if (statusPesanan.find((s) => s.idstatus === dibatalkanStatus?.id)) {
+      if (statusPesanan?.idstatus === dibatalkanStatus?.id) {
         return;
       }
 
@@ -75,16 +75,15 @@ export async function GET(req: Request) {
         tr.idkategorijasa
       );
 
-      if (!subKategoriPekerja.find((s) => s.subKategori.includes(subKategori?.namasubkategori))) {
+      if (
+        !subKategoriPekerja.find((s) =>
+          s.subKategori.includes(subKategori?.namasubkategori)
+        )
+      ) {
         return;
       }
 
-      if (
-        (statusPesanan[1].idstatus === status?.id ||
-          statusPesanan[0].idstatus === status?.id) &&
-        (statusPesanan.length === 2 || statusPesanan.length === 1)
-      ) {
-
+      if (statusPesanan?.idstatus === status?.id) {
         const pelanggan = await new User().findBy("id", tr.idpelanggan);
         return {
           id: tr.id,
