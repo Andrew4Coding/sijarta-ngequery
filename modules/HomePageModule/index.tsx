@@ -130,7 +130,7 @@ export const HomePageModule = () => {
             <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8">
                 {filteredCategories.length === 0 ? (
                     <div className="text-center text-base font-medium text-gray-500 w-full col-span-3 mt-5">
-                        Tidak ada kategori
+                        Tidak ada subkategori
                     </div>
                 ) : (
                     filteredCategories.map((category, index) => (

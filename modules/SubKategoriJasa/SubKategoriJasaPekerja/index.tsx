@@ -126,7 +126,7 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
   if (!subcategoryInfo) return <p>Subcategory not found</p>;
 
   return (
-    <main className="bg-[#f8f8f8] min-h-screen pt-[132px] pb-[32px] px-6">
+    <main className="bg-background min-h-screen pt-[132px] pb-[32px] px-6">
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mb-10">
         <div className="flex">
           <div className="flex-1 h-[46px] bg-[#1ab35f] text-center text-white text-xl font-bold rounded-tl-[20px] rounded-bl-[20px] flex items-center justify-center">
