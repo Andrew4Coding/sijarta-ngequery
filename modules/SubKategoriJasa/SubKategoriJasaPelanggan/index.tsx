@@ -49,8 +49,8 @@ interface Discount {
 
 const BeliJasaSchema = z.object({
   date: z.string(),
-  discountCode: z.string(),
-  total: z.number(),
+  discountCode: z.string().optional(),
+  total: z.string(),
   paymentMethod: z.string(),
 });
 
