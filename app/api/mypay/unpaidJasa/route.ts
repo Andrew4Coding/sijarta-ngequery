@@ -39,11 +39,6 @@ export async function GET(req: Request) {
     "Menunggu Pembayaran"
   );
 
-  const dibatalkanStatus = await new StatusPesanan().findBy(
-    "nama",
-    "Pesanan Dibatalkan"
-  );
-
   const metodeBayar = await new MetodeBayar().findBy("nama", "MPay");
 
   const unpaidPesanan = await new TrPemesananJasa().customQuery(
