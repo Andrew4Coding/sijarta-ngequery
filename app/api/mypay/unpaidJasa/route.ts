@@ -70,7 +70,6 @@ export async function GET(req: Request) {
         return {
           id: tr.id,
           tanggalPemesanan: tr.tglpemesanan,
-          tanggalPekerjaan: tr.tglpekerjaan,
           subKategori: subKategori?.namasubkategori,
           nominal: tr.totalbiaya,
           status: status?.nama,

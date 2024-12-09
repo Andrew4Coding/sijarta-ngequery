@@ -29,7 +29,6 @@ export interface UnPaidPesananInterface {
   id: string;
   nominal: string;
   tanggalPemesanan: Date;
-  tanggalPekerjaan: Date;
   subKategori: string;
   status: string;
 }
