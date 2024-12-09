@@ -302,7 +302,7 @@ export default function SubKategoriJasaPelanggan({
   if (!subcategoryInfo) return <p>Subcategory not found</p>;
 
   return (
-    <main className="bg-[#f8f8f8] min-h-screen pt-[132px] pb-[32px] px-6">
+    <main className="bg-background min-h-screen pt-[132px] pb-[32px] px-6">
       {/* Subcategory Information */}
       <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mb-10">
         <div className="flex">

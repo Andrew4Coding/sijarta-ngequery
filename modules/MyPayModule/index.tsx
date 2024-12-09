@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,11 +7,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
+import { PaymentHistoryInterface, ResponseInterface } from "./interface";
 import { Transaksi } from "./sections/Transaksi";
 import { TransaksiHistori } from "./sections/TransaksiHistori";
-import Image from "next/image";
-import { ResponseInterface, PaymentHistoryInterface } from "./interface";
-import { Button } from "@/components/ui/button";
 
 export const MyPayModule = ({
   userData,
@@ -20,11 +19,10 @@ export const MyPayModule = ({
 }) => {
   const [saldo, setSaldo] = useState("0");
   const [noHp, setNoHp] = useState("");
-  const [historyTransaksi, setHistoryTransaksi] = useState<
-    PaymentHistoryInterface[]
-  >([]);
+  const [historyTransaksi, setHistoryTransaksi] = useState<PaymentHistoryInterface[]>([]);
 
   const fetchData = async () => {
+    setIsLoading(true);
     const response = await fetch(`/api/mypay?id=${userData.id}`);
 
     if (response.ok) {
@@ -38,11 +36,15 @@ export const MyPayModule = ({
       );
       setNoHp(data.noHp);
       setHistoryTransaksi(data.trHistory);
+
+      setIsLoading(false);
     } else {
       const error = await response.json();
       console.log(error);
     }
   };
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,25 +53,23 @@ export const MyPayModule = ({
 
     return () => clearInterval(interval);
   }, []);
+
   return (
     <main className="min-h-screen flex flex-col justify-center items-center py-52 z-10">
-      <div className="absolute top-0 w-full h-full z-[1]">
-        <Image src="/images/MyPayBG.png" alt="MyPay" fill className="" />
-      </div>
       <h1 className="text-4xl md:text-6xl text-center text-green-500 shadow-header font-newake z-10">
         MyPay
       </h1>
       <div className="grid z-10">
         <div className="flex gap-8">
           <h2 className="text-[24px] md:text-[32px] text-center font-bold text-white  bg-green-500 px-8 py-6 rounded-[50px] mt-8 mb-3">
-            {noHp}
+            {noHp ? noHp : "Loading ..."}
           </h2>
           <h2 className="text-[24px] md:text-[32px] text-center font-bold text-white  bg-green-500 px-8 py-6 rounded-[50px] mt-8 mb-3">
-            {saldo}
+            {saldo ? saldo : "Loading ..."}
           </h2>
         </div>
         <Dialog>
-          <DialogTrigger className="">
+          <DialogTrigger className="w-fit mx-auto">
             <Button>Lakukan Transaksi</Button>
           </DialogTrigger>
           <DialogContent className="lg:min-w-[850px] rounded-[20px]">
