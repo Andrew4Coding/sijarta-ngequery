@@ -1,14 +1,5 @@
 'use client';
 
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogTrigger
-} from "@/components/ui/dialog";
-import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { useUserData } from "@/hooks/useUserData";
 import { Button } from '@/components/ui/button';
 import {
     Select,
@@ -19,11 +10,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useUserData } from "@/hooks/useUserData";
+import { useEffect, useState } from 'react';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { toast } from "sonner";
 import { statuses } from './const';
 import { Order } from './type';
-import { toast } from "sonner";
 
 type Category = {
     name: string;
@@ -31,7 +24,6 @@ type Category = {
 };
 
 const PemesananJasaModule = () => {
-    const pathname = usePathname();
     const { userData, isAuthenticated } = useUserData();
     const [orders, setOrders] = useState<Order[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
@@ -81,6 +73,10 @@ const PemesananJasaModule = () => {
             );
 
             const result = await response.json();
+
+            console.log("result", result);
+            
+
             if (response.ok) {
                 setOrders(result.data);
             } else {
@@ -118,6 +114,8 @@ const PemesananJasaModule = () => {
             (statusFilter === "" || order.status === statusFilter)
         );
     });
+    
+    const flatmapCategories = categories.flatMap((category) => category.subcategories);
 
     return (
         <div className="p-6 bg-gray-100 min-h-screen pt-40 px-10 md:px-32">
@@ -135,15 +133,11 @@ const PemesananJasaModule = () => {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem value="all">Semua Subkategori</SelectItem>
+                                <SelectItem key={'all'} value="all">Semua Subkategori</SelectItem>
                                 <SelectLabel>Subkategori</SelectLabel>
-                                {categories.flatMap((category) =>
-                                    category.subcategories.map((subcategory, idx) => (
-                                        <SelectItem key={idx} value={subcategory}>
-                                            {subcategory}
-                                        </SelectItem>
-                                    ))
-                                )}
+                                {flatmapCategories.map((subcategory, idx) => (
+                                    <SelectItem key={idx} value={subcategory}>{subcategory}</SelectItem>
+                                ))}
                             </SelectGroup>
                         </SelectContent>
                     </Select>
