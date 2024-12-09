@@ -5,7 +5,7 @@ export interface Order {
     subcategory: string;
     session: number;
     price: number;
-    workerName?: string;
+    workername?: string;
     status: string;
 }
 
