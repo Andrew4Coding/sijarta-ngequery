@@ -145,7 +145,7 @@ export const HomePageModule = () => {
                                         href={`/subkategori-jasa/${isPekerja ? 'pekerja' : 'pelanggan'}/${subcategory.split(' ').join('-')}`}
                                     >
                                         <li
-                                            className={`px-5 py-4 text-center text-[#1ab35f] text-base font-semibold cursor-pointer ${subIndex === 0
+                                            className={`px-5 py-4 text-center text-[#1ab35f] hover:text-green-900 duration-300 text-base font-semibold cursor-pointer ${subIndex === 0
                                                 ? 'rounded-tl-xl rounded-tr-xl'
                                                 : subIndex === category.subcategories.length - 1
                                                     ? 'rounded-bl-xl rounded-br-xl'
