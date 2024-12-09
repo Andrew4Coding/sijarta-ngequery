@@ -169,31 +169,37 @@ const PemesananJasaModule = () => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {filteredOrders.map((order, index) => (
-                            <TableRow key={order.id || index}>
-                                <TableCell>{order.subcategory}</TableCell>
-                                <TableCell>{order.session}</TableCell>
-                                <TableCell>{order.price}</TableCell>
-                                <TableCell>{order.workerName || "Belum Ditentukan"}</TableCell>
-                                <TableCell>{order.status || "-"}</TableCell>
-                                <TableCell>
-                                    {order.status === "Menunggu Pembayaran" || order.status === "Mencari Pekerja Terdekat" ? (
-                                        <Button
-                                            onClick={() => cancelOrder(order.id)}
-                                            className="bg-white text-[#f17474] border border-[#ffcdcd] px-5 py-2 rounded-xl"
-                                        >
-                                            Batalkan
-                                        </Button>
-                                    ) : order.status === "Pesanan Selesai" ? (
-                                        <Button
-                                            className="bg-white text-[#1ab35f] border border-[#b8e7cd] px-5 py-2 rounded-xl"
-                                        >
-                                            Buat Testimoni
-                                        </Button>
-                                    ) : "-"}
-                                </TableCell>
+                        {filteredOrders.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={6} className="text-center">Tidak ada pesanan yang ditemukan.</TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            filteredOrders.map((order, index) => (
+                                <TableRow key={order.id || index}>
+                                    <TableCell>{order.subcategory}</TableCell>
+                                    <TableCell>{order.session}</TableCell>
+                                    <TableCell>{order.price}</TableCell>
+                                    <TableCell>{order.workerName || "Belum Ditentukan"}</TableCell>
+                                    <TableCell>{order.status || "-"}</TableCell>
+                                    <TableCell>
+                                        {order.status === "Menunggu Pembayaran" || order.status === "Mencari Pekerja Terdekat" ? (
+                                            <Button
+                                                onClick={() => cancelOrder(order.id)}
+                                                className="bg-white text-[#f17474] border border-[#ffcdcd] px-5 py-2 rounded-xl"
+                                            >
+                                                Batalkan
+                                            </Button>
+                                        ) : order.status === "Pesanan Selesai" ? (
+                                            <Button
+                                                className="bg-white text-[#1ab35f] border border-[#b8e7cd] px-5 py-2 rounded-xl"
+                                            >
+                                                Buat Testimoni
+                                            </Button>
+                                        ) : "-"}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </div>
