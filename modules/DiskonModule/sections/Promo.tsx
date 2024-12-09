@@ -6,7 +6,7 @@ import { dateConverter } from "../../EditProfileModule";
 
 export const PromoSection = ({ promoData }: { promoData: Promo[] }) => {
   return (
-    <div className="w-full max-w-[1280px] p-4 md:p-12 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col justify-start items-start gap-10">
+    <div className="w-full max-w-[1280px] p-12 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col justify-start items-start gap-10">
       <div className="self-stretch p-2 bg-[#1ab35f] rounded-xl pl-5">
         <div className="text-white text-[32px] font-bold">Promo</div>
       </div>

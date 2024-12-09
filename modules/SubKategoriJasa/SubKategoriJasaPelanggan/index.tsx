@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -20,8 +19,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Image from "next/image";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { dateConverter } from "../../EditProfileModule";
 
 interface Worker {
@@ -54,7 +54,6 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
   const [sessions, setSessions] = useState<{ sesi: number; harga: number }[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<{ id: string; nama: string }[]>([]);
   const [workers, setWorkers] = useState<Worker[]>([]);
-  const [testimonials] = useState<Testimonial[]>([]);
   const [newOrder, setNewOrder] = useState({
     date: new Date().toLocaleDateString(),
     discountCode: "",
@@ -95,6 +94,7 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
   const fetchWorkers = async (subkategoriId: string) => {
     try {
       const workersResponse = await fetch(`/api/pekerja?subkategoriId=${subkategoriId}`);
+
       if (!workersResponse.ok) throw new Error("Failed to fetch workers");
       const workersResult = await workersResponse.json();
       setWorkers(workersResult.data);
@@ -171,12 +171,6 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
     },
     [selectedSession]
   );  
-
-  const handleDiscountChangeOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      validateDiscountCode(newOrder.discountCode);
-    }
-  };
 
   const handleSubmitOrder = () => {
     if (!selectedSession) {
@@ -363,7 +357,9 @@ export default function SubKategoriJasaPelanggan({ subCategory }: { subCategory:
                   </div>
                 </div>
                 <DialogClose asChild>
-                  <Button className="w-full px-5 py-3 bg-[#1ab35f] text-white text-2xl rounded-xl">
+                  <Button
+                    variant={'secondary'}
+                  >
                     Tutup
                   </Button>
                 </DialogClose>

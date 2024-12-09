@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Voucher } from "../interface";
-import { MetodeBayar } from "../interface";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { statuses } from "@/modules/PemesananJasaModule/const";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
+import { MetodeBayar, Voucher } from "../interface";
 
 export const VoucherSection = ({
     daftarMetodeBayar,
@@ -31,7 +30,7 @@ export const VoucherSection = ({
 
         const selectedMetodeBayar = daftarMetodeBayar.find(m => m.id === metodeBayarId)
         
-        const { potongan, mintrpemesanan, kode } = selectedVoucher;
+        const { kode } = selectedVoucher;
 
         const purchaseResponse = await fetch("/api/diskon/beliVoucher", {
           method: "POST",
@@ -149,8 +148,8 @@ export const VoucherSection = ({
                   </SelectContent>
                 </Select>
               </div>
-              <button
-                className="self-stretch px-2.5 py-5 bg-[#1ab35f] rounded-xl text-white text-2xl font-bold disabled:bg-gray-400"
+              <Button
+                variant={'secondary'}
                 onClick={() => {
                   setPurchaseDialogOpen(false);
                   beliVoucher();
@@ -158,7 +157,7 @@ export const VoucherSection = ({
                 disabled={!metodeBayarId}
               >
                 Beli
-              </button>
+              </Button>
             </DialogContent>
           </Dialog>
         )}
@@ -169,7 +168,7 @@ export const VoucherSection = ({
             open={Boolean(transactionStatus)}
             onOpenChange={() => setTransactionStatus(null)}
           >
-            <DialogContent className="max-w-fit p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-10">
+            <DialogContent className="max-w-fit p-8 bg-white rounded-[20px] border border-[#d9d9d9] flex flex-col gap-10 w-[80%]">
               <DialogHeader>
                 <DialogTitle
                   className={`text-center text-2xl font-bold ${
@@ -187,7 +186,7 @@ export const VoucherSection = ({
                   : "Saldo tidak cukup. Silakan top-up saldo Anda."}
               </div>
               {transactionStatus === "sukses" && (
-                <div className="self-stretch flex gap-3">
+                <div className="self-stretch flex flex-col lg:flex-row gap-3">
                   <div className="w-[200px] flex flex-col gap-2">
                     <span className="text-[#1ab35f] text-base font-medium text-left">
                       Kode
