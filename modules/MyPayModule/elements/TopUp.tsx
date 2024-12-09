@@ -41,7 +41,7 @@ export const TopUp = () => {
         : Promise.reject(result.error),
       {
         loading: "Loading...",
-        success: "Withdrawal Success",
+        success: "Top Up Success",
         error: result.error,
       }
     );
