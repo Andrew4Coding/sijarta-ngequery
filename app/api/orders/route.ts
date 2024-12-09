@@ -15,7 +15,7 @@ export async function GET(req: Request) {
         }
 
         let query = `
-            SELECT pj.id, sj.namasubkategori AS subcategory, pj.sesi AS session, sl.harga AS price, 
+            SELECT pj.id, sj.namasubkategori AS subcategory, pj.sesi AS session, pj.totalbiaya AS price, 
                    ut.nama AS workerName, ps.nama AS status
             FROM tr_pemesanan_jasa pj
             LEFT JOIN subkategori_jasa sj ON sj.id = pj.idkategorijasa
