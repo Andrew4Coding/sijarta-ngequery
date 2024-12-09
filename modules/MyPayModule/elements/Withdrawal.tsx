@@ -85,7 +85,7 @@ export const Withdrawal = () => {
           <InputForm
             label="Nominal"
             name="nominal"
-            description="Masukan Nominal Top Up"
+            description="Masukan Nominal Withdrawal"
             placeholder="100000"
             type="number"
             form={form}

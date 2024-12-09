@@ -74,7 +74,7 @@ export const Transfer = () => {
           <InputForm
             label="Nominal"
             name="nominal"
-            description="Masukan Nominal Top Up"
+            description="Masukan Nominal Transfer"
             placeholder="100000"
             type="number"
             form={form}
