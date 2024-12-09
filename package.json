@@ -31,6 +31,7 @@
     "dayjs": "^1.11.13",
     "dlx": "^0.2.1",
     "dotenv": "^16.4.7",
+    "framer-motion": "^11.13.1",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.454.0",
