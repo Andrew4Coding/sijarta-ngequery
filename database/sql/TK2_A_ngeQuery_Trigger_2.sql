@@ -4,7 +4,7 @@ DECLARE
     userid UUID;
 BEGIN
 
-    IF NEW.IdStatus != (SELECT id FROM STATUS_PESANAN WHERE nama = 'Pesanan Dibatalkan') THEN
+    IF NEW.IdStatus = (SELECT id FROM STATUS_PESANAN WHERE nama = 'Pesanan Dibatalkan') THEN
         SELECT TotalBiaya,
             idPelanggan INTO nominal,
                                 userid
