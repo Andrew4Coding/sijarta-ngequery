@@ -1,13 +1,9 @@
-import { SubKategoriJasaPekerja } from "@/modules/SubKategoriJasa/SubKategoriJasaPekerja";
+import SubKategoriJasaPekerja from "@/modules/SubKategoriJasa/SubKategoriJasaPekerja";
 
-async function page({ params }: {
-  params: Promise<{ subCategory: string }>;
-}) {
-  const subcategory = (await params).subCategory.replace("-", " ");
+function Page({ params }: { params: { subCategory: string } }) {
+  const subcategory = params.subCategory.replace(/-/g, " ");
 
-  return (
-    <SubKategoriJasaPekerja subCategory={subcategory} />
-  );
+  return <SubKategoriJasaPekerja subCategory={subcategory} />;
 }
 
-export default page;
+export default Page;

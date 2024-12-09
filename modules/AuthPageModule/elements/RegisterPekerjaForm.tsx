@@ -308,6 +308,9 @@ export const RegisterPekerjaForm = () => {
                         <Button
                             variant={'secondary'}
                             type="submit"
+                            onClick={() => {
+                                console.log(form.getValues());
+                            }}
                             className="col-span-1 md:col-span-2"
                         >
                             Daftar
