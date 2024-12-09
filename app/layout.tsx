@@ -19,10 +19,10 @@ const newake = localFont({
 });
 
 const jakartaSans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
+  subsets: ["latin"],
   variable: "--font-jakarta-sans",
   weight: ["200", "300", "400", "500", "600", "700", "800"],
-})
+});
 
 export default async function RootLayout({
   children,
@@ -30,10 +30,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      suppressHydrationWarning
-      suppressContentEditableWarning
-      lang="en">
+    <html suppressHydrationWarning suppressContentEditableWarning lang="en">
       <body
         className={`${jakartaSans.variable} ${newake.variable} antialiased font-jakarta`}
       >
@@ -44,9 +41,9 @@ export default async function RootLayout({
             </div>
           }
         >
-            <Navbar />
-            <Layout>{children}</Layout>
-            <Toaster />
+          <Navbar />
+          <Layout>{children}</Layout>
+          <Toaster />
         </Suspense>
       </body>
     </html>

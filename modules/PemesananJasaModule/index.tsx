@@ -11,24 +11,8 @@ import {
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
-} from "@/components/ui/form";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,6 +20,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { dummyOrders, statuses } from './const';
 import { createTestimonySchema, Order } from './type';
+import { toast } from "sonner";
+import { v4 } from "uuid";
 
 const PemesananJasaModule = () => {
     const [orders, setOrders] = useState<Order[]>(dummyOrders);
@@ -61,10 +47,41 @@ const PemesananJasaModule = () => {
         resolver: zodResolver(createTestimonySchema)
     });
 
-    const onSubmit = (data: z.infer<typeof createTestimonySchema>) => {
-        console.log(data);
-    }
+    const onSubmit = async (data: z.infer<typeof createTestimonySchema>) => {
+      try {
+        const response = await fetch("/api/testimoni", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idtrpemesanan: v4(), //todo
+            tgl: new Date(),
+            teks: data.comment,
+            rating: data.rating,
+          }),
+        });
 
+        const result = await response.json();
+
+        toast.promise(
+          response.ok
+            ? Promise.resolve(result.message)
+            : Promise.reject(result.error),
+          {
+            loading: "Loading...",
+            success: "Testimoni berhasil dikirim!",
+            error: result.error || "Terjadi kesalahan.",
+          }
+        );
+
+        console.log("Submitted Data:", data);
+      } catch (error) {
+        console.error("Error submitting testimony:", error);
+        toast.error("Terjadi kesalahan saat mengirim testimoni.");
+      }
+    };
+    
     return (
         <div className="p-6 bg-gray-100 min-h-screen pt-40 px-10 md:px-32">
             <h2 className="text-center text-[#1ab35f] text-6xl font-normal font-['Newake'] tracking-[3px]">Pesanan Saya</h2>
@@ -173,24 +190,24 @@ const PemesananJasaModule = () => {
                                                             )}
                                                         />
 
-                                                        {/* Comment Field */}
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="comment"
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel>Komentar</FormLabel>
-                                                                    <FormControl>
-                                                                        <Textarea
-                                                                            rows={4}
-                                                                            placeholder="Tulis komentar Anda ..."
-                                                                            {...field}
-                                                                        />
-                                                                    </FormControl>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
+                            {/* Comment Field */}
+                            <FormField
+                              control={form.control}
+                              name="comment"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Komentar</FormLabel>
+                                  <FormControl>
+                                    <Textarea
+                                      rows={4}
+                                      placeholder="Tulis komentar Anda ..."
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
 
                                                         <div className="flex justify-end gap-2">
                                                             <DialogClose asChild>
