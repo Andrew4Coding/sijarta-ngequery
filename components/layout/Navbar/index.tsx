@@ -79,6 +79,10 @@ export const Navbar = () => {
     }
   }
 
+  if (!userDataState.id && !hideMenus) {
+    return null;
+  }
+
   return (
     <motion.nav
       initial={{ y: -120 }}
@@ -148,7 +152,7 @@ export const Navbar = () => {
           <Separator />
           <li>
           <a
-            href='/'
+            href='/login'
             onClick={logout}
             className='text-red-500 cursor-pointer duration-300'
           >

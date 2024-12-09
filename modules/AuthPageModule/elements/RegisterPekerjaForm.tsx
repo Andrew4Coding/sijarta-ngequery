@@ -44,7 +44,7 @@ export const RegisterPekerjaForm = () => {
                     nama: data.nama,
                     nohp: data.noHp,
                     pwd: data.password,
-                    saldompay: 10000,
+                    saldompay: 0,
                     tgllahir: new Date(data.tanggalLahir),
                     namabank: data.namaBank,
                     nomorrekening: data.noRekening,
