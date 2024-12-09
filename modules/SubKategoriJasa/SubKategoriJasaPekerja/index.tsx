@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Dialog,
   DialogClose,
@@ -13,6 +12,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useUserData } from "@/hooks/useUserData";
+import { Testimonial } from "../type";
 
 interface Session {
   sesi: number;
@@ -45,6 +45,7 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const { userData } = useUserData();
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   const fetchSubcategoryData = async () => {
     try {
@@ -68,8 +69,23 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
       setLoading(false);
     }
   };
+
+  const fetchTestimonials = async () => {
+    try {
+      const response = await fetch("/api/testimoni"); // Sesuaikan endpoint
+      if (!response.ok) throw new Error("Failed to fetch testimonials");
+
+      const result = await response.json();
+      setTestimonials(result.data); // Asumsikan `data` berisi array testimoni
+    } catch (error) {
+      console.error("Error fetching testimonials:", error);
+      toast.error("Gagal memuat testimoni.");
+    }
+  };
+
   useEffect(() => {
     fetchSubcategoryData();
+    fetchTestimonials();
   }, [subCategory]);
 
   const fetchWorkers = async (subkategoriId: string) => {
@@ -101,7 +117,7 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
       toast.error(result.message);
       return;
     }
-    fetchSubcategoryData(); 
+    fetchSubcategoryData();
     toast.success("Anda berhasil bergabung sebagai pekerja!");
     setIsLoading(false);
   };
@@ -210,6 +226,9 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
                       <p>
                         {new Date(worker.tgllahir).toLocaleDateString("id-ID")}
                       </p>
+                      <p>
+                        {new Date(worker.tgllahir).toLocaleDateString("id-ID")}
+                      </p>
                       <p>{worker.alamat}</p>
                     </div>
                   </div>
@@ -223,6 +242,36 @@ const SubKategoriJasaPekerja = ({ subCategory }: { subCategory: string }) => {
             </Dialog>
           ))}
         </div>
+      </div>
+      {/* Bagian Testimoni */}
+      <div className="max-w-3xl mx-auto bg-white rounded-[20px] border border-[#d9d9d9] p-7 mt-10">
+        <h2 className="text-[#1ab35f] text-[28px] font-bold">Testimoni</h2>
+        {testimonials.length > 0 ? (
+          testimonials.map((testimonial, index) => (
+            <div
+              key={index}
+              className="border-b border-[#d9d9d9] pb-4 mb-4 last:border-none last:mb-0"
+            >
+              <div className="flex items-center mb-2">
+                <p className="text-black text-lg font-semibold">
+                  {testimonial.customerName}
+                </p>
+                <span className="text-[#1ab35f] text-sm ml-2">
+                  {testimonial.rating.toFixed(1)} ⭐
+                </span>
+              </div>
+              <p className="text-black text-sm mb-2">"{testimonial.review}"</p>
+              <p className="text-gray-500 text-xs">
+                Dipekerjakan oleh {testimonial.workerName} pada{" "}
+                {new Date(testimonial.date).toLocaleDateString("id-ID")}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">
+            Belum ada testimoni untuk kategori ini.
+          </p>
+        )}
       </div>
     </main>
   );
