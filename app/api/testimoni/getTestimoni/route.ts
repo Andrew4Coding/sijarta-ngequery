@@ -1,11 +1,20 @@
 import { Testimoni } from "@/database/models/testimoni";
+import { TrPemesananJasa } from "@/database/models/trPemesananJasa";
 
 export async function GET(req: Request) {
   try {
+    const query = new URL(req.url).searchParams;
+    const id = query.get("subKategoriId");
+    const trPemesananJasa = await new TrPemesananJasa().findMany("idkategorijasa", id);
     const testimonyModel = new Testimoni();
-    const testimonies = await testimonyModel.findAll();
+    const testimonies = await Promise.all([
+      trPemesananJasa.map(async(jasa) =>
+      {
+        const testimonies = await testimonyModel.findMany("idtrpemesanan", jasa.id); 
+      })
+    ])
 
-    if (!testimonies || testimonies.length === 0) {
+    if (!testimonies) {
       return new Response(
         JSON.stringify({ success: true, data: [], message: "Tidak ada testimoni tersedia" }),
         {
@@ -16,7 +25,7 @@ export async function GET(req: Request) {
     }
 
     return new Response(
-      JSON.stringify({ success: true, data: testimonies }),
+      JSON.stringify({ success: true, data: testimonies}),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
