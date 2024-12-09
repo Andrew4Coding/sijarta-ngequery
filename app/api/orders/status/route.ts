@@ -1,4 +1,3 @@
-import pool from "@/database/db";
 import { StatusPesanan } from "@/database/models/statusPesanan";
 import { TrPemesananStatus } from "@/database/models/trPemesananStatus";
 

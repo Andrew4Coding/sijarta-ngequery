@@ -254,6 +254,11 @@ export default function SubKategoriJasaPelanggan({
   const onSubmit = async () => {
     const { date, discountCode, total, paymentMethod } = form.getValues();
 
+    if (!paymentMethod) {
+      toast.error("Pilih metode pembayaran.");
+      return;
+    }
+
     try {
       const response = await fetch("/api/pemesanan-jasa", {
         method: "POST",
@@ -272,16 +277,19 @@ export default function SubKategoriJasaPelanggan({
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to create order");
+      const result = await response.json();
 
+      if (result.success === false) {
+        toast.error(result.message);
+        return;
+      }
+      
       toast.success("Pesanan berhasil diproses!");
 
       setTimeout(() => {
         router.push("/pemesanan-jasa");
       }, 2000);
     } catch (error) {
-      console.log(error);
-
       toast.error("Gagal membuat pesanan.");
     }
   };

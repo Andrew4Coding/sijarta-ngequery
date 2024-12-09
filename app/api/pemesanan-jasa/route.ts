@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       idpelanggan: idPelanggan,
       idkategorijasa: idSubKategori,
       sesi: sesi,
-      iddiskon: idDiskon,
+      iddiskon: idDiskon === "" ? null : idDiskon,
       idmetodebayar: idMetodeBayar,
     });
 
@@ -130,6 +130,21 @@ export async function POST(req: Request) {
 
     // Reduce user mpay
     const userModel = new User();
+
+    // Check if user saldo is enoough
+    if (idMetodeBayar === metodeMpay?.id) {
+      const user = await userModel.findBy("id", idPelanggan);
+      if (user?.saldompay && user.saldompay < totalBiaya) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "Saldo MPay tidak mencukupi.",
+          }),
+          { status: 400 }
+        );
+      }
+    }
+
     const user = await userModel.findBy("id", idPelanggan);
     if (idMetodeBayar === metodeMpay?.id) {
       await userModel.update("id", idPelanggan, {

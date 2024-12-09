@@ -1,3 +1,28 @@
+CREATE OR REPLACE FUNCTION check_mpay_balance() RETURNS TRIGGER AS $$
+BEGIN
+    -- Check if the payment method is MPAY
+    IF (NEW.idMetodeBayar IS NOT NULL) THEN
+        -- Get the payment method name
+        PERFORM Nama FROM METODE_BAYAR WHERE id = NEW.idMetodeBayar AND Nama = 'Mpay';
+
+        -- If MPAY is used, check the user's balance
+        IF FOUND THEN
+            -- Check if the user's SALDOMPAY is sufficient
+            PERFORM 1
+            FROM USERTABLE
+            WHERE ID = NEW.idPelanggan AND SALDOMPAY >= NEW.TotalBiaya;
+
+            -- If insufficient balance, raise an exception
+            IF NOT FOUND THEN
+                RAISE EXCEPTION 'Insufficient MPAY balance for user %', NEW.idPelanggan;
+            END IF;
+        END IF;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION kembalikan_saldo_mypay() RETURNS TRIGGER AS $$
 DECLARE
     nominal DECIMAL;
