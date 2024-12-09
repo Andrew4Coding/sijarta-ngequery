@@ -6,8 +6,10 @@ import { SearchIcon } from "lucide-react";
 import { StatusPekerjaanProps } from "../interface";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export const StatusPekerjaan = ({ userId }: { userId: string }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState("");
   const [search, setSearch] = useState("");
   const [filteredPekerjaan, setfilteredPekerjaan] = useState<
@@ -43,14 +45,43 @@ export const StatusPekerjaan = ({ userId }: { userId: string }) => {
     }
   };
 
-  useEffect(() => {
-    const filterData = async () => {
-      if (value === "" && search === "") {
-        fetchAllPekerjaan();
-        return;
+  const updateStatus = async (trPemesananJasaId: string, status: string) => {
+    setIsLoading(true);
+    const response = await fetch(`/api/statuspekerjaan/update`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        trPemesananJasaId,
+        status,
+      }),
+    });
+    const result = await response.json();
+    toast.promise(
+      response.ok
+        ? Promise.resolve(result.message)
+        : Promise.reject(result.error),
+      {
+        loading: "Loading...",
+        success: "Berhasil mengubah status pekerjaan",
+        error: result.error,
       }
-      fetchPekerjaanBySearchAndStatus(search, value);
-    };
+    );
+    filterData();
+    setIsLoading(false);
+  };
+
+  const filterData = async () => {
+    if (value === "" && search === "") {
+      fetchAllPekerjaan();
+      return;
+    }
+    fetchPekerjaanBySearchAndStatus(search, value);
+  };
+
+  useEffect(() => {
     filterData();
   }, [value, search]);
 
@@ -135,12 +166,17 @@ export const StatusPekerjaan = ({ userId }: { userId: string }) => {
                       currency: "IDR",
                     })}
                   </h2>
-                  <Button
-                    variant={"secondary"}
-                    className="md:text-[20px] md:ml-auto max-h-[60px]"
-                  >
-                    Update Status
-                  </Button>
+                  {(card.status !== "Pesanan Selesai" &&
+                    card.status !== "Dibatalkan") && (
+                      <Button
+                        onClick={() => updateStatus(card.id, card.status)}
+                        disabled={isLoading}
+                        variant={"secondary"}
+                        className="md:text-[20px] md:ml-auto max-h-[60px]"
+                      >
+                        Update Status
+                      </Button>
+                    )}
                 </div>
               </div>
             </div>

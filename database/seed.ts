@@ -1,7 +1,7 @@
 import pool from "./db";
 
 export async function resetDatabase() {
-    await pool.query(`
+  await pool.query(`
         DROP TABLE IF EXISTS TR_PEMBELIAN_VOUCHER;
         DROP TABLE IF EXISTS PROMO;
         DROP TABLE IF EXISTS VOUCHER;
@@ -22,11 +22,11 @@ export async function resetDatabase() {
         DROP TABLE IF EXISTS USERTABLE;
     `);
 
-    console.log('Reset database done!');
+  console.log("Reset database done!");
 }
 
 export async function createTable() {
-    await pool.query(`
+  await pool.query(`
         CREATE TABLE USERTABLE (
             ID UUID PRIMARY KEY,
             NAMA VARCHAR(255),
@@ -181,11 +181,11 @@ export async function createTable() {
         );
     `);
 
-    console.log("Table created successfully");
+  console.log("Table created successfully");
 }
 
 export async function seedDatabase() {
-    await pool.query(`
+  await pool.query(`
         -- INSERT DATA DUMMY
         -- AILEEN
         INSERT INTO USERTABLE (ID, NAMA, JENISKELAMIN, NOHP, PWD, TGLLAHIR, ALAMAT, SALDOMPAY) VALUES
@@ -223,7 +223,8 @@ export async function seedDatabase() {
         ('444e0113-4234-5678-8914-ddefdddefdde', 'Withdrawal'),
         ('555e0114-5234-5678-8915-eefeeedefeef', 'Pengembalian Dana'),
         ('666e0115-6234-5678-8916-ffefffefefef', 'Pembayaran Voucher'),
-        ('777e0116-7234-5678-8917-001100112223', 'Terima Transfer');
+        ('777e0116-7234-5678-8917-001100112223', 'Terima Transfer'),
+        ('888e0117-8234-5678-8918-113322114455', 'Menerima Honor Transaksi Jasa');
 
         INSERT INTO TR_MPAY (ID, USERID, TGL, NOMINAL, KATEGORIID) VALUES
         ('111f0115-1234-5678-8916-abcdefabcdef', '1c3e0100-1234-5678-8901-abcdefabcdef', '2024-07-01', 50000.00,  '111e0110-1234-5678-8911-abcdefabcdef'),
@@ -475,11 +476,11 @@ export async function seedDatabase() {
         ('14a32e52-dccf-4322-ba92-052d83dfab4c', '2024-10-22', 'Menyesal menggunakan layanan ini, tidak sesuai.', 1);    
     `);
 
-    console.log('Seeding database done!');
+  console.log("Seeding database done!");
 }
 
 export async function seedTrigger() {
-    await pool.query(`
+  await pool.query(`
         -- Trigger to check if phone number already exists
         CREATE OR REPLACE FUNCTION check_phone_number_exists() 
         RETURNS TRIGGER AS $$
@@ -535,17 +536,58 @@ export async function seedTrigger() {
         CREATE TRIGGER trigger_check_bank_account
         BEFORE INSERT OR UPDATE ON PEKERJA
         FOR EACH ROW EXECUTE FUNCTION check_bank_account_combination();
+
+        -- Trigger to check if pesanan selesai, tf mpay ke pekerja
+        CREATE OR REPLACE FUNCTION plus_saldo_on_selesai()
+        RETURNS trigger AS 
+        $$
+            DECLARE
+            nominal DECIMAL;
+            pekerjaId UUID;
+            kategoriId UUID;
+            BEGIN
+            IF NEW.IdStatus = (SELECT id FROM STATUS_PESANAN WHERE nama = 'Pesanan selesai') 
+            THEN
+                SELECT IdPekerja, TotalBiaya
+                    INTO pekerjaId, nominal
+                    FROM TR_PEMESANAN_JASA TJ
+                    WHERE NEW.IdTrPemesanan = TJ.id;
+                UPDATE USERTABLE 
+                    SET saldo = saldo + nominal
+                    WHERE USERTABLE.Id = pekerjaId;
+                    RETURN NEW;
+                SELECT id
+                    INTO kategoriId
+                    FROM KATEGORI_TR_MPAY
+                    WHERE nama = 'Menerima Honor Transaksi Jasa';
+                INSERT INTO TR_MPAY (Id, UserId, Tgl, Nominal, KategoriId)
+                VALUES (
+                    gen_random_uuid(),
+                    pekerja_id,
+                    CURRENT_DATE,
+                    nominal,
+                    kategoriId
+                );
+            END IF;
+            RETURN NEW;
+            END;
+        $$
+        LANGUAGE plpgsql;
+
+        CREATE TRIGGER trigger_plus_saldo_on_selesai
+        AFTER UPDATE ON TR_PEMESANAN_STATUS
+        FOR EACH ROW
+        EXECUTE FUNCTION plus_saldo_on_selesai();
     `);
 
-    console.log('Seeding trigger done!');
+  console.log("Seeding trigger done!");
 }
 
 async function seedDatabaseRun() {
-    await resetDatabase();
-    await createTable();
-    await seedDatabase();
-    await seedTrigger();
+  await resetDatabase();
+  await createTable();
+  await seedDatabase();
+  await seedTrigger();
 }
 
-
-seedDatabaseRun()
+seedDatabaseRun();
