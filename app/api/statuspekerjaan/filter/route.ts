@@ -37,14 +37,14 @@ export async function GET(req: Request) {
   
       const statusPekerjaan = await statusPesananModel.customQuery(`
         SELECT
-          tr.id AS order_id,
-          tr.tglpemesanan AS created_at,
+          tr.id,
+          tr.tglpemesanan AS "createdAt",
           tr.sesi,
-          tr.waktupekerjaan AS todo_date,
-          subkategori.namasubkategori AS sub_category,
-          status.nama AS status,
-          tr.totalbiaya AS price,
-          pelanggan.nama AS assignner
+          tr.waktupekerjaan AS "todoDate",
+          subkategori.namasubkategori AS "subCategory",
+          status.nama AS "status",
+          tr.totalbiaya AS "price",
+          pelanggan.nama AS "assignner"
       FROM
           TR_PEMESANAN_JASA tr
       JOIN
@@ -56,7 +56,7 @@ export async function GET(req: Request) {
       JOIN
           USERTABLE pelanggan ON tr.idpelanggan = pelanggan.id
       WHERE
-          tr.idpekerja = '${id}' -- Replace :id with the worker's id
+          tr.idpekerja = '${id}'
           AND ts.idstatus = '${statusPesanan.id}';
       `)
   
@@ -72,14 +72,14 @@ export async function GET(req: Request) {
     if (!status && namaKategori) {
       const statusPekerjaan = await statusPesananModel.customQuery(`
         SELECT
-          tr.id AS order_id,
-          tr.tglpemesanan AS created_at,
+          tr.id,
+          tr.tglpemesanan AS "createdAt",
           tr.sesi,
-          tr.waktupekerjaan AS todo_date,
-          subkategori.namasubkategori AS sub_category,
-          status.nama AS status,
-          tr.totalbiaya AS price,
-          pelanggan.nama AS assignner
+          tr.waktupekerjaan AS "todoDate",
+          subkategori.namasubkategori AS "subCategory",
+          status.nama AS "status",
+          tr.totalbiaya AS "price",
+          pelanggan.nama AS "assignner"
       FROM
           TR_PEMESANAN_JASA tr
       JOIN
@@ -120,14 +120,14 @@ export async function GET(req: Request) {
   
       const statusPekerjaan = await statusPesananModel.customQuery(`
         SELECT
-            tr.id AS order_id,
-            tr.tglpemesanan AS created_at,
+            tr.id,
+            tr.tglpemesanan AS "createdAt",
             tr.sesi,
-            tr.waktupekerjaan AS todo_date,
-            subkategori.namasubkategori AS sub_category,
-            status.nama AS status,
-            tr.totalbiaya AS price,
-            pelanggan.nama AS assignner
+            tr.waktupekerjaan AS "todoDate",
+            subkategori.namasubkategori AS "subCategory",
+            status.nama AS "status",
+            tr.totalbiaya AS "price",
+            pelanggan.nama AS "assignner"
         FROM
             TR_PEMESANAN_JASA tr
         JOIN
@@ -141,7 +141,7 @@ export async function GET(req: Request) {
         WHERE
             tr.idpekerja = '${id}'
             AND ts.idstatus = '${statusPesanan.id}'
-            AND subkategori.namasubkategori NOT LIKE '${namaKategori}';
+            AND LOWER(subkategori.namasubkategori) LIKE LOWER('%' || '${namaKategori}' || '%');
         `)
   
       return new Response(
